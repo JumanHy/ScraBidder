@@ -1,0 +1,11 @@
+// Import Lato font
+//@import "../../node_modules/@fontsource/lato/index.css";
+
+// Custom variables
+$primary: #003a70; // Text, titles, nav links color
+$secondary: #b87333;
+// Override Bootstrap default font to Lato
+$font-family-sans-serif: "Lato", sans-serif;
+
+// Import Bootstrap components with customizations
+@import "../../../node_modules/bootstrap/scss/bootstrap";
