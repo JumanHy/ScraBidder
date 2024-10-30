@@ -1,11 +1,10 @@
-import NavBar from "./components/NavBar/NavBar";
+import Home from "./Pages/HomePage/Home";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./styles/css/main.min.css";
 function App() {
   return (
     <>
-      <NavBar />
+      <Home />
     </>
   );
 }

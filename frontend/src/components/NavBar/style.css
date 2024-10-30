@@ -18,3 +18,7 @@
 .nav-link:hover::after {
   transform: scaleX(1);
 }
+
+.login-btn:hover {
+  background-color: #c88547 !important;
+}
