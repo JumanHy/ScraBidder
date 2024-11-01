@@ -1,7 +1,7 @@
-import { Container, Col, Button, Image, Stack } from "react-bootstrap";
+import { Container, Col, Button, Image } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import logo from "../../assets/images/ScraBidderLogo.png";
+import logo from "@/assets/images/ScraBidderLogo.png";
 import "./style.css";
 function NavBar() {
   return (
