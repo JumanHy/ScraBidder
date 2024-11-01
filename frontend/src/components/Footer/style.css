@@ -1,0 +1,9 @@
+.link {
+    text-decoration: none; /* Remove underline initially */
+    color: white; /* Set text color */
+    transition: text-decoration 0.3s ease; /* Smooth transition for underline */
+  }
+  
+  .link:hover {
+    text-decoration: underline; /* Underline on hover */
+  }

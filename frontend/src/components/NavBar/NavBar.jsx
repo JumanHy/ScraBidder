@@ -28,7 +28,7 @@ function NavBar() {
               <Nav.Link
                 className="nav-link "
                 style={{ color: "#003A70" }}
-                href="#home"
+                href="./HomePage"
               >
                 Home
               </Nav.Link>
@@ -49,7 +49,7 @@ function NavBar() {
               <Nav.Link
                 className="nav-link"
                 style={{ color: "#003A70" }}
-                href="#link"
+                href=".AboutUs/"
               >
                 About Us
               </Nav.Link>
