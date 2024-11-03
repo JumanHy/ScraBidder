@@ -33,13 +33,8 @@ function LatestAuctions() {
                 <div className='col-12 col-sm-6 col-md-4 mb-4'>
                
            <div 
-            className="d-flex flex-column align-items-center"
-            style={
-                {
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.25)'
+            className="d-flex shadow flex-column align-items-center"
 
-                }
-            }
             >
             <Image 
                 src={scrapImage} fluid alt="Scrap"
@@ -100,13 +95,8 @@ function LatestAuctions() {
                 <div className='col-12 col-sm-6 col-md-4 mb-4'>
                
            <div 
-            className="d-flex flex-column align-items-center"
-            style={
-                {
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.25)'
-
-                }
-            }
+            className="d-flex shadow flex-column align-items-center"
+  
             >
             <Image 
                 src={scrapImage} fluid alt="Scrap"
@@ -166,13 +156,8 @@ function LatestAuctions() {
                 <div className='col-12 col-sm-6 col-md-4 mb-4'>
                
            <div 
-            className="d-flex flex-column align-items-center"
-            style={
-                {
-                    boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.25)'
+            className="d-flex shadow-lg flex-column align-items-center"
 
-                }
-            }
             >
             <Image 
                 src={scrapImage} fluid alt="Scrap"
