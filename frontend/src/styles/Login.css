@@ -1,0 +1,74 @@
+.outer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh; /* Full height for the outer container */
+  }
+  
+  .logo-section {
+    flex: 1; /* Takes half of the space */
+    background-color: #003A70; /* Background color for the logo section */
+    color: white; /* Text color */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px; /* Adjust padding as needed */
+    text-align: center; /* Center text */
+  }
+  
+  .logo {
+    max-width: 80%; /* Adjust logo size */
+    height: auto;
+  }
+  
+  .quote {
+    margin-top: 20px; /* Space between logo and quote */
+    font-size: 1.2em; /* Adjust font size for quote */
+  }
+  
+  .login-section {
+    flex: 1; /* Takes half of the space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px; /* Add padding */
+    background-color: white; /* Optional: background color for login section */
+  }
+  
+  .login-form {
+    width: 100%; /* Full width of the form */
+  }
+  
+  .label {
+    display: block; /* Ensure label is block-level */
+    margin-bottom: 5px; /* Space between label and input */
+  }
+  
+  .input-field {
+    width: 100%; /* Full width for inputs */
+    padding: 10px; /* Padding for inputs */
+    margin-bottom: 15px; /* Space between inputs */
+    border: 1px solid #ccc; /* Border for inputs */
+    border-radius: 5px; /* Rounded corners */
+  }
+  
+  .submit-button {
+    background-color: #003A70; /* Adjust button color */
+    color: white; /* Text color for button */
+    padding: 10px 15px; /* Padding for button */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Change cursor to pointer */
+    transition: background-color 0.3s; /* Transition for hover effect */
+  }
+  
+  .submit-button:hover {
+    background-color: #00509e; /* Darker shade on hover */
+  }
+  
+  .error {
+    color: red; /* Error message color */
+    font-size: 12px; /* Smaller font size for error messages */
+  }
+  
