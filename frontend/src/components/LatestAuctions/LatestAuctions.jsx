@@ -23,7 +23,7 @@ function LatestAuctions() {
         }
       }
       >
-        <h2 className="pb-5">Latest Auctions</h2>
+        <h2 className="pb-5" style={{letterSpacing:5}}>Latest Auctions</h2>
 
         
         <div className='container'>
