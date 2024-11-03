@@ -1,0 +1,11 @@
+/* styles.css */
+.card {
+    transition: all 0.3s ease; /* Smooth transition */
+}
+
+.card:hover {
+    background-color: #f0f8ff; /* Change background color on hover */
+    transform: scale(1.05); /* Slightly scale up */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.35); /* Enhance shadow */
+}
+
