@@ -6,10 +6,10 @@ function Hero() {
   return (
     <header style={{ paddingLeft: 0, letterSpacing: 5 }}>
       <div
-        className="p-5 text-center bg-image"
+        className="p-1 text-center bg-image"
         style={{
           backgroundImage: "url('./src/assets/images/hero.png')",
-        height:"500px",
+          height: "500px",
           backgroundSize: "cover", // Ensure the image covers the entire section
           backgroundPosition: "center", // Center the background image
         }}
@@ -18,11 +18,12 @@ function Hero() {
           fluid
           className="d-flex flex-column justify-content-center align-items-center text-white h-100"
         >
-          <Row className="justify-content-center">
+          <Row className="justify-content-center text-white">
             <Col xs={12}>
               <h1>Transform Your Scrap into Cash!</h1>
               <h4 className="mb-5">
-                Join our marketplace for seamless buying and selling of scrap materials.
+                Join our marketplace for seamless buying and selling of scrap
+                materials.
               </h4>
             </Col>
             <Col xs={12}>

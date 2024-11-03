@@ -1,15 +1,15 @@
-import React from 'react';
-import { Formik } from 'formik';
-import '../styles/BusinessRegistration.css'; 
+import React from "react";
+import { Formik } from "formik";
+import "../styles/BusinessRegistration.css";
 
 // Import the logo image
-import logoImage from '../components/output-onlinepngtools.png'; 
+// import logoImage from '../components/output-onlinepngtools.png';
 
 const BusinessRegistration = () => (
   <div className="outer-container">
     <div className="form-container">
       <header className="header">
-        <img src={logoImage} alt="Project Logo" className="logo" />
+        <img src={""} alt="Project Logo" className="logo" />
         <div className="login-link">
           Already a member? <a href="/login">Log in</a>
         </div>
@@ -19,76 +19,83 @@ const BusinessRegistration = () => (
       <h8>General Details</h8>
       <Formik
         initialValues={{
-          companyName: '',
-          email: '',
-          phoneNumber: '',
-          registrationNumber: '',
-          country: '',
-          address: '',
-          password: '',
-          confirmPassword: '',
-          fullName: '', // New field
-          jobTitle: '', // New field
-          contactEmail: '', // New field
-          contactPhoneNumber: '', // New field
-          linkedinProfile: '', // New field
-          companyVision: '', // New field
+          companyName: "",
+          email: "",
+          phoneNumber: "",
+          registrationNumber: "",
+          country: "",
+          address: "",
+          password: "",
+          confirmPassword: "",
+          fullName: "", // New field
+          jobTitle: "", // New field
+          contactEmail: "", // New field
+          contactPhoneNumber: "", // New field
+          linkedinProfile: "", // New field
+          companyVision: "", // New field
         }}
-        validate={values => {
+        validate={(values) => {
           const errors = {};
           // Existing validations...
           if (!values.companyName) {
-            errors.companyName = 'Company Name is required';
+            errors.companyName = "Company Name is required";
           }
           if (!values.email) {
-            errors.email = 'Email is required';
-          } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-            errors.email = 'Invalid email address';
+            errors.email = "Email is required";
+          } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          ) {
+            errors.email = "Invalid email address";
           }
           if (!values.phoneNumber) {
-            errors.phoneNumber = 'Phone number is required';
+            errors.phoneNumber = "Phone number is required";
           } else if (!/^\d{10}$/.test(values.phoneNumber)) {
-            errors.phoneNumber = 'Phone number must be 10 digits';
+            errors.phoneNumber = "Phone number must be 10 digits";
           }
           if (!values.registrationNumber) {
-            errors.registrationNumber = 'Registration Number is required';
+            errors.registrationNumber = "Registration Number is required";
           }
           if (!values.country) {
-            errors.country = 'Country is required';
+            errors.country = "Country is required";
           }
           if (!values.address) {
-            errors.address = 'Address is required';
+            errors.address = "Address is required";
           }
           if (!values.password) {
-            errors.password = 'Password is required';
+            errors.password = "Password is required";
           } else if (values.password.length < 6) {
-            errors.password = 'Password must be at least 6 characters';
+            errors.password = "Password must be at least 6 characters";
           }
           if (!values.confirmPassword) {
-            errors.confirmPassword = 'Please confirm your password';
+            errors.confirmPassword = "Please confirm your password";
           } else if (values.password !== values.confirmPassword) {
-            errors.confirmPassword = 'Passwords do not match';
+            errors.confirmPassword = "Passwords do not match";
           }
 
           // New validations for Primary Contact Details
           if (!values.fullName) {
-            errors.fullName = 'Full Name is required';
+            errors.fullName = "Full Name is required";
           }
           if (!values.jobTitle) {
-            errors.jobTitle = 'Job Title is required';
+            errors.jobTitle = "Job Title is required";
           }
           if (!values.contactEmail) {
-            errors.contactEmail = 'Contact Email is required';
-          } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.contactEmail)) {
-            errors.contactEmail = 'Invalid email address';
+            errors.contactEmail = "Contact Email is required";
+          } else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
+              values.contactEmail
+            )
+          ) {
+            errors.contactEmail = "Invalid email address";
           }
           if (!values.contactPhoneNumber) {
-            errors.contactPhoneNumber = 'Contact Phone Number is required';
+            errors.contactPhoneNumber = "Contact Phone Number is required";
           } else if (!/^\d{10}$/.test(values.contactPhoneNumber)) {
-            errors.contactPhoneNumber = 'Contact Phone Number must be 10 digits';
+            errors.contactPhoneNumber =
+              "Contact Phone Number must be 10 digits";
           }
           if (!values.companyVision) {
-            errors.companyVision = 'Company Vision is required';
+            errors.companyVision = "Company Vision is required";
           }
 
           return errors;
@@ -136,7 +143,9 @@ const BusinessRegistration = () => (
                 value={values.email}
                 className="input-field"
               />
-              {errors.email && touched.email && <div className="error">{errors.email}</div>}
+              {errors.email && touched.email && (
+                <div className="error">{errors.email}</div>
+              )}
             </div>
 
             <div>
@@ -200,7 +209,7 @@ const BusinessRegistration = () => (
             </div>
 
             {/* <div> */}
-              {/* <label className="label">Password *</label>
+            {/* <label className="label">Password *</label>
               <input
                 type="password"
                 name="password"
@@ -231,7 +240,7 @@ const BusinessRegistration = () => (
 
             {/* New Primary Contact Details Section */}
             <h3>Primary Contact Details</h3>
-            <br/>
+            <br />
 
             <div>
               <label className="label">Full Name *</label>
@@ -318,8 +327,7 @@ const BusinessRegistration = () => (
                 <div className="error">{errors.companyVision}</div>
               )}
             </div>
-           
-            
+
             {/* <h3>Account Information</h3>
 <p className="small-text">This information will be used to create your account.</p>
 
@@ -383,7 +391,11 @@ const BusinessRegistration = () => (
 
  */}
 
-            <button type="submit" disabled={isSubmitting} className="submit-button">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="submit-button"
+            >
               Register
             </button>
           </form>

@@ -1,15 +1,16 @@
-import React from 'react';
-import { Formik } from 'formik';
-import '../styles/Login.css'; 
+import React from "react";
+import { Formik } from "formik";
+import "../styles/Login.css";
 
-import logoImage from '../components/output-onlinepngtools.png'; // Adjust the path to your logo image
+// import logoImage from '../components/output-onlinepngtools.png'; // Adjust the path to your logo image
 
 const Login = () => (
   <div className="outer-container">
     <div className="logo-section">
-      <img src={logoImage} alt="Project Logo" className="logo" />
+      <img src={""} alt="Project Logo" className="logo" />
       <blockquote className="quote">
-        Your Gateway to Industrial Auctions<br />
+        Your Gateway to Industrial Auctions
+        <br />
         Bid, Win, and Grow with Confidence
       </blockquote>
     </div>
@@ -17,14 +18,17 @@ const Login = () => (
       <h1>Login</h1>
       <Formik
         initialValues={{
-          email: '',
-          password: '',
+          email: "",
+          password: "",
         }}
-        validate={values => {
+        validate={(values) => {
           const errors = {};
-          if (!values.email) errors.email = 'Email is required';
-          else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) errors.email = 'Invalid email address';
-          if (!values.password) errors.password = 'Password is required';
+          if (!values.email) errors.email = "Email is required";
+          else if (
+            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+          )
+            errors.email = "Invalid email address";
+          if (!values.password) errors.password = "Password is required";
           return errors;
         }}
         onSubmit={(values, { setSubmitting }) => {
@@ -54,7 +58,9 @@ const Login = () => (
                 value={values.email}
                 className="input-field"
               />
-              {errors.email && touched.email && <div className="error">{errors.email}</div>}
+              {errors.email && touched.email && (
+                <div className="error">{errors.email}</div>
+              )}
             </div>
 
             <div>
@@ -67,10 +73,16 @@ const Login = () => (
                 value={values.password}
                 className="input-field"
               />
-              {errors.password && touched.password && <div className="error">{errors.password}</div>}
+              {errors.password && touched.password && (
+                <div className="error">{errors.password}</div>
+              )}
             </div>
 
-            <button type="submit" disabled={isSubmitting} className="submit-button">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="submit-button"
+            >
               Login
             </button>
           </form>

@@ -12,13 +12,13 @@ import Home from "./Pages/HomePage/Home";
 // export default App;
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-
+import "../src/styles/css/main.min.css";
 import Registration from "./pages/Registration";
 import BusinessRegistration from "./pages/BusinessRegistration";
 import Login from "./pages/login";
 import UserProfile from "./pages/UserProfile";
-
+import NavBar from "./components/NavBar/NavBar";
+import Footer from "./components/Footer/Footer";
 export default function App() {
   return (
     <>
@@ -26,12 +26,13 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/register" element={<Registration />} />
-          <Route index path="/home" element={<Home />} />
+          <Route index path="/" element={<Home />} />
           <Route path="/business-register" element={<BusinessRegistration />} />
           <Route path="/login" element={<Login />} />
           <Route path="/userProfile" element={<UserProfile />} />
         </Routes>
       </BrowserRouter>
+      <Footer />
     </>
   );
 }
