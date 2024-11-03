@@ -19,7 +19,7 @@ function LatestAuctions() {
         {
             backgroundColor:"#F0F8FF",
             color:"#333333",
-            letterSpacing:5
+            letterSpacing:1
         }
       }
       >
@@ -44,7 +44,7 @@ function LatestAuctions() {
                 }}
             />
             <h4 className='pt-3' style={{color:"#003A70",textAlign:"center"}}>10 tons of stainless steel scrap</h4>
-            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center",letterSpacing:1}}>ends after</h6>
+            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center"}}>ends after</h6>
 
             
                 
@@ -66,18 +66,15 @@ function LatestAuctions() {
                         }}
                         />
        
-            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center",letterSpacing:1}}>Starting Bid : $500</h6>
+            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center"}}>Starting Bid : $500</h6>
 
-            <button className='bid-button mt-2 mb-3'
+            <button className='bid-button mt-2 mb-3 border-0 rounded-5 w-50 pb-2 pt-2'
                 style={
                     {
                         backgroundColor:'#B87333',
-                        border:'0',
-                        borderRadius:50,
                         color:'white',
                         textAlign:"center",
                         letterSpacing:3,
-                        width: '50%',
                     }
                 } 
             >
@@ -96,7 +93,7 @@ function LatestAuctions() {
                
            <div 
             className="d-flex shadow flex-column align-items-center"
-  
+
             >
             <Image 
                 src={scrapImage} fluid alt="Scrap"
@@ -106,7 +103,7 @@ function LatestAuctions() {
                 }}
             />
             <h4 className='pt-3' style={{color:"#003A70",textAlign:"center"}}>10 tons of stainless steel scrap</h4>
-            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center",letterSpacing:1}}>ends after</h6>
+            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center"}}>ends after</h6>
 
             
                 
@@ -128,18 +125,15 @@ function LatestAuctions() {
                         }}
                         />
        
-            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center",letterSpacing:1}}>Starting Bid : $500</h6>
+            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center"}}>Starting Bid : $500</h6>
 
-            <button className='bid-button mt-2 mb-3'
+            <button className='bid-button mt-2 mb-3 border-0 rounded-5 w-50 pb-2 pt-2'
                 style={
                     {
                         backgroundColor:'#B87333',
-                        border:'0',
-                        borderRadius:50,
                         color:'white',
                         textAlign:"center",
                         letterSpacing:3,
-                        width: '50%',
                     }
                 } 
             >
@@ -155,62 +149,59 @@ function LatestAuctions() {
                 {/*Card 3*/ }
                 <div className='col-12 col-sm-6 col-md-4 mb-4'>
                
-           <div 
-            className="d-flex shadow-lg flex-column align-items-center"
-
-            >
-            <Image 
-                src={scrapImage} fluid alt="Scrap"
-                style={{
-                    width: '100%',
-                    maxHeight: 200,
-                }}
-            />
-            <h4 className='pt-3' style={{color:"#003A70",textAlign:"center"}}>10 tons of stainless steel scrap</h4>
-            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center",letterSpacing:1}}>ends after</h6>
-
+               <div 
+                className="d-flex shadow flex-column align-items-center"
+    
+                >
+                <Image 
+                    src={scrapImage} fluid alt="Scrap"
+                    style={{
+                        width: '100%',
+                        maxHeight: 200,
+                    }}
+                />
+                <h4 className='pt-3' style={{color:"#003A70",textAlign:"center"}}>10 tons of stainless steel scrap</h4>
+                <h6 className='pt-3' style={{color:"#B87333",textAlign:"center"}}>ends after</h6>
+    
+                
+                    
+                    <FlipCountdown
+                            endAt={'2024-11-11 23:55:55'}
+                            size='small'
+                            titlePosition='top'
+                            hideYear
+                            hideMonth
+                            dayTitle='days'
+                            hourTitle='hours'
+                            minuteTitle='mnts'
+                            secondTitle='scnds'
+                            cardStyles={{
+                                backgroundColor: '#B87333', // Customize card background color
+                                borderRadius: '8px', // Rounded corners for the cards
+                                color: '#FFFFFF', // Text color inside the card
+                                padding: '10px', // Padding inside the cards
+                            }}
+                            />
+           
+                <h6 className='pt-3' style={{color:"#B87333",textAlign:"center"}}>Starting Bid : $500</h6>
+    
+                <button className='bid-button mt-2 mb-3 border-0 rounded-5 w-50 pb-2 pt-2'
+                    style={
+                        {
+                            backgroundColor:'#B87333',
+                            color:'white',
+                            textAlign:"center",
+                            letterSpacing:3,
+                        }
+                    } 
+                >
+                    <a >Bid Now</a>
+                </button>
             
                 
-                <FlipCountdown
-                        endAt={'2024-11-11 23:55:55'}
-                        size='small'
-                        titlePosition='top'
-                        hideYear
-                        hideMonth
-                        dayTitle='days'
-                        hourTitle='hours'
-                        minuteTitle='mnts'
-                        secondTitle='scnds'
-                        cardStyles={{
-                            backgroundColor: '#B87333', // Customize card background color
-                            borderRadius: '8px', // Rounded corners for the cards
-                            color: '#FFFFFF', // Text color inside the card
-                            padding: '10px', // Padding inside the cards
-                        }}
-                        />
-       
-            <h6 className='pt-3' style={{color:"#B87333",textAlign:"center",letterSpacing:1}}>Starting Bid : $500</h6>
-
-            <button className='bid-button mt-2 mb-3'
-                style={
-                    {
-                        backgroundColor:'#B87333',
-                        border:'0',
-                        borderRadius:50,
-                        color:'white',
-                        textAlign:"center",
-                        letterSpacing:3,
-                        width: '50%',
-                    }
-                } 
-            >
-                <a >Bid Now</a>
-            </button>
-        
-            
-           </div>
-
-                </div>
+               </div>
+    
+                    </div>
 
 
             </div>
@@ -221,19 +212,13 @@ function LatestAuctions() {
 
        
         <div >
-        <button className='bid-button mt-5 mb-5 opacity-70'
+        <button className='bid-button mt-5 mb-3 border-0 rounded-5 pb-2 pt-2'
                 style={
                     {
-                        width:250,
-                        height:40,
                         backgroundColor:'#B87333',
-                        border:'0',
-                        borderRadius:10,
                         color:'white',
-                        textAlign:"center",
                         letterSpacing:3,
-                        fontWeight:'normal',
-                        marginLeft:100
+                        width:250
                     }
                 } 
             >
