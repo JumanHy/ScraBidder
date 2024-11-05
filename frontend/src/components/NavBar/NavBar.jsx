@@ -1,58 +1,36 @@
-import { Container, Col, Button, Image, Stack } from "react-bootstrap";
+import { Container, Col, Button, Image } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import logo from "../../assets/images/ScraBidderLogo.png";
+import logo from "@/assets/images/ScraBidderLogo.png";
+import { LinkContainer } from "react-router-bootstrap";
 import "./style.css";
 function NavBar() {
   return (
     <Navbar expand="md" style={{ backgroundColor: "#FAFAFA" }}>
       <Container fluid>
-        <Col xs={12} md={2} className="">
-          <Navbar.Brand
-            href="#home"
-            className="d-flex align-items-center justify-content-center justify-content-md-start gap-1"
-          >
+        <Col xs={2} md={2} className="">
+          <Navbar.Brand className="d-flex align-items-center gap-1">
             <Image fluid src={logo} style={{ maxWidth: "50px" }} />
             <span style={{ color: "#003A70" }} className="fs-6 fw-bold">
               ScraBidder
             </span>
           </Navbar.Brand>
         </Col>
-        <Col xs={12} md={8} className="">
-          <Navbar.Toggle className="col-12" aria-controls="basic-navbar-nav" />
+        <Navbar.Toggle className="ms-auto" aria-controls="basic-navbar-nav" />
+        <Col xs={12} md={8}>
           <Navbar.Collapse
             className="justify-content-between"
             id="basic-navbar-nav"
           >
             <Nav className="m-start gap-md-3 text-center">
-              <Nav.Link
-                className="nav-link "
-                style={{ color: "#003A70" }}
-                href="./HomePage"
-              >
-                Home
-              </Nav.Link>
-              <Nav.Link
-                className="nav-link "
-                style={{ color: "#003A70" }}
-                href="#link"
-              >
-                Auctions
-              </Nav.Link>
-              <Nav.Link
-                className="nav-link"
-                style={{ color: "#003A70" }}
-                href="#link"
-              >
+              <Nav.Link className="nav-link text-primary">Home</Nav.Link>
+              <LinkContainer to="/results">
+                <Nav.Link className="nav-link text-primary">Auctions</Nav.Link>
+              </LinkContainer>
+              <Nav.Link className="nav-link text-primary">
                 Help & Support
               </Nav.Link>
-              <Nav.Link
-                className="nav-link"
-                style={{ color: "#003A70" }}
-                href=".AboutUs/"
-              >
-                About Us
-              </Nav.Link>
+              <Nav.Link className="nav-link text-primary">About Us</Nav.Link>
             </Nav>
             <div>
               <Button
