@@ -1,0 +1,121 @@
+/* Login.css */
+
+.outer-container {
+  display: flex;
+  align-items: center; /* Center items vertically */
+  justify-content: center; /* Center items horizontally */
+  height: 100vh; /* Full height of the viewport */
+  padding: 20px;
+  background-color: #F0F4F8; /* Light background for contrast */
+}
+
+.split-container {
+  display: flex; /* Use flex to create two columns */
+  width: 100%; /* Full width for the container */
+  max-width: 600px; /* Reduced max width for the container */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Shadow for the whole container */
+  overflow: hidden; /* Ensure no overflow */
+}
+
+.logo-section {
+  flex: 1; /* Take up half of the width */
+  background-color: #003A70; /* Dark blue background */
+  color: white; /* Text color */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
+  padding: 20px; /* Padding inside logo section */
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3); /* Shadow effect inside */
+}
+
+.logo {
+  max-width: 80%; /* Ensure it does not exceed 80% of the container width */
+  height: auto; /* Maintain aspect ratio */
+  width: 450px; /* Fixed width for larger logo size */
+  margin: 0 auto 20px auto; /* Center the logo and add space below */
+}
+
+.quote {
+  font-size: 1.2rem; /* Increase font size for the quote */
+  text-align: center; /* Center the quote text */
+  margin-top: 20px; /* Space above the quote */
+  font-style: italic; /* Make the quote italic */
+}
+
+.login-section {
+  flex: 1; /* Take up half of the width */
+  background-color: #ffffff; /* White background for login section */
+  padding: 20px; /* Reduced padding inside login section */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Shadow effect */
+}
+
+
+
+
+h1 {
+  text-align: center;
+  color: #003A70; /* Dark color for the heading */
+  font-size: 1.8rem; /* Font size for the heading */
+  margin-bottom: 20px; /* Space below the heading */
+}
+
+.form-group {
+  display: flex; /* Use flexbox to align items */
+  flex-direction: column; /* Stack label and input vertically */
+  align-items: flex-start; /* Align items to the left */
+  width: 100%; /* Full width for form group */
+  margin-bottom: 10px; /* Reduced space between form groups */
+}
+
+.label {
+  font-size: 0.8rem; /* Smaller font size for labels */
+  color: #7c7e81; /* Muted color for labels */
+  margin-bottom: 2px; /* Reduced space below the label */
+}
+
+.input-field {
+  width: 100%; /* Full width for input fields */
+  padding: 4px; /* Padding inside input fields */
+  border: 1px solid #CED4DA; /* Border for input fields */
+  border-radius: 5px; /* Rounded corners for input fields */
+  font-size: 1rem; /* Font size for input fields */
+}
+
+.submit-button {
+  width: 100%; /* Full width for the submit button */
+  padding: 10px; /* Padding inside button */
+  background-color: #003A70; /* Button color */
+  color: white; /* Text color */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners for button */
+  font-size: 1rem; /* Font size for button */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth background color change */
+}
+
+.submit-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.submit-button:disabled {
+  background-color: #6c757d; /* Disabled button color */
+}
+
+.error {
+  color: red; /* Error message color */
+  font-size: 0.8rem; /* Font size for error messages */
+}
+
+.forgot-password {
+  font-size: 0.8rem; /* Smaller font size for forgot password */
+  color: #7c7e81; /* Muted color for forgot password */
+  margin-top: 20px; /* Reduced space above forgot password text */
+}
+
+.login-footer {
+  font-size: 0.8rem; /* Smaller font size for footer text */
+  color: #7c7e81; /* Muted color for footer text */
+  margin-top: 3px; /* Reduced space above footer text */
+}
