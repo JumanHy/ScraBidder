@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/css/main.min.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import AuctionForm from "./Pages/AuctionFormPage/AuctionFormPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/auction" element={<AuctionDetailsPage />} />
             <Route path="/results" element={<ResultsPage />} />
+            <Route path="/auction-form" element={<AuctionForm />} />
           </Routes>
         </Container>
       </Router>
