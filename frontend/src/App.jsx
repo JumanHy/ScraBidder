@@ -8,11 +8,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/css/main.min.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+
 function App() {
   return (
     <>
       <Router>
-        <NavBar />{" "}
+        <NavBar />
         <Container fluid className="mt-3">
           <Routes>
             <Route path="/auction" element={<AuctionDetailsPage />} />
