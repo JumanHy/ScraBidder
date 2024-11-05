@@ -58,6 +58,9 @@ function NavBar() {
               <Button
                 style={{ backgroundColor: "#B87333" }}
                 className="border-0 login-btn w-100"
+                onClick={()=>{
+                  window.location="/multiStepForm"
+                }}
               >
                 Login\Register
               </Button>

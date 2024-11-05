@@ -1,0 +1,125 @@
+/* MultiStepForm.css */
+body {
+    background-color: #f8f9fa; /* Light background for better contrast */
+}
+
+.form-container {
+    background-color: #ffffff; /* Change to white for a brighter appearance */
+    border-radius: 10px;
+    padding: 30px; /* Increased padding for better spacing */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+    width: 100%;
+    max-width: 600px; /* Set a max-width for better responsiveness */
+}
+
+.logo-container {
+    text-align: left;
+    margin-bottom: 5px; /* Space below logo */
+}
+
+.logo {
+    max-width: 100px; /* Set the desired width for the logo */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.header {
+    margin-bottom: 20px; /* Space between header and form */
+}
+
+h2 {
+    color: #003A70; /* Darker color for headings */
+    font-size: 1.3rem; /* Reduced font size for h2 */
+}
+
+h4 {
+    color: #495057; /* Slightly lighter heading color */
+    font-size: 1rem; /* Reduced font size for h4 */
+}
+
+.form-group {
+    margin-bottom: 15px; /* Spacing between form groups */
+}
+
+label {
+    font-size: 0.75rem; /* Smaller font size for labels */
+    color: #6c757d; /* Muted color for labels */
+}
+
+/* Style for input fields */
+input[type="text"], input[type="email"], input[type="password"], textarea {
+    background-color: white; /* White background for text fields */
+    border: 1px solid #e0e0e0; /* Light border for a softer look */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px; /* Padding for better spacing */
+    width: 100%; /* Full width of the container */
+    font-size: 0.875rem; /* Font size for input fields */
+    color: #495057; /* Darker text color */
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus {
+    border-color: #003A70; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+}
+
+.btn {
+    margin-top: 20px; /* Space above buttons */
+    font-size: 0.8rem; /* Reduced font size for buttons */
+    float: right; /* Align buttons to the right */
+}
+
+.btn-primary {
+    background-color: #003A70; /* Primary button color */
+    border-color: #003A70;
+    color: white; /* Ensure button text is white */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Slightly lighter color on hover */
+    border-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #003A70; /* Secondary button color */
+    border-color: #003A70;
+    color: white; /* Ensure button text is white */
+    margin-left: 10px; /* Space between buttons */
+}
+
+.btn-secondary:hover {
+    background-color: #0056b3; /* Slightly lighter color on hover */
+    border-color: #0056b3;
+}
+
+.alert {
+    margin-top: 15px; /* Space above alerts */
+    font-size: 0.9rem; /* Reduced font size for alerts */
+}
+
+.login-text {
+    font-size: 0.9rem; /* Adjusted font size for login text */
+    color: #6c757d; /* Muted color for the text */
+    margin-top: 10px; /* Space above the text */
+}
+
+@media (max-width: 576px) {
+    .form-container {
+        padding: 20px; /* Reduced padding on smaller screens */
+    }
+
+    h2 {
+        font-size: 1.2rem; /* Further reduced heading size for small screens */
+    }
+
+    h4 {
+        font-size: 0.9rem; /* Further reduced subheading size */
+    }
+
+    .logo {
+        max-width: 120px; /* Adjust logo size for smaller screens */
+    }
+}
+.login-link {
+    margin-top: 5px; /* Add space above the login link */
+    color: #495057; /* Optional: Change color to match your theme */
+  }
+  

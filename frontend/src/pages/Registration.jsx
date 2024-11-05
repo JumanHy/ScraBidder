@@ -15,10 +15,9 @@ const Registration = () => (
       </Col>
       <Col xs={6} md={4} className="">
         <Row className="justify-content-end">
-          <div style={{ width: "fit-content" }}>
-            <span className="text-muted">Already a member?</span>{" "}
-            <span className="text-primary fw-bold">Login</span>
-          </div>
+        <div className="login-link">
+                            Already a member? <a href="/login">Log in</a>
+                        </div>
         </Row>
       </Col>
     </Row>

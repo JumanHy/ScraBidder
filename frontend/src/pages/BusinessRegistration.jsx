@@ -2,14 +2,13 @@ import React from "react";
 import { Formik } from "formik";
 import "../styles/BusinessRegistration.css";
 
-// Import the logo image
-// import logoImage from '../components/output-onlinepngtools.png';
+ import logoImage from '../assets/images/ScraBidderLogo.png';
 
 const BusinessRegistration = () => (
   <div className="outer-container">
     <div className="form-container">
       <header className="header">
-        <img src={""} alt="Project Logo" className="logo" />
+        <img src={logoImage} alt="Project Logo" className="logo" />
         <div className="login-link">
           Already a member? <a href="/login">Log in</a>
         </div>
