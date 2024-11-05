@@ -20,18 +20,15 @@ import Footer from "./components/Footer/Footer";
 
 // export default App;
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "../src/styles/css/main.min.css";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import Registration from "./pages/Registration";
 import Login from "./pages/login";
-import NavBar from "./components/NavBar/NavBar";
-import Footer from "./components/Footer/Footer";
+
 import MultiStepForm from "./pages/Multistepform";
 import ResetPasswordRequest from "./pages/ResetPasswordRequestForm";
 import ResetPassword from "./pages/ResetPassword";
 
-import Sidebar from "./pages/Sidebar";
 import AcountNavbar from "./pages/AcountNavbar";
 export default function App() {
   return (
@@ -42,8 +39,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/auction" element={<AuctionDetailsPage />} />
           <Route path="/results" element={<ResultsPage />} />
-            <Route path="/register" element={<Registration />} />
-            <Route path="/multiStepForm" element={<MultiStepForm />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Registration />} />
+          <Route path="/multiStepForm" element={<MultiStepForm />} />
           <Route path="/reset-Password" element={<ResetPasswordRequest />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/acountnavbar" element={<AcountNavbar />} />
@@ -51,8 +49,6 @@ export default function App() {
         <Footer />;
       </Router>
       {/* <NavBar /> */}
-     
-      
 
       {/* <div>
       <CustomNavbar />

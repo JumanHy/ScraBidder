@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik } from "formik";
-import "../styles/Registration.css";
+
 import logoImage from "../assets/images/ScraBidderLogo.png";
 import { Container, Image, Row, Col, Form, Button } from "react-bootstrap";
 
@@ -15,9 +15,9 @@ const Registration = () => (
       </Col>
       <Col xs={6} md={4} className="">
         <Row className="justify-content-end">
-        <div className="login-link">
-                            Already a member? <a href="/login">Log in</a>
-                        </div>
+          <div className="login-link">
+            Already a member? <a href="/login">Log in</a>
+          </div>
         </Row>
       </Col>
     </Row>

@@ -6,7 +6,7 @@
   justify-content: center; /* Center items horizontally */
   height: 100vh; /* Full height of the viewport */
   padding: 20px;
-  background-color: #F0F4F8; /* Light background for contrast */
+  background-color: #f0f4f8; /* Light background for contrast */
 }
 
 .split-container {
@@ -20,7 +20,7 @@
 
 .logo-section {
   flex: 1; /* Take up half of the width */
-  background-color: #003A70; /* Dark blue background */
+  background-color: #003a70; /* Dark blue background */
   color: white; /* Text color */
   display: flex;
   flex-direction: column; /* Stack items vertically */
@@ -51,12 +51,9 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Shadow effect */
 }
 
-
-
-
 h1 {
   text-align: center;
-  color: #003A70; /* Dark color for the heading */
+  color: #003a70; /* Dark color for the heading */
   font-size: 1.8rem; /* Font size for the heading */
   margin-bottom: 20px; /* Space below the heading */
 }
@@ -78,7 +75,7 @@ h1 {
 .input-field {
   width: 100%; /* Full width for input fields */
   padding: 4px; /* Padding inside input fields */
-  border: 1px solid #CED4DA; /* Border for input fields */
+  border: 1px solid #ced4da; /* Border for input fields */
   border-radius: 5px; /* Rounded corners for input fields */
   font-size: 1rem; /* Font size for input fields */
 }
@@ -86,7 +83,7 @@ h1 {
 .submit-button {
   width: 100%; /* Full width for the submit button */
   padding: 10px; /* Padding inside button */
-  background-color: #003A70; /* Button color */
+  background-color: #003a70; /* Button color */
   color: white; /* Text color */
   border: none; /* No border */
   border-radius: 5px; /* Rounded corners for button */

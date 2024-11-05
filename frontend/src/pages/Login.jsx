@@ -1,7 +1,7 @@
 import React from "react";
 import { Formik } from "formik";
 import "../styles/Login.css";
-import logoImage from '../assets/images/ScraBidderLogo.png';
+import logoImage from "../assets/images/ScraBidderLogo.png";
 
 const Login = () => (
   <div className="outer-container">
@@ -92,8 +92,8 @@ const Login = () => (
                   Forgot password? <a href="/reset-password">Reset it</a>
                 </p>
                 <p className="login-footer">
-                  Don't have an account? 
-                  <a href="/register">individual</a> or 
+                  Don't have an account?
+                  <a href="/register">individual</a> or
                   <a href="/multiStepForm">business</a>
                 </p>
               </div>
