@@ -23,7 +23,10 @@ function NavBar() {
             id="basic-navbar-nav"
           >
             <Nav className="m-start gap-md-3 text-center">
-              <Nav.Link className="nav-link text-primary">Home</Nav.Link>
+              <LinkContainer to="/">
+                <Nav.Link className="nav-link text-primary">Home</Nav.Link>
+              </LinkContainer>
+
               <LinkContainer to="/results">
                 <Nav.Link className="nav-link text-primary">Auctions</Nav.Link>
               </LinkContainer>
