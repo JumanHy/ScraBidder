@@ -12,20 +12,30 @@ import {
 import BidHistoryModal from "./BiddingHistoryModal";
 import Timer from "./Timer";
 import LoginModal from "./LoginModal";
+import PaymentModal from "@/components/PaymentModal/PaymentModal";
 import Swal from "sweetalert2";
 import WatchButton from "./WatchButton";
 
 export default function BiddingInfo() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [isDepositAuthorized, setIsDepositAuthorized] = useState(false);
   const startingPrice = 500;
   const [highestBid, setHighestBid] = useState(startingPrice);
   const [bidAmount, setBidAmount] = useState("");
   const [error, setError] = useState("");
 
+  const depositAmount = 50; // amount to hold for bidding authorization
+
   const handleBidNowClick = () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
+      return;
+    }
+
+    if (!isDepositAuthorized) {
+      setShowPaymentModal(true);
       return;
     }
 
@@ -49,6 +59,17 @@ export default function BiddingInfo() {
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
     setShowLoginModal(false);
+    setShowPaymentModal(true); // Show payment modal after login
+  };
+
+  const handlePaymentSuccess = () => {
+    setIsDepositAuthorized(true); // Enable bidding after deposit authorization
+    setShowPaymentModal(false);
+    Swal.fire({
+      title: "Deposit Authorized",
+      text: `A hold of ${depositAmount} JD has been placed on your account.`,
+      icon: "success",
+    });
   };
 
   useEffect(() => {
@@ -103,19 +124,20 @@ export default function BiddingInfo() {
                 <Form.Control
                   type="number"
                   placeholder={`Bid Amount (min ${highestBid + 1})`}
-                  min={highestBid} // Set the minimum value for the input
+                  min={highestBid + 1} // Set the minimum bid value
                   value={bidAmount}
-                  step={1} // Allow steps of 1 (whole numbers only)
+                  step={1} // Whole numbers only
                   onChange={(e) => {
-                    // Remove decimal places
                     const inputValue = e.target.value;
-                    // Only set the bidAmount if it is a whole number
                     if (/^\d*$/.test(inputValue)) {
                       setBidAmount(inputValue);
                       setError("");
                     }
                   }}
                   isInvalid={!!error}
+                  className={
+                    !isLoggedIn || !isDepositAuthorized ? "d-none" : ""
+                  }
                 />
                 <Form.Control.Feedback type="invalid">
                   {error}
@@ -138,6 +160,14 @@ export default function BiddingInfo() {
         show={showLoginModal}
         onHide={() => setShowLoginModal(false)}
         onLoginSuccess={handleLoginSuccess}
+      />
+
+      {/* Payment Modal */}
+      <PaymentModal
+        show={showPaymentModal}
+        handleClose={() => setShowPaymentModal(false)}
+        amount={depositAmount}
+        onPaymentSuccess={handlePaymentSuccess}
       />
     </Card>
   );
