@@ -1,11 +1,14 @@
-import { Container, Col, Button, Image } from "react-bootstrap";
+import { Container, Col, Button, Image,Badge } from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "@/assets/images/ScraBidderLogo.png";
 import { LinkContainer } from "react-router-bootstrap";
 import "./style.css";
-function NavBar() {
-  return (
+import { FaBell } from "react-icons/fa";
+import userImage from "@/assets/images/UserImage.png"
+import { useState } from "react"
+function NavBar() { const [isLogedin ,setIsLogedin]=useState(true);
+  return ( 
     <Navbar expand="md" style={{ backgroundColor: "#FAFAFA" }}>
       <Container fluid>
         <Col xs={2} md={2} className="">
@@ -35,7 +38,8 @@ function NavBar() {
               </Nav.Link>
               <Nav.Link className="nav-link text-primary">About Us</Nav.Link>
             </Nav>
-            <div>
+        
+            <div>{ !isLogedin ?
               <Button
                 style={{ backgroundColor: "#B87333" }}
                 className="border-0 login-btn w-100"
@@ -45,6 +49,28 @@ function NavBar() {
               >
                 Login\Register
               </Button>
+              : <div className="d-flex align-items-center gap-2">
+              {/* Logout Button */}
+              <Nav.Link href="/logout" className="logout-link ms-2">
+                Logout
+              </Nav.Link>
+  
+              {/* Notification Icon */}
+              <Nav.Link href="/notifications" className="position-relative">
+                <FaBell size={20} />
+                <Badge bg="danger" pill className="position-absolute top-0 start-100 translate-middle p-1">
+                  5
+                </Badge>
+              </Nav.Link>
+  
+              
+              <Nav.Link href="/profile">
+                <Image src={userImage} roundedCircle width={30} height={30} alt="User" />
+              </Nav.Link>
+            </div>
+
+
+              }
             </div>
           </Navbar.Collapse>
         </Col>
