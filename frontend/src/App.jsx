@@ -9,22 +9,19 @@ import NavBar from "./components/NavBar/NavBar";
 import AuctionDetailsPage from "./pages/AuctionDetailsPage/AuctionDetailsPage";
 import ResultsPage from "./pages/ResultsPage/ResultsPage";
 import Home from "./Pages/HomePage/Home";
-
-import "./styles/css/main.min.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Footer from "./components/Footer/Footer";
-
-import "bootstrap/dist/css/bootstrap.min.css";
-
 import Login from "./Pages/Login.jsx";
-
 import BusinessRegistration from "./Pages/BusinessRegistration.jsx";
 import ResetPasswordRequest from "./pages/ResetPasswordRequestForm";
 import ResetPassword from "./pages/ResetPassword";
 import UserProfile from "./pages/UserProfile";
 import BusinessAccount from "./Pages/BusinessAccount/BusinessAccount.jsx";
 import IndividualRegistration from "./Pages/IndividualRegistration.jsx";
+import AuctionForm from "./Pages/AuctionFormPage/AuctionFormPage";
+import Footer from "./components/Footer/Footer";
+import "./styles/css/main.min.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function App() {
   return (
@@ -45,6 +42,7 @@ export default function App() {
           <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/user-account" element={<UserProfile />} />
           <Route path="/business-account" element={<BusinessAccount />} />
+          <Route path="/auction-form" element={<AuctionForm />} />
         </Routes>
         <ConditionalFooter />
       </Router>
