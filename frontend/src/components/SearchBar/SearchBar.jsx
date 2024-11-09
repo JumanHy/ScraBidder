@@ -3,7 +3,7 @@ import { InputGroup, FormControl, Button } from "react-bootstrap";
 function SearchBar() {
   return (
     <InputGroup
-      className="shadow-lg rounded-pill p-1 border border-primary"
+      className="shadow-lg rounded-pill p-1 bg-white border border-primary"
       style={{
         maxWidth: "500px",
       }}

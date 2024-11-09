@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import BAcountSidebar from '../../components/BAcountSidebar/BAcountSidebar';
-import WatchList from '../../components/WatchList/WatchList';
-import TransactionHistory from '../../components/TransactionHistory/TransactionHistory';
-import PaymentMethods from '../../components/PaymentMethods/PaymentMethods';
-import MyAuctions from '../../components/MyAuctions/MyAuctions';
+import React, { useState, useEffect } from "react";
+import BAcountSidebar from "../../components/BAcountSidebar/BAcountSidebar";
+import WatchList from "../../components/WatchList/WatchList";
+import TransactionHistory from "../../components/TransactionHistory/TransactionHistory";
+import PaymentMethods from "../../components/PaymentMethods/PaymentMethods";
+// import MyAuctions from '../../components/MyAuctions/MyAuctions';
 
 function BusinessProfile() {
   const [activeSection, setActiveSection] = useState("dashboard"); // Default to 'dashboard' section
@@ -52,16 +52,34 @@ function BusinessProfile() {
           <div>
             <h2>Dashboard</h2>
             <p>Welcome to your business dashboard!</p>
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <div style={{ padding: '20px', backgroundColor: '#f0f0f0', borderRadius: '8px' }}>
+            <div style={{ display: "flex", gap: "20px" }}>
+              <div
+                style={{
+                  padding: "20px",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "8px",
+                }}
+              >
                 <h4>Total Watchlist Items</h4>
                 <p>12 items</p>
               </div>
-              <div style={{ padding: '20px', backgroundColor: '#f0f0f0', borderRadius: '8px' }}>
+              <div
+                style={{
+                  padding: "20px",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "8px",
+                }}
+              >
                 <h4>Total Transactions</h4>
                 <p>35 transactions</p>
               </div>
-              <div style={{ padding: '20px', backgroundColor: '#f0f0f0', borderRadius: '8px' }}>
+              <div
+                style={{
+                  padding: "20px",
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "8px",
+                }}
+              >
                 <h4>Current Balance</h4>
                 <p>$540.00</p>
               </div>
@@ -75,7 +93,11 @@ function BusinessProfile() {
           <div>
             <h2>My Auctions</h2>
             {/* Make sure to pass the auctions data */}
-            {loading ? <p>Loading auctions...</p> : <MyAuctions auctions={auctions} />}
+            {loading ? (
+              <p>Loading auctions...</p>
+            ) : (
+              <MyAuctions auctions={auctions} />
+            )}
           </div>
         );
       case "transactions":
@@ -105,12 +127,12 @@ function BusinessProfile() {
 
   return (
     <div>
-      <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <div style={{ display: "flex", minHeight: "100vh" }}>
         {/* Sidebar */}
         <BAcountSidebar setActiveSection={setActiveSection} />
 
         {/* Main Content Area */}
-        <div style={{ flex: 1, padding: '20px' }}>
+        <div style={{ flex: 1, padding: "20px" }}>
           {renderContent()} {/* Render content based on active section */}
         </div>
       </div>
