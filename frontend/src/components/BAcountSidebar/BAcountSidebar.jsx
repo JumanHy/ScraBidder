@@ -76,10 +76,10 @@ const BAcountSidebar = ({ setActiveSection }) => {
             {/* Add "My Auction" Nav Item with FaGavel icon here */}
             <Nav.Item style={{ marginBottom: "10px" }}>
               <div
-                style={linkStyle(hoveredItem === "my-auction")}
-                onMouseEnter={() => setHoveredItem("my-auction")}
+                style={linkStyle(hoveredItem === "MyAuction")}
+                onMouseEnter={() => setHoveredItem("MyAuction")}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={() => setActiveSection("my-auction")}
+                onClick={() => setActiveSection("MyAuction")}
               >
                 <FaGavel /> My Auction
               </div>
@@ -103,7 +103,7 @@ const BAcountSidebar = ({ setActiveSection }) => {
                 onMouseLeave={() => setHoveredItem(null)}
                 onClick={() => setActiveSection("settings")}
               >
-                <FaCog /> Settings
+                <FaCog /> Settings  
               </div>
             </Nav.Item>
           </Nav>
@@ -155,10 +155,10 @@ const BAcountSidebar = ({ setActiveSection }) => {
           {/* Add "My Auction" Nav Item with FaGavel icon here */}
           <Nav.Item style={{ marginBottom: "10px" }}>
             <div
-              style={linkStyle(hoveredItem === "my-auction")}
-              onMouseEnter={() => setHoveredItem("my-auction")}
+              style={linkStyle(hoveredItem === "MyAuctions")}
+              onMouseEnter={() => setHoveredItem("MyAuctions")}
               onMouseLeave={() => setHoveredItem(null)}
-              onClick={() => setActiveSection("my-auction")}
+              onClick={() => setActiveSection("MyAuctions")}
             >
               <FaGavel /> My Auction
             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Nav } from 'react-bootstrap';
-import { FaUser, FaEye, FaHistory, FaCreditCard, FaCog } from 'react-icons/fa';
+import {  FaEye, FaHistory, FaCreditCard, FaCog } from 'react-icons/fa';
 
 const AccountSidebar = ({ setActiveSection }) => {
   const [hoveredItem, setHoveredItem] = useState(null);

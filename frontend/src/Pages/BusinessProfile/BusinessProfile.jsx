@@ -3,7 +3,8 @@ import BAcountSidebar from '../../components/BAcountSidebar/BAcountSidebar';
 import WatchList from '../../components/WatchList/WatchList';
 import TransactionHistory from '../../components/TransactionHistory/TransactionHistory';
 import PaymentMethods from '../../components/PaymentMethods/PaymentMethods';
-import MyAuctions from '../../components/MyAuctions/MyAuctions';
+import Myauctions from '../../components/Myauctions/Myauctions';
+import UserDetails from '../../components/UserDetails/UserDetails';
 
 function BusinessProfile() {
   const [activeSection, setActiveSection] = useState("dashboard"); // Default to 'dashboard' section
@@ -73,9 +74,8 @@ function BusinessProfile() {
       case "MyAuctions":
         return (
           <div>
-            <h2>My Auctions</h2>
-            {/* Make sure to pass the auctions data */}
-            {loading ? <p>Loading auctions...</p> : <MyAuctions auctions={auctions} />}
+                 <h2>My Auctions</h2>
+            <Myauctions/>
           </div>
         );
       case "transactions":
@@ -95,7 +95,7 @@ function BusinessProfile() {
       case "settings":
         return (
           <div>
-            <h2>Settings</h2>
+          <UserDetails /> 
           </div>
         );
       default:

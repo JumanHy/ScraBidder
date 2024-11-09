@@ -21,7 +21,8 @@ import ResetPasswordRequest from "./pages/ResetPasswordRequestForm";
 import ResetPassword from "./pages/ResetPassword";
 import UserProfile from "./pages/UserProfile";
 import BusinessProfile from "./pages/BusinessProfile/BusinessProfile";
-
+import New from"./pages/New";
+import Companyprofile from "./pages/Companyprofile/Companyprofile"
 export default function App() {
   return (
     <>
@@ -38,6 +39,8 @@ export default function App() {
           <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/bprofile" element={<BusinessProfile />} />
+          <Route path="/cprofile" element={<Companyprofile />} />
+          <Route path="/new" element={<New />}/>
         </Routes>
         
         {/* <Footer />; */}
