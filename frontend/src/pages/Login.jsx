@@ -1,21 +1,35 @@
 import React from "react";
-import { Formik } from "formik";
-import "../styles/Login.css";
+import { LinkContainer } from "react-router-bootstrap";
 import logoImage from "../assets/images/ScraBidderLogo.png";
+import { Container, Col, Row, Image, Button } from "react-bootstrap";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 const Login = () => (
-  <div className="outer-container">
-    <div className="split-container">
-      <div className="logo-section">
-        <img src={logoImage} alt="Project Logo" className="logo" />
-        <blockquote className="quote">
+  <Container style={{ height: "100vh" }} className="my-2 shadow rounded-3">
+    <Row className="h-100">
+      <Col
+        xs={12}
+        sm={6}
+        className="shadow-inner h-100 rounded-start-3 p-3 gap-3 d-flex flex-column align-items-center justify-content-center bg-primary text-white"
+      >
+        <Image
+          src={logoImage}
+          alt="Logo"
+          className=""
+          style={{ width: "150px" }}
+        />
+        <blockquote className="fs-5 fst-italic text-center">
           Your Gateway to Industrial Auctions
           <br />
           Bid, Win, and Grow with Confidence
         </blockquote>
-      </div>
-      <div className="login-section">
-        <h1>Login</h1>
+      </Col>
+      <Col
+        xs={12}
+        sm={6}
+        className="p-5 h-100 d-flex flex-column justify-content-center"
+      >
+        <h2 className="text-center text-primary">Login</h2>
         <Formik
           initialValues={{
             email: "",
@@ -38,71 +52,79 @@ const Login = () => (
             }, 400);
           }}
         >
-          {({
-            values,
-            errors,
-            touched,
-            handleChange,
-            handleBlur,
-            handleSubmit,
-            isSubmitting,
-          }) => (
-            <form onSubmit={handleSubmit} className="login-form">
-              <div className="form-group">
-                <label className="label">Email *</label>
-                <input
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.email}
-                  className="input-field"
-                />
-                {errors.email && touched.email && (
-                  <div className="error">{errors.email}</div>
-                )}
-              </div>
-
-              <div className="form-group">
-                <label className="label">Password *</label>
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                  className="input-field"
-                />
-                {errors.password && touched.password && (
-                  <div className="error">{errors.password}</div>
-                )}
-              </div>
-
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="submit-button"
-              >
-                Login
-              </button>
-
-              {/* Footer links */}
-              <div className="footer-text">
-                <p className="forgot-password">
-                  Forgot password? <a href="/reset-password">Reset it</a>
-                </p>
-                <p className="login-footer">
-                  Don't have an account?
-                  <a href="/register">individual</a> or
-                  <a href="/multiStepForm">business</a>
-                </p>
-              </div>
-            </form>
+          {({ isSubmitting }) => (
+            <Form className="container-fluid p-0">
+              <Row className="gap-2">
+                <Col xs={12} className="d-flex flex-column">
+                  <label className="text-muted">Email *</label>
+                  <Field
+                    type="email"
+                    name="email"
+                    className=" rounded focus-ring p-2 border border-1"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    className="text-danger"
+                  />
+                </Col>
+                <Col xs={12} className="d-flex flex-column">
+                  <label className="text-muted">Password *</label>
+                  <Field
+                    type="password"
+                    name="password"
+                    className="p-2 focus-ring rounded border border-1"
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="text-danger"
+                  />
+                </Col>
+                <Col xs={12}>
+                  <Button
+                    variant="primary w-100 rounded p-2"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    Login
+                  </Button>
+                </Col>
+                {/* Footer links */}
+                <Col
+                  xs={12}
+                  className="d-flex flex-column align-items-center gap-2 justify-content-center text-muted"
+                >
+                  <p className="m-0 d-flex align-items-center">
+                    Forgot password?{" "}
+                    <LinkContainer to="/reset-password">
+                      <Button variant="link" className="p-1">
+                        Reset it
+                      </Button>
+                    </LinkContainer>
+                  </p>
+                  <p className="m-0 d-flex align-items-center">
+                    Don't have an account?{" "}
+                    <LinkContainer to="/individual-register">
+                      <Button variant="link" className="p-1">
+                        individual
+                      </Button>
+                    </LinkContainer>
+                    <span className="">Or</span>
+                    <LinkContainer to="/business-register">
+                      <Button variant="link" className="p-1">
+                        business
+                      </Button>
+                    </LinkContainer>
+                  </p>
+                </Col>
+              </Row>
+            </Form>
           )}
         </Formik>
-      </div>
-    </div>
-  </div>
+      </Col>
+    </Row>
+  </Container>
 );
 
 export default Login;

@@ -1,10 +1,10 @@
 import React from "react";
 import { Formik } from "formik";
-
+import { LinkContainer } from "react-router-bootstrap";
 import logoImage from "../assets/images/ScraBidderLogo.png";
 import { Container, Image, Row, Col, Form, Button } from "react-bootstrap";
 
-const Registration = () => (
+const IndividualRegistration = () => (
   <Container
     className="my-4 p-3 rounded-2 shadow"
     style={{ maxWidth: "700px" }}
@@ -14,9 +14,14 @@ const Registration = () => (
         <Image style={{ maxWidth: "50px" }} src={logoImage} className="w-100" />
       </Col>
       <Col xs={6} md={4} className="">
-        <Row className="justify-content-end">
-          <div className="login-link">
-            Already a member? <a href="/login">Log in</a>
+        <Row className="justify-content-end ">
+          <div className="d-flex align-items-center">
+            Already a member?{" "}
+            <LinkContainer to="/login">
+              <Button variant="link" className="p-1">
+                Login
+              </Button>
+            </LinkContainer>
           </div>
         </Row>
       </Col>
@@ -212,4 +217,4 @@ const Registration = () => (
   </Container>
 );
 
-export default Registration;
+export default IndividualRegistration;

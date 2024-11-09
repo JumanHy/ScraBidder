@@ -1,407 +1,578 @@
-import React from "react";
+import React, { useState } from "react";
+import {
+  Button,
+  Container,
+  Row,
+  Col,
+  Form,
+  Alert,
+  Image,
+} from "react-bootstrap";
 import { Formik } from "formik";
-import "../styles/BusinessRegistration.css";
+import * as Yup from "yup";
+import { LinkContainer } from "react-router-bootstrap";
+import logoImage from "../assets/images/ScraBidderLogo.png";
 
- import logoImage from '../assets/images/ScraBidderLogo.png';
+// Validation schema for Formik
+const validationSchemaStep1 = Yup.object().shape({
+  companyName: Yup.string().required("Required"),
+  category: Yup.string().required("Required"),
+  country: Yup.string().required("Required"),
+  address: Yup.string().required("Required"),
+  companyNumber: Yup.string().required("Required"),
+  companyEmail: Yup.string().email("Invalid email").required("Required"),
+  companyRegNumber: Yup.string().required("Required"),
+});
 
-const BusinessRegistration = () => (
-  <div className="outer-container">
-    <div className="form-container">
-      <header className="header">
-        <img src={logoImage} alt="Project Logo" className="logo" />
-        <div className="login-link">
-          Already a member? <a href="/login">Log in</a>
-        </div>
-      </header>
-      <h1>Let's get you started</h1>
-      <h5>Enter the details to get going</h5>
-      <h8>General Details</h8>
-      <Formik
-        initialValues={{
-          companyName: "",
-          email: "",
-          phoneNumber: "",
-          registrationNumber: "",
-          country: "",
-          address: "",
-          password: "",
-          confirmPassword: "",
-          fullName: "", // New field
-          jobTitle: "", // New field
-          contactEmail: "", // New field
-          contactPhoneNumber: "", // New field
-          linkedinProfile: "", // New field
-          companyVision: "", // New field
-        }}
-        validate={(values) => {
-          const errors = {};
-          // Existing validations...
-          if (!values.companyName) {
-            errors.companyName = "Company Name is required";
-          }
-          if (!values.email) {
-            errors.email = "Email is required";
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-          ) {
-            errors.email = "Invalid email address";
-          }
-          if (!values.phoneNumber) {
-            errors.phoneNumber = "Phone number is required";
-          } else if (!/^\d{10}$/.test(values.phoneNumber)) {
-            errors.phoneNumber = "Phone number must be 10 digits";
-          }
-          if (!values.registrationNumber) {
-            errors.registrationNumber = "Registration Number is required";
-          }
-          if (!values.country) {
-            errors.country = "Country is required";
-          }
-          if (!values.address) {
-            errors.address = "Address is required";
-          }
-          if (!values.password) {
-            errors.password = "Password is required";
-          } else if (values.password.length < 6) {
-            errors.password = "Password must be at least 6 characters";
-          }
-          if (!values.confirmPassword) {
-            errors.confirmPassword = "Please confirm your password";
-          } else if (values.password !== values.confirmPassword) {
-            errors.confirmPassword = "Passwords do not match";
-          }
+const validationSchemaStep2 = Yup.object().shape({
+  fullName: Yup.string().required("Required"),
+  jobTitle: Yup.string().required("Required"),
+  contactEmail: Yup.string().email("Invalid email").required("Required"),
+  phoneNumber: Yup.string().required("Required"),
+  linkedinProfile: Yup.string().url("Invalid URL").optional(),
+});
 
-          // New validations for Primary Contact Details
-          if (!values.fullName) {
-            errors.fullName = "Full Name is required";
-          }
-          if (!values.jobTitle) {
-            errors.jobTitle = "Job Title is required";
-          }
-          if (!values.contactEmail) {
-            errors.contactEmail = "Contact Email is required";
-          } else if (
-            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(
-              values.contactEmail
-            )
-          ) {
-            errors.contactEmail = "Invalid email address";
-          }
-          if (!values.contactPhoneNumber) {
-            errors.contactPhoneNumber = "Contact Phone Number is required";
-          } else if (!/^\d{10}$/.test(values.contactPhoneNumber)) {
-            errors.contactPhoneNumber =
-              "Contact Phone Number must be 10 digits";
-          }
-          if (!values.companyVision) {
-            errors.companyVision = "Company Vision is required";
-          }
+const validationSchemaStep3 = Yup.object().shape({
+  username: Yup.string().required("Required"),
+  email: Yup.string().email("Invalid email").required("Required"), // Add email validation
+  password: Yup.string().required("Required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "Passwords must match")
+    .required("Required"),
+});
 
-          return errors;
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2)); // Replace with actual submission logic
-            setSubmitting(false);
-          }, 400);
-        }}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-        }) => (
-          <form onSubmit={handleSubmit} className="registration-form">
-            {/* Existing fields */}
-            <div>
-              <label className="label">Company Name *</label>
-              <input
-                type="text"
-                name="companyName"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.companyName}
-                className="input-field"
-              />
-              {errors.companyName && touched.companyName && (
-                <div className="error">{errors.companyName}</div>
-              )}
+const BusinessRegistration = () => {
+  const [step, setStep] = useState(1);
+  const [submissionMessage, setSubmissionMessage] = useState("");
+
+  const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => prev - 1);
+
+  const handleSubmit = (values) => {
+    if (step === 3) {
+      // Simulate form submission
+      setTimeout(() => {
+        setSubmissionMessage("Form submitted successfully!");
+        console.log(values);
+      }, 2000);
+    } else {
+      nextStep();
+    }
+  };
+
+  return (
+    <Container
+      style={{ maxWidth: "670px" }}
+      className="my-5 shadow rounded justify-content-center"
+    >
+      <Row className="p-4 gap-3">
+        <Col
+          xs={12}
+          className=" d-flex justify-content-between align-items-center"
+        >
+          <div className="">
+            <Image
+              style={{ maxWidth: "50px" }}
+              src={logoImage}
+              alt="Logo"
+              className="w-100"
+            />
+          </div>
+          <div className="d-flex align-items-center text-muted">
+            Already a member?{" "}
+            <LinkContainer to="/login">
+              <Button variant="link" className="p-1">
+                Login
+              </Button>
+            </LinkContainer>
+          </div>
+        </Col>
+        <Col xs={12} className="">
+          <h3 className="text-center text-primary">
+            Business Account Registration
+          </h3>
+
+          <Col xs={12} className="">
+            <div className="d-flex  justify-content-between align-items-center">
+              {/* Step 1 */}
+              <div
+                className={`rounded-circle d-flex justify-content-center align-items-center ${
+                  step >= 1
+                    ? "bg-primary text-white"
+                    : "border border-primary text-primary"
+                }`}
+                style={{ width: "40px", height: "40px" }} // Ensuring all circles are the same size
+              >
+                1
+              </div>
+
+              {/* Line between circles (dynamically fills remaining space) */}
+              <div
+                style={{ flexGrow: 1, height: "5px" }} // Ensures lines take up remaining space
+                className={` rounded-5 ${
+                  step > 1 ? "bg-primary" : "border-primary"
+                }`}
+              ></div>
+
+              {/* Step 2 */}
+              <div
+                className={`rounded-circle d-flex justify-content-center align-items-center ${
+                  step >= 2
+                    ? "bg-primary text-white"
+                    : "border border-2  border-primary text-primary"
+                }`}
+                style={{ width: "40px", height: "40px" }} // Ensuring all circles are the same size
+              >
+                2
+              </div>
+
+              {/* Line between circles (dynamically fills remaining space) */}
+              <div
+                style={{ flexGrow: 1, height: "5px" }} // Ensures lines take up remaining space
+                className={`rounded-5 ${
+                  step > 2 ? "bg-primary" : "border-primary"
+                }`}
+              ></div>
+
+              {/* Step 3 */}
+              <div
+                className={`rounded-circle d-flex justify-content-center align-items-center ${
+                  step >= 3
+                    ? "bg-primary text-white"
+                    : "border border-2 border-primary text-primary"
+                }`}
+                style={{ width: "40px", height: "40px" }} // Ensuring all circles are the same size
+              >
+                3
+              </div>
             </div>
+          </Col>
+        </Col>
+        <Col xs={12} className=" p-0">
+          {submissionMessage && (
+            <Alert variant="success">{submissionMessage}</Alert>
+          )}
 
-            <div>
-              <label className="label">Email *</label>
-              <input
-                type="email"
-                name="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                className="input-field"
-              />
-              {errors.email && touched.email && (
-                <div className="error">{errors.email}</div>
-              )}
-            </div>
+          <Formik
+            initialValues={{
+              companyName: "",
+              category: "",
+              country: "",
+              address: "",
+              companyNumber: "",
+              companyEmail: "",
+              companyRegNumber: "",
+              companyVision: "",
+              fullName: "",
+              jobTitle: "",
+              contactEmail: "",
+              phoneNumber: "",
+              linkedinProfile: "",
+              username: "",
+              email: "", // Add initial email value
+              password: "",
+              confirmPassword: "",
+            }}
+            validationSchema={
+              step === 1
+                ? validationSchemaStep1
+                : step === 2
+                ? validationSchemaStep2
+                : validationSchemaStep3
+            }
+            onSubmit={handleSubmit}
+          >
+            {({ handleSubmit, handleChange, values, errors, touched }) => (
+              <Form onSubmit={handleSubmit} className="border">
+                {step === 1 && (
+                  <div>
+                    <h6 className="text-white bg-primary p-4">
+                      Company Information
+                    </h6>
+                    <Row className="p-3 gy-4">
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="companyName">
+                          <Form.Label className="text-muted">
+                            Company Name *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="companyName"
+                            value={values.companyName}
+                            onChange={handleChange}
+                            isInvalid={
+                              touched.companyName && !!errors.companyName
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.companyName}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="category">
+                          <Form.Label className="text-muted">
+                            Category *
+                          </Form.Label>
+                          <Form.Select
+                            as="select"
+                            name="category"
+                            value={values.category}
+                            onChange={handleChange}
+                            isInvalid={touched.category && !!errors.category}
+                          >
+                            <option value="">Select...</option>
+                            <option value="buyer">Buyer</option>
+                            <option value="seller">Seller</option>
+                            <option value="both">Both</option>
+                          </Form.Select>
+                          <Form.Control.Feedback type="invalid">
+                            {errors.category}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
 
-            <div>
-              <label className="label">Phone Number *</label>
-              <input
-                type="text"
-                name="phoneNumber"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.phoneNumber}
-                className="input-field"
-              />
-              {errors.phoneNumber && touched.phoneNumber && (
-                <div className="error">{errors.phoneNumber}</div>
-              )}
-            </div>
+                      <Col xs={12}>
+                        <Form.Group controlId="country">
+                          <Form.Label className="text-muted">
+                            Country *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="country"
+                            value={values.country}
+                            onChange={handleChange}
+                            isInvalid={touched.country && !!errors.country}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.country}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
 
-            <div>
-              <label className="label">Registration Number *</label>
-              <input
-                type="text"
-                name="registrationNumber"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.registrationNumber}
-                className="input-field"
-              />
-              {errors.registrationNumber && touched.registrationNumber && (
-                <div className="error">{errors.registrationNumber}</div>
-              )}
-            </div>
+                      <Col xs={12}>
+                        <Form.Group controlId="address">
+                          <Form.Label className="text-muted">
+                            Address *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="address"
+                            value={values.address}
+                            onChange={handleChange}
+                            isInvalid={touched.address && !!errors.address}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.address}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
 
-            <div>
-              <label className="label">Country *</label>
-              <input
-                type="text"
-                name="country"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.country}
-                className="input-field"
-              />
-              {errors.country && touched.country && (
-                <div className="error">{errors.country}</div>
-              )}
-            </div>
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="companyNumber">
+                          <Form.Label className="text-muted">
+                            Company Number *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="companyNumber"
+                            value={values.companyNumber}
+                            onChange={handleChange}
+                            isInvalid={
+                              touched.companyNumber && !!errors.companyNumber
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.companyNumber}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="companyEmail">
+                          <Form.Label className="text-muted">
+                            Company Email *
+                          </Form.Label>
+                          <Form.Control
+                            type="email"
+                            name="companyEmail"
+                            value={values.companyEmail}
+                            onChange={handleChange}
+                            isInvalid={
+                              touched.companyEmail && !!errors.companyEmail
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.companyEmail}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col xs={12}>
+                        <Form.Group controlId="companyRegNumber">
+                          <Form.Label className="text-muted">
+                            Company Registration Number *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="companyRegNumber"
+                            value={values.companyRegNumber}
+                            onChange={handleChange}
+                            isInvalid={
+                              touched.companyRegNumber &&
+                              !!errors.companyRegNumber
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.companyRegNumber}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
 
-            <div>
-              <label className="label">Address *</label>
-              <input
-                type="text"
-                name="address"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.address}
-                className="input-field"
-              />
-              {errors.address && touched.address && (
-                <div className="error">{errors.address}</div>
-              )}
-            </div>
+                      <Col xs={12}>
+                        <Form.Group controlId="companyVision">
+                          <Form.Label className="text-muted">
+                            Company Vision
+                          </Form.Label>
+                          <Form.Control
+                            as="textarea"
+                            name="companyVision"
+                            value={values.companyVision}
+                            onChange={handleChange}
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col xs={12} className=" d-flex justify-content-center">
+                        <Button variant="primary" type="submit">
+                          Next
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                )}
 
-            {/* <div> */}
-            {/* <label className="label">Password *</label>
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.password}
-                className="input-field"
-              />
-              {errors.password && touched.password && (
-                <div className="error">{errors.password}</div>
-              )}
-            </div>
+                {step === 2 && (
+                  <div>
+                    <h6 className="text-white bg-primary p-4">
+                      Primary Contact Information
+                    </h6>
+                    <Row className="p-3 gy-4">
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="fullName">
+                          <Form.Label className="text-muted">
+                            Full Name *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="fullName"
+                            value={values.fullName}
+                            onChange={handleChange}
+                            isInvalid={touched.fullName && !!errors.fullName}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.fullName}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="jobTitle">
+                          <Form.Label className="text-muted">
+                            Job Title *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="jobTitle"
+                            value={values.jobTitle}
+                            onChange={handleChange}
+                            isInvalid={touched.jobTitle && !!errors.jobTitle}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.jobTitle}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
 
-            <div>
-              <label className="label">Confirm Password *</label>
-              <input
-                type="password"
-                name="confirmPassword"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.confirmPassword}
-                className="input-field"
-              />
-              {errors.confirmPassword && touched.confirmPassword && (
-                <div className="error">{errors.confirmPassword}</div>
-              )}
-            </div> */}
+                      <Col xs={12}>
+                        <Form.Group controlId="contactEmail">
+                          <Form.Label className="text-muted">
+                            Contact Email *
+                          </Form.Label>
+                          <Form.Control
+                            type="email"
+                            name="contactEmail"
+                            value={values.contactEmail}
+                            onChange={handleChange}
+                            isInvalid={
+                              touched.contactEmail && !!errors.contactEmail
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.contactEmail}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
 
-            {/* New Primary Contact Details Section */}
-            <h3>Primary Contact Details</h3>
-            <br />
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="phoneNumber">
+                          <Form.Label className="text-muted">
+                            Phone Number *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="phoneNumber"
+                            value={values.phoneNumber}
+                            onChange={handleChange}
+                            isInvalid={
+                              touched.phoneNumber && !!errors.phoneNumber
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.phoneNumber}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="linkedinProfile">
+                          <Form.Label className="text-muted">
+                            LinkedIn Profile
+                          </Form.Label>
+                          <Form.Control
+                            type="url"
+                            name="linkedinProfile"
+                            value={values.linkedinProfile}
+                            onChange={handleChange}
+                            isInvalid={
+                              touched.linkedinProfile &&
+                              !!errors.linkedinProfile
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.linkedinProfile}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col
+                        xs={12}
+                        className="d-flex justify-content-center gap-5 align-items-center"
+                      >
+                        <Button
+                          variant="secondary"
+                          className="text-white"
+                          onClick={prevStep}
+                        >
+                          Back
+                        </Button>
+                        <Button variant="primary" type="submit">
+                          Next
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                )}
 
-            <div>
-              <label className="label">Full Name *</label>
-              <input
-                type="text"
-                name="fullName"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.fullName}
-                className="input-field"
-              />
-              {errors.fullName && touched.fullName && (
-                <div className="error">{errors.fullName}</div>
-              )}
-            </div>
+                {step === 3 && (
+                  <div>
+                    <h6 className="text-white bg-primary p-4">
+                      Create Your Account
+                    </h6>
 
-            <div>
-              <label className="label">Job Title *</label>
-              <input
-                type="text"
-                name="jobTitle"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.jobTitle}
-                className="input-field"
-              />
-              {errors.jobTitle && touched.jobTitle && (
-                <div className="error">{errors.jobTitle}</div>
-              )}
-            </div>
+                    <Row className="p-3 gy-4">
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="username">
+                          <Form.Label className="text-muted">
+                            Username *
+                          </Form.Label>
+                          <Form.Control
+                            type="text"
+                            name="username"
+                            value={values.username}
+                            onChange={handleChange}
+                            isInvalid={touched.username && !!errors.username}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.username}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="email">
+                          <Form.Label className="text-muted">
+                            Email *
+                          </Form.Label>
+                          <Form.Control
+                            type="email"
+                            name="email"
+                            value={values.email}
+                            onChange={handleChange}
+                            isInvalid={touched.email && !!errors.email}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.email}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
 
-            <div>
-              <label className="label">Contact Email *</label>
-              <input
-                type="email"
-                name="contactEmail"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.contactEmail}
-                className="input-field"
-              />
-              {errors.contactEmail && touched.contactEmail && (
-                <div className="error">{errors.contactEmail}</div>
-              )}
-            </div>
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="password">
+                          <Form.Label className="text-muted">
+                            Password *
+                          </Form.Label>
+                          <Form.Control
+                            type="password"
+                            name="password"
+                            value={values.password}
+                            onChange={handleChange}
+                            isInvalid={touched.password && !!errors.password}
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.password}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
+                      <Col xs={12} md={6}>
+                        <Form.Group controlId="confirmPassword">
+                          <Form.Label className="text-muted">
+                            Confirm Password *
+                          </Form.Label>
+                          <Form.Control
+                            type="password"
+                            name="confirmPassword"
+                            value={values.confirmPassword}
+                            onChange={handleChange}
+                            isInvalid={
+                              touched.confirmPassword &&
+                              !!errors.confirmPassword
+                            }
+                          />
+                          <Form.Control.Feedback type="invalid">
+                            {errors.confirmPassword}
+                          </Form.Control.Feedback>
+                        </Form.Group>
+                      </Col>
 
-            <div>
-              <label className="label">Contact Phone Number *</label>
-              <input
-                type="text"
-                name="contactPhoneNumber"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.contactPhoneNumber}
-                className="input-field"
-              />
-              {errors.contactPhoneNumber && touched.contactPhoneNumber && (
-                <div className="error">{errors.contactPhoneNumber}</div>
-              )}
-            </div>
-
-            <div>
-              <label className="label">LinkedIn Profile</label>
-              <input
-                type="text"
-                name="linkedinProfile"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.linkedinProfile}
-                className="input-field"
-              />
-            </div>
-
-            <div>
-              <label className="label">Company Vision *</label>
-              <textarea
-                name="companyVision"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.companyVision}
-                className="input-field"
-              />
-              {errors.companyVision && touched.companyVision && (
-                <div className="error">{errors.companyVision}</div>
-              )}
-            </div>
-
-            {/* <h3>Account Information</h3>
-<p className="small-text">This information will be used to create your account.</p>
-
-<div>
-  <label className="label">Email *</label>
-  <input
-    type="email"
-    name="email"
-    onChange={handleChange}
-    onBlur={handleBlur}
-    value={values.email}
-    className="input-field"
-  />
-  {errors.email && touched.email && <div className="error">{errors.email}</div>}
-</div>
-
-<div>
-  <label className="label">Phone Number *</label>
-  <input
-    type="text"
-    name="phoneNumber"
-    onChange={handleChange}
-    onBlur={handleBlur}
-    value={values.phoneNumber}
-    className="input-field"
-  />
-  {errors.phoneNumber && touched.phoneNumber && (
-    <div className="error">{errors.phoneNumber}</div>
-  )}
-</div>
-
-<div>
-  <label className="label">Password *</label>
-  <input
-    type="password"
-    name="password"
-    onChange={handleChange}
-    onBlur={handleBlur}
-    value={values.password}
-    className="input-field"
-  />
-  {errors.password && touched.password && (
-    <div className="error">{errors.password}</div>
-  )}
-</div>
-
-<div>
-  <label className="label">Confirm Password *</label>
-  <input
-    type="password"
-    name="confirmPassword"
-    onChange={handleChange}
-    onBlur={handleBlur}
-    value={values.confirmPassword}
-    className="input-field"
-  />
-  {errors.confirmPassword && touched.confirmPassword && (
-    <div className="error">{errors.confirmPassword}</div>
-  )}
-</div>
-
- */}
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="submit-button"
-            >
-              Register
-            </button>
-          </form>
-        )}
-      </Formik>
-    </div>
-  </div>
-);
+                      <Col
+                        xs={12}
+                        className="d-flex justify-content-center gap-5 align-items-center"
+                      >
+                        <Button
+                          variant="secondary"
+                          className="text-white"
+                          onClick={prevStep}
+                        >
+                          Back
+                        </Button>
+                        <Button variant="primary" type="submit">
+                          Submit
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                )}
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
 export default BusinessRegistration;
