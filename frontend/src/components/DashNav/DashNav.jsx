@@ -1,7 +1,7 @@
 import { Container, Image, Nav, Navbar, Dropdown, Badge } from "react-bootstrap";
 import logo from "../../assets/images/ScraBidderLogo.png";
 import React from "react";
-import { Gear, Bell, Person } from "react-bootstrap-icons"; // Import Person icon for profile
+import { Gear, Bell, Person,BoxArrowRight } from "react-bootstrap-icons"; // Import Person icon for profile
 import "./style.css";
 
 function NavBar() {
@@ -40,7 +40,7 @@ function NavBar() {
                 <Dropdown.Item href="#/action-2">Account Settings</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Help</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item href="#/action-4">Logout</Dropdown.Item>
+                <Dropdown.Item href="#/action-4">Logout <BoxArrowRight size={15} className="me-2 ms-2" /></Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
