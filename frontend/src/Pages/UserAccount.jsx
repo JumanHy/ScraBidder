@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import AcountSidebar from '../components/AcountSidebar';
-import WatchList from "../components/WatchList/WatchList"; 
+import React, { useState } from "react";
+import AcountSidebar from "../components/AcountSidebar";
+import WatchList from "../components/WatchList/WatchList";
 import UserDetails from "../components/UserDetails/UserDetails";
-import TransactionHistory from '../components/TransactionHistory/TransactionHistory';
-import PaymentMethods from '../components/PaymentMethods/PaymentMethods';
+import TransactionHistory from "../components/TransactionHistory/TransactionHistory";
+import PaymentMethods from "../components/PaymentMethods/PaymentMethods";
 
-function UserProfile() {
+function UserAccount() {
   const [activeSection, setActiveSection] = useState("watchlist"); // Default to 'watchlist' section
 
   // Function to render content based on active section
@@ -21,19 +21,19 @@ function UserProfile() {
         return (
           <div>
             <h2>Transaction History</h2>
-             <TransactionHistory />
+            <TransactionHistory />
           </div>
         );
       case "payment-methods":
         return (
           <div>
-            <PaymentMethods/>
+            <PaymentMethods />
           </div>
         );
       case "settings":
         return (
           <div>
-             <UserDetails />
+            <UserDetails />
           </div>
         );
       default:
@@ -46,12 +46,12 @@ function UserProfile() {
       {/* Navbar */}
       {/* <NavBar /> */}
 
-      <div style={{ display: 'flex', minHeight: '100vh' }}>
+      <div style={{ display: "flex", minHeight: "100vh" }}>
         {/* Sidebar */}
         <AcountSidebar setActiveSection={setActiveSection} />
 
         {/* Main Content Area */}
-        <div style={{ flex: 1, padding: '20px' }}>
+        <div style={{ flex: 1, padding: "20px" }}>
           {/* Profile Content */}
           {renderContent()} {/* Render content based on active section */}
         </div>
@@ -60,4 +60,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default UserAccount;

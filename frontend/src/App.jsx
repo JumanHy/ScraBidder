@@ -13,10 +13,9 @@ import Login from "./Pages/Login.jsx";
 import BusinessRegistration from "./Pages/BusinessRegistration.jsx";
 import ResetPasswordRequest from "./pages/ResetPasswordRequestForm";
 import ResetPassword from "./pages/ResetPassword";
-import UserProfile from "./pages/UserProfile";
-import BusinessProfile from "./pages/BusinessProfile/BusinessProfile";
-import New from"./pages/New";
-import Companyprofile from "./pages/Companyprofile/Companyprofile"
+import UserAccount from "./Pages/UserAccount.jsx";
+import New from "./pages/New";
+import Companyprofile from "./pages/Companyprofile/Companyprofile";
 import BusinessAccount from "./Pages/BusinessAccount/BusinessAccount.jsx";
 import IndividualRegistration from "./Pages/IndividualRegistration.jsx";
 import AuctionForm from "./Pages/AuctionFormPage/AuctionFormPage";
@@ -43,11 +42,8 @@ export default function App() {
           <Route path="/business-register" element={<BusinessRegistration />} />
           <Route path="/reset-Password" element={<ResetPasswordRequest />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/bprofile" element={<BusinessProfile />} />
           <Route path="/cprofile" element={<Companyprofile />} />
-          <Route path="/new" element={<New />}/>
-          <Route path="/user-account" element={<UserProfile />} />
+          <Route path="/user-account" element={<UserAccount />} />
           <Route path="/business-account" element={<BusinessAccount />} />
           <Route path="/auction-form" element={<AuctionForm />} />
         </Routes>
@@ -65,6 +61,8 @@ const ConditionalFooter = () => {
     "/business-register",
     "/reset-password",
     "/resetPassword",
+    "/business-account",
+    "/user-account",
   ];
 
   return !hideFooterRoutes.includes(location.pathname) ? <Footer /> : null;
