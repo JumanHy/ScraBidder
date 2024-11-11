@@ -1,0 +1,24 @@
+
+.dashnav-link {
+    position: relative;
+  }
+  
+  .dashnav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0px;
+    height: 2px;
+    width: 100%;
+    background-color: black;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+ 
+  .dropdown-toggle::after {
+    border-top: 0.4em solid black;
+  }
+
+  .dropdown-item:hover {
+    background-color: #DEC4AC; 
+  }
