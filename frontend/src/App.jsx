@@ -5,7 +5,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import "./styles/css/main.min.css";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -25,14 +25,13 @@ import IndividualRegistration from "./Pages/IndividualRegistration.jsx";
 import AuctionForm from "./Pages/AuctionFormPage/AuctionFormPage";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer";
-
-
+import "./styles/css/main.min.css";
 
 export default function App() {
   return (
     <>
       <Router>
-        <NavBar />
+        <ConditionalNavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auction" element={<AuctionDetailsPage />} />
@@ -47,7 +46,7 @@ export default function App() {
           <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/cprofile" element={<Companyprofile />} />
           <Route path="/user-account" element={<UserAccount />} />
-           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/business-account" element={<BusinessAccount />} />
           <Route path="/auction-form" element={<AuctionForm />} />
         </Routes>
@@ -67,8 +66,14 @@ const ConditionalFooter = () => {
     "/resetPassword",
     "/business-account",
     "/user-account",
-    "/dashboard"
+    "/dashboard",
   ];
 
   return !hideFooterRoutes.includes(location.pathname) ? <Footer /> : null;
+};
+const ConditionalNavBar = () => {
+  const location = useLocation();
+  const hideNavBarRoutes = ["/dashboard"];
+
+  return !hideNavBarRoutes.includes(location.pathname) ? <NavBar /> : null;
 };
