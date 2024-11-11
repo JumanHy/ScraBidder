@@ -4,7 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Modal, Button ,Container,Row,Col,Form,Image} from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
-import { Dot } from 'react-bootstrap-icons';
 import scrap from "../../assets/images/scrap.png"
 
 function UsersData(){
@@ -17,9 +16,6 @@ function UsersData(){
     };
     const [selectedUser, setSelectedUser] = useState({});
     const [auctionStatus, setAuctionStatus] = useState('');
-    {/*const [userType, setUserType] = useState('');
-
-    */}
     const columns=[
         {name:'ID' , selector:row=>row.id,sortable:true },
         {name:'Auction Title' , selector:row=>row.name,sortable:true,
@@ -35,6 +31,7 @@ function UsersData(){
         {name:'Seller' , selector:row=>row.seller,sortable:true },
         {name:'Start Date' , selector:row=>row.start,sortable:true },
         {name:'End Date' , selector:row=>row.end,sortable:true },
+        {name:'Category' , selector:row=>row.category,sortable:true },
         {name:'Auction Status' , selector:row=>row.status,sortable:true,
             cell: row => {
                 const colorMap = {
@@ -59,41 +56,50 @@ function UsersData(){
 
         }
     ]
-    const data=[
-        
-            { id: 1, name: 'Scrap Metal Auction - Lot 1', seller: 'Juman', start: '2024-01-10', end: '2024-02-15', status: 'Active' },
-            { id: 2, name: 'Used Car Parts Auction - Lot 2', seller: 'Sara', start: '2023-11-22', end: '2024-01-05', status: 'Pending' },
-            { id: 3, name: 'Electronics Scrap Auction - Lot 3', seller: 'Omar', start: '2024-03-10', end: '2024-03-25', status: 'Sold' },
-            { id: 4, name: 'Industrial Equipment Scrap Auction - Lot 4', seller: 'Layla', start: '2024-02-12', end: '2024-04-01', status: 'Active' },
-            { id: 5, name: 'Automobile Scrap Auction - Lot 5', seller: 'Noura', start: '2023-09-18', end: '2023-11-20', status: 'Not Sold' },
-            { id: 6, name: 'Scrap Metal Auction - Lot 6', seller: 'Hassan', start: '2024-02-14', end: '2024-02-28', status: 'Listed' },
-            { id: 7, name: 'Heavy Machinery Scrap Auction - Lot 7', seller: 'Reem', start: '2024-04-01', end: '2024-05-15', status: 'Active' },
-            { id: 8, name: 'Construction Waste Auction - Lot 8', seller: 'Adil', start: '2023-12-01', end: '2024-01-15', status: 'Pending' },
-            { id: 9, name: 'Metal Scrap Auction - Lot 9', seller: 'Huda', start: '2024-01-20', end: '2024-03-10', status: 'Sold' },
-            { id: 10, name: 'Recycled Goods Auction - Lot 10', seller: 'Salim', start: '2024-02-05', end: '2024-03-20', status: 'Not Sold' },
-            { id: 11, name: 'Auto Parts Auction - Lot 11', seller: 'Rana', start: '2024-03-15', end: '2024-04-10', status: 'Active' },
-            { id: 12, name: 'Scrap Electronics Auction - Lot 12', seller: 'Basel', start: '2024-01-01', end: '2024-01-25', status: 'Listed' },
-            { id: 13, name: 'Recycled Plastic Auction - Lot 13', seller: 'Yasmin', start: '2024-02-08', end: '2024-03-12', status: 'Pending' },
-            { id: 14, name: 'Battery Scrap Auction - Lot 14', seller: 'Mohammed', start: '2023-11-10', end: '2023-12-15', status: 'Sold' },
-            { id: 15, name: 'Furniture Scraps Auction - Lot 15', seller: 'Dina', start: '2024-04-05', end: '2024-04-20', status: 'Active' },
-            { id: 16, name: 'Electronic Waste Auction - Lot 16', seller: 'Khaled', start: '2024-01-12', end: '2024-02-20', status: 'Not Sold' },
-            { id: 17, name: 'Used Tires Auction - Lot 17', seller: 'Fadi', start: '2024-03-05', end: '2024-04-10', status: 'Sold' },
-            { id: 18, name: 'Plastic Waste Auction - Lot 18', seller: 'Jalila', start: '2024-02-01', end: '2024-03-30', status: 'Active' },
-            { id: 19, name: 'Old Machines Auction - Lot 19', seller: 'Mona', start: '2023-10-25', end: '2023-12-01', status: 'Pending' },
-            { id: 20, name: 'Scrap Cars Auction - Lot 20', seller: 'Mustafa', start: '2024-03-15', end: '2024-04-05', status: 'Listed' },
-            { id: 21, name: 'Aluminum Scrap Auction - Lot 21', seller: 'Naseem', start: '2024-01-01', end: '2024-02-10', status: 'Active' },
-            { id: 22, name: 'Copper Scrap Auction - Lot 22', seller: 'Rasha', start: '2024-02-25', end: '2024-03-30', status: 'Sold' },
-            { id: 23, name: 'Vehicle Parts Auction - Lot 23', seller: 'Lina', start: '2024-03-01', end: '2024-04-05', status: 'Not Sold' },
-            { id: 24, name: 'Waste Paper Auction - Lot 24', seller: 'Wael', start: '2023-11-15', end: '2023-12-05', status: 'Listed' },
-            { id: 25, name: 'Scrap Wire Auction - Lot 25', seller: 'Kareem', start: '2024-01-15', end: '2024-02-28', status: 'Active' },
-            { id: 26, name: 'Plastic Scrap Auction - Lot 26', seller: 'Amira', start: '2024-02-10', end: '2024-03-15', status: 'Sold' },
-            { id: 27, name: 'Old Appliances Auction - Lot 27', seller: 'Hadi', start: '2024-01-10', end: '2024-02-05', status: 'Pending' },
-            { id: 28, name: 'Metal Scrap Auction - Lot 28', seller: 'Sami', start: '2024-02-20', end: '2024-03-25', status: 'Active' },
-            { id: 29, name: 'Used Battery Auction - Lot 29', seller: 'Rida', start: '2023-12-01', end: '2024-01-01', status: 'Sold' },
-            { id: 30, name: 'Scrap Plastics Auction - Lot 30', seller: 'Tariq', start: '2024-01-15', end: '2024-02-01', status: 'Not Sold' }
-        
-    ]
-
+    const data = [
+        { id: 1, name: 'Scrap Metal Auction - Lot 1', seller: 'Juman', start: '2024-01-10', end: '2024-02-15', category: 'Iron', status: 'Active' },
+        { id: 2, name: 'Scrap Metal Auction - Lot 2', seller: 'Ahmed', start: '2024-01-12', end: '2024-02-16', category: 'Aluminum', status: 'Pending' },
+        { id: 3, name: 'Scrap Metal Auction - Lot 3', seller: 'Khaled', start: '2024-01-14', end: '2024-02-17', category: 'Copper', status: 'Sold' },
+        { id: 4, name: 'Scrap Metal Auction - Lot 4', seller: 'Laila', start: '2024-01-16', end: '2024-02-18', category: 'Plastic', status: 'Not Sold' },
+        { id: 5, name: 'Scrap Metal Auction - Lot 5', seller: 'Sarah', start: '2024-01-18', end: '2024-02-19', category: 'Stainless Steel', status: 'Listed' },
+        { id: 6, name: 'Scrap Metal Auction - Lot 6', seller: 'Ali', start: '2024-01-20', end: '2024-02-20', category: 'Wood', status: 'Active' },
+        { id: 7, name: 'Scrap Metal Auction - Lot 7', seller: 'Zainab', start: '2024-01-22', end: '2024-02-21', category: 'Glass', status: 'Pending' },
+        { id: 8, name: 'Scrap Metal Auction - Lot 8', seller: 'Youssef', start: '2024-01-24', end: '2024-02-22', category: 'Paper', status: 'Sold' },
+        { id: 9, name: 'Scrap Metal Auction - Lot 9', seller: 'Samira', start: '2024-01-26', end: '2024-02-23', category: 'Iron', status: 'Not Sold' },
+        { id: 10, name: 'Scrap Metal Auction - Lot 10', seller: 'Fahad', start: '2024-01-28', end: '2024-02-24', category: 'Aluminum', status: 'Listed' },
+        { id: 11, name: 'Scrap Metal Auction - Lot 11', seller: 'Hassan', start: '2024-01-30', end: '2024-02-25', category: 'Copper', status: 'Active' },
+        { id: 12, name: 'Scrap Metal Auction - Lot 12', seller: 'Layla', start: '2024-02-01', end: '2024-02-26', category: 'Plastic', status: 'Pending' },
+        { id: 13, name: 'Scrap Metal Auction - Lot 13', seller: 'Tariq', start: '2024-02-03', end: '2024-02-27', category: 'Stainless Steel', status: 'Sold' },
+        { id: 14, name: 'Scrap Metal Auction - Lot 14', seller: 'Rania', start: '2024-02-05', end: '2024-02-28', category: 'Wood', status: 'Not Sold' },
+        { id: 15, name: 'Scrap Metal Auction - Lot 15', seller: 'Omar', start: '2024-02-07', end: '2024-03-01', category: 'Glass', status: 'Listed' },
+        { id: 16, name: 'Scrap Metal Auction - Lot 16', seller: 'Jana', start: '2024-02-09', end: '2024-03-02', category: 'Paper', status: 'Active' },
+        { id: 17, name: 'Scrap Metal Auction - Lot 17', seller: 'Yara', start: '2024-02-11', end: '2024-03-03', category: 'Iron', status: 'Pending' },
+        { id: 18, name: 'Scrap Metal Auction - Lot 18', seller: 'Sami', start: '2024-02-13', end: '2024-03-04', category: 'Aluminum', status: 'Sold' },
+        { id: 19, name: 'Scrap Metal Auction - Lot 19', seller: 'Mariam', start: '2024-02-15', end: '2024-03-05', category: 'Copper', status: 'Not Sold' },
+        { id: 20, name: 'Scrap Metal Auction - Lot 20', seller: 'Amina', start: '2024-02-17', end: '2024-03-06', category: 'Plastic', status: 'Listed' },
+        { id: 21, name: 'Scrap Metal Auction - Lot 21', seller: 'Zaid', start: '2024-02-19', end: '2024-03-07', category: 'Stainless Steel', status: 'Active' },
+        { id: 22, name: 'Scrap Metal Auction - Lot 22', seller: 'Lina', start: '2024-02-21', end: '2024-03-08', category: 'Wood', status: 'Pending' },
+        { id: 23, name: 'Scrap Metal Auction - Lot 23', seller: 'Kareem', start: '2024-02-23', end: '2024-03-09', category: 'Glass', status: 'Sold' },
+        { id: 24, name: 'Scrap Metal Auction - Lot 24', seller: 'Fatima', start: '2024-02-25', end: '2024-03-10', category: 'Paper', status: 'Not Sold' },
+        { id: 25, name: 'Scrap Metal Auction - Lot 25', seller: 'Ahmed', start: '2024-02-27', end: '2024-03-11', category: 'Iron', status: 'Listed' },
+        { id: 26, name: 'Scrap Metal Auction - Lot 26', seller: 'Juman', start: '2024-03-01', end: '2024-03-12', category: 'Aluminum', status: 'Active' },
+        { id: 27, name: 'Scrap Metal Auction - Lot 27', seller: 'Mohammed', start: '2024-03-03', end: '2024-03-13', category: 'Copper', status: 'Pending' },
+        { id: 28, name: 'Scrap Metal Auction - Lot 28', seller: 'Khaled', start: '2024-03-05', end: '2024-03-14', category: 'Plastic', status: 'Sold' },
+        { id: 29, name: 'Scrap Metal Auction - Lot 29', seller: 'Laila', start: '2024-03-07', end: '2024-03-15', category: 'Stainless Steel', status: 'Not Sold' },
+        { id: 30, name: 'Scrap Metal Auction - Lot 30', seller: 'Ali', start: '2024-03-09', end: '2024-03-16', category: 'Wood', status: 'Listed' },
+        { id: 31, name: 'Scrap Metal Auction - Lot 31', seller: 'Youssef', start: '2024-03-11', end: '2024-03-17', category: 'Glass', status: 'Active' },
+        { id: 32, name: 'Scrap Metal Auction - Lot 32', seller: 'Samira', start: '2024-03-13', end: '2024-03-18', category: 'Paper', status: 'Pending' },
+        { id: 33, name: 'Scrap Metal Auction - Lot 33', seller: 'Fahad', start: '2024-03-15', end: '2024-03-19', category: 'Iron', status: 'Sold' },
+        { id: 34, name: 'Scrap Metal Auction - Lot 34', seller: 'Rania', start: '2024-03-17', end: '2024-03-20', category: 'Aluminum', status: 'Not Sold' },
+        { id: 35, name: 'Scrap Metal Auction - Lot 35', seller: 'Fatima', start: '2024-03-19', end: '2024-03-21', category: 'Copper', status: 'Listed' },
+        { id: 36, name: 'Scrap Metal Auction - Lot 36', seller: 'Hassan', start: '2024-03-21', end: '2024-03-22', category: 'Plastic', status: 'Active' },
+        { id: 37, name: 'Scrap Metal Auction - Lot 37', seller: 'Layla', start: '2024-03-23', end: '2024-03-23', category: 'Stainless Steel', status: 'Pending' },
+        { id: 38, name: 'Scrap Metal Auction - Lot 38', seller: 'Mariam', start: '2024-03-25', end: '2024-03-24', category: 'Wood', status: 'Sold' },
+        { id: 39, name: 'Scrap Metal Auction - Lot 39', seller: 'Amina', start: '2024-03-27', end: '2024-03-25', category: 'Glass', status: 'Not Sold' },
+        { id: 40, name: 'Scrap Metal Auction - Lot 40', seller: 'Zaid', start: '2024-03-29', end: '2024-03-26', category: 'Paper', status: 'Listed' }
+      ];
+      
+    
     const bidColumns=[
         {name:'ID' , selector:row=>row.id,sortable:true },
         {name:'Bidder Name' , selector:row=>row.name,sortable:true,
@@ -145,14 +151,22 @@ function UsersData(){
  
 
     const [records,setRecords]=useState(data);
+    const [bidRecords,setBidRecords]=useState(bidData);
     
-    {/*function handleFilter(event){
+     function handleBidFilter(event){
+        const newData=bidData.filter(row=>{
+            return row.name.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase())
+            
+        })
+        setBidRecords(newData)
+    }
+    function handleAuctionFilter(event){
         const newData=data.filter(row=>{
             return row.name.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase())
             
         })
         setRecords(newData)
-    }*/}
+    }
     function handleStatusFilter(event){
         const newData=data.filter(row=>{
             return row.status===event;
@@ -160,48 +174,19 @@ function UsersData(){
         })
         setRecords(newData)
     }
-    {/*}
-    function handleTypeFilter(event){
+
+    function handleCategoryFilter(event){
         const newData=data.filter(row=>{
-            return row.type===e{ id: 1, name: 'Title 1', seller: 'Juman', start: '',end:'', status: 'Active' }vent;
+            return row.category===event;
             
         })
         setRecords(newData)
-    }*/}
+    }
     return(
         <>
-        
-        <div
-                className="col-12 d-flex p-2 m-3 bg-white rounded-5 justify-content-between align-items-center border border-black"
-                style={{
-                  maxWidth: "400px",
-                  height:'40px',
-                  borderColor:'#003A70',
-                }}
-              >
-                <input
-                  type="text"
-                  placeholder="Search by username or email"
-                  className="w-100 border-0 "
-                  style={{
-                    outline: "none"
-                  }}
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-search"
-                  viewBox="0 0 16 16"
-                  color="black"
-                >
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                </svg>
-              </div>
-
+       
               
-       <div className="d-flex justify-content-between px-2 border-bottom border-top py-5">
+       <div className="d-flex justify-content-between px-2 pt-2">
        <div className="w-25 me-0">
         <span style={{color:'#666666'}} className="me-2">start/end date</span>
        <Form.Control type="date"/>
@@ -227,8 +212,15 @@ function UsersData(){
   </button>
   <ul className="dropdown-menu">
   <li><a className="dropdown-item border-bottom" style={{color:'#666666',borderBottomColor:"#666666"}} href="#"onClick={() => setRecords(data)} >All</a></li>
-    <li><a className="dropdown-item" href="#" >Category 1</a></li>
-    <li><a className="dropdown-item" href="#" >Category 2</a></li>
+    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Aluminum')}>Aluminum</a></li>
+    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Copper')}>Copper</a></li>
+    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Plastic')}>Plastic</a></li>
+    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Iron')}>Iron</a></li>
+    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Stainless Steel')}>Stainless Steel</a></li>
+    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Wood')}>Wood</a></li>
+    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Glass')}>Glass</a></li>
+    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Paper')}>Paper</a></li>
+
   </ul>
         </div>
         </div>
@@ -249,7 +241,35 @@ function UsersData(){
   </ul>
         </div>
                 </div>
-            <div className="text-end pb-3"><input type="text" placeholder="type to search" /></div>
+                <div
+                className="col-12 d-flex p-2 m-3 bg-white rounded-5 justify-content-between border border-black "
+                style={{
+                  maxWidth: "250px",
+                  height:'40px',
+                  borderColor:'#003A70',
+                }}
+              >
+                <input
+                  type="text"
+                  placeholder="Search by auction ID"
+                  className="w-100 border-0 "
+                  style={{
+                    outline: "none"
+                  }}
+                  onChange={handleAuctionFilter}
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  className="bi bi-search"
+                  viewBox="0 0 16 16"
+                  color="black"
+                >
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                </svg>
+              </div>
             </div>
         
 
@@ -263,6 +283,23 @@ responsive
 striped
 highlightOnHover
 selectableRowsHighlight
+customStyles={{
+    rows: {
+      style: {
+        fontSize: '16px', 
+        borderRadius: '0 0 10px 10px'
+      },
+    },
+    headCells: {
+      style: {
+        backgroundColor: '#B87333', 
+        color: 'white', 
+        fontSize: '17px', 
+        fontWeight: 'bold', 
+         borderRadius: '10px 10px 0 0'
+      },
+    },
+  }}
 ></DataTable>
         </div>
 
@@ -378,6 +415,7 @@ selectableRowsHighlight
                   style={{
                     outline: "none"
                   }}
+                  onChange={handleBidFilter}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -396,7 +434,7 @@ selectableRowsHighlight
 
 <DataTable
 columns={bidColumns}
-data={bidData}
+data={bidRecords}
 selectableRows
 fixedHeader
 pagination
@@ -404,6 +442,23 @@ responsive
 striped
 highlightOnHover
 selectableRowsHighlight
+customStyles={{
+    rows: {
+      style: {
+        fontSize: '16px', 
+        borderRadius: '0 0 10px 10px'
+      },
+    },
+    headCells: {
+      style: {
+        backgroundColor: '#B87333', 
+        color: 'white', 
+        fontSize: '17px', 
+        fontWeight: 'bold', 
+         borderRadius: '10px 10px 0 0'
+      },
+    },
+  }}
 ></DataTable>
         </div>
         

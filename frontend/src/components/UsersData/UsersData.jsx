@@ -1,5 +1,5 @@
 import "./style.css";
-import{ React , useState , useEffect, useRef }from "react";
+import{ React , useState }from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Modal, Button ,Container,Row,Col} from 'react-bootstrap';
@@ -111,6 +111,38 @@ function UsersData(){
     return(
         <>
         
+        <div className="pb-3 my-5 border-bottom" >
+        <h2 className="text-center pt-3" style={{color:'#003a70'}}>Summary</h2>
+                    <div className="de-flex row justify-content-center">
+                        <div className="shadow col-6 col-lg-3 mx-2 my-3 text-center rounded-3 card-animation card-delay-1">
+                            <div className="fs-6 py-3">
+                                <span className="ps-3" style={{color:"#666666"}}>Total Users</span>
+                            </div>
+                            <div className="fs-3 pb-2 fw-bold" style={{color:'#003A70'}}>233</div>
+                        </div>
+                        <div className="shadow col-6 col-lg-3 mx-2 my-3 text-center rounded-3 card-animation card-delay-2">
+                            <div className="fs-6 py-3">
+                                <span className="ps-3" style={{color:"#666666"}}>Active Users</span>
+                            </div>
+                            <div className="fs-3 pb-2 fw-bold text-success">45</div>
+                        </div>
+                        <div className="shadow col-6 col-lg-3 mx-2 my-3 text-center rounded-3 card-animation card-delay-3">
+                            <div className="fs-6 py-3">
+                                <span className="ps-3" style={{color:"#666666"}}>Pending Users</span>
+                            </div>
+                            <div className="fs-3 pb-2 fw-bold" style={{color:'#E9D62D'}}>10</div>
+                        </div>
+                        <div className="shadow col-6 col-lg-3 mx-2 my-3 text-center rounded-3 card-animation card-delay-4">
+                            <div className="fs-6 py-3">
+                                <span className="ps-3" style={{color:"#666666"}}>Blocked Users</span>
+                            </div>
+                            <div className="fs-3 pb-2 fw-bold text-danger" style={{color:'#003A70'}}>3</div>
+                        </div>
+                        
+                    </div>
+        </div>
+
+
        <Container fluid className="my-4 d-flex flex-wrap justify-content-around">
        <div
                 className="col-12 d-flex p-2 m-0 bg-white rounded-5 justify-content-between align-items-center border border-black"
@@ -127,6 +159,7 @@ function UsersData(){
                   style={{
                     outline: "none"
                   }}
+                  onChange={handleFilter}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -182,7 +215,6 @@ function UsersData(){
   </ul>
         </div>
                 </div>
-            <div className="text-end pb-3"><input type="text" placeholder="type to search" onChange={handleFilter}/></div>
             </div>
         
 
@@ -196,6 +228,18 @@ responsive
 striped
 highlightOnHover
 selectableRowsHighlight
+customStyles={{
+    rows: {
+      style: {
+        fontSize: '16px', // Adjust font size for rows
+      },
+    },
+    headCells: {
+      style: {
+        fontSize: '17px', // Adjust font size for header cells
+      },
+    },
+  }}
 
 ></DataTable>
         </div>
@@ -276,36 +320,7 @@ selectableRowsHighlight
            
 
            
-        <div className="pb-3 mb-5" >
-        <h2 className="text-center pt-3" style={{color:'#003a70'}}>Summary</h2>
-                    <div className="de-flex row justify-content-around">
-                        <div className="shadow col-6 col-lg-3 mx-2 my-5 text-center rounded-3 card-animation card-delay-1">
-                            <div className="fs-6 py-3">
-                                <span className="ps-3" style={{color:"#666666"}}>Total Users</span>
-                            </div>
-                            <div className="fs-3 pb-2 fw-bold" style={{color:'#003A70'}}>233</div>
-                        </div>
-                        <div className="shadow col-6 col-lg-3 mx-2 my-5 text-center rounded-3 card-animation card-delay-2">
-                            <div className="fs-6 py-3">
-                                <span className="ps-3" style={{color:"#666666"}}>Active Users</span>
-                            </div>
-                            <div className="fs-3 pb-2 fw-bold text-success">45</div>
-                        </div>
-                        <div className="shadow col-6 col-lg-3 mx-2 my-5 text-center rounded-3 card-animation card-delay-3">
-                            <div className="fs-6 py-3">
-                                <span className="ps-3" style={{color:"#666666"}}>Pending Users</span>
-                            </div>
-                            <div className="fs-3 pb-2 fw-bold" style={{color:'#E9D62D'}}>10</div>
-                        </div>
-                        <div className="shadow col-6 col-lg-3 mx-2 my-5 text-center rounded-3 card-animation card-delay-4">
-                            <div className="fs-6 py-3">
-                                <span className="ps-3" style={{color:"#666666"}}>Blocked Users</span>
-                            </div>
-                            <div className="fs-3 pb-2 fw-bold text-danger" style={{color:'#003A70'}}>3</div>
-                        </div>
-                        
-                    </div>
-        </div>
+       
         
         </>
     );

@@ -25,7 +25,7 @@ function Overview(){
 
         <div className="pb-3 border-bottom mb-5" >
         <h2 className="text-center pt-3" style={{color:'#003a70'}}>Quick Stats</h2>
-                    <div className="de-flex row justify-content-around">
+                    <div className="de-flex row justify-content-center">
                         <div className="shadow col-6 col-lg-3 mx-2 my-5 text-center rounded-3  card-animation card-delay-1">
                             <div className="fs-6 py-3">
                                 <Hammer size={25} color="#B87333"/>
