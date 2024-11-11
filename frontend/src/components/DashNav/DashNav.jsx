@@ -1,16 +1,29 @@
 import { Container, Image, Nav, Navbar, Dropdown, Badge } from "react-bootstrap";
 import logo from "../../assets/images/ScraBidderLogo.png";
-import React from "react";
-import { Gear, Bell, Person,BoxArrowRight } from "react-bootstrap-icons"; // Import Person icon for profile
+import React,{useState} from "react";
+import { Dot,Gear, Bell, Person,BoxArrowRight ,Hammer, Trophy, Upload, CurrencyDollar, ExclamationCircle, Envelope, CheckCircle, Circle, ChatDots, ChatDotsFill} from "react-bootstrap-icons"; // Import Person icon for profile
 import "./style.css";
 
 function NavBar() {
   const notifications = [
-    { id: 1, message: "New comment on your post" },
-    { id: 2, message: "You have a new follower" },
-    { id: 3, message: "Update your profile information" },
-  ];
+    { id: 1, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#B87333'}} /> },
+    { id: 2, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#B87333'}}/> },
+    { id: 3, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{color:'#B87333'}}/> },
+    { id: 4, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{color:'#B87333'}}/> },
+    { id: 5, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{color:'#B87333'}}/> },
+    { id: 6, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{color:'#B87333'}}/> },
+    { id: 7, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{color:'#B87333'}}/> },
+    { id: 8, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#B87333'}} /> },
+    { id: 9, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#B87333'}}/> },
+    { id: 10, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{color:'#B87333'}}/> },
+    { id: 11, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{color:'#B87333'}}/> },
+    { id: 12, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{color:'#B87333'}}/> },
+    { id: 13, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{color:'#B87333'}}/> },
+    { id: 14, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{color:'#B87333'}}/> }
+  ]
 
+
+  
   return (
     <Navbar expand="md" style={{ backgroundColor: "#FAFAFA" }}>
       <Container fluid>
@@ -50,11 +63,20 @@ function NavBar() {
                   </Badge>
                 )}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Header>Notifications</Dropdown.Header>
+              <Dropdown.Menu className="rounded-4" style={{ maxHeight: "500px", overflowY: "auto" }}>
+                <Dropdown.Header >Notifications</Dropdown.Header>
                 {notifications.length > 0 ? (
                   notifications.map((notification) => (
-                    <Dropdown.Item key={notification.id}>{notification.message}</Dropdown.Item>
+                    <Dropdown.Item key={notification.id} className="d-flex justify-content-between py-3 px-3" >
+              <span className="d-flex ">
+              <span className="me-4">{notification.icon}</span>
+              <span className="d-flex flex-column">
+              <span >{notification.message}</span>
+              <span className="fw-lighter fst-italic fs-6" style={{color:'#4F2804'}}><Dot/>10 minutes ago</span>
+              </span>
+              </span>
+              <Dot className="text-end" size={40} style={{color:'#B87333'}}/>
+            </Dropdown.Item>
                   ))
                 ) : (
                   <Dropdown.Item disabled>No new notifications</Dropdown.Item>

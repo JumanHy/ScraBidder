@@ -18,3 +18,7 @@
   .dropdown-toggle::after {
     border-top: 0.4em solid black;
   }
+
+  .dropdown-item:hover {
+    background-color: #DEC4AC; 
+  }
