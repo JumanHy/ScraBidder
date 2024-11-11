@@ -1,0 +1,12 @@
+.user-name-link {
+    color: #003a70; 
+    font-weight: bold;
+    text-decoration: none; 
+}
+
+.user-name-link:hover {
+    text-decoration: underline; 
+    color: black; 
+}
+
+  
