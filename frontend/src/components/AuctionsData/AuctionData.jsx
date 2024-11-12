@@ -2,7 +2,7 @@ import "./style.css";
 import{ React , useState}from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { Modal, Button ,Container,Row,Col,Form,Image} from 'react-bootstrap';
+import { Modal, Button ,Container,Row,Col,Form,Image,Dropdown} from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
 import scrap from "../../assets/images/scrap.png"
 
@@ -186,122 +186,127 @@ function UsersData(){
         <>
        
               
-       <div className="d-flex justify-content-between px-2 pt-2">
-       <div className="w-25 me-0">
-        <span style={{color:'#666666'}} className="me-2">start/end date</span>
-       <Form.Control type="date"/>
-       </div>
+       <Row className="justify-content-between px-2 pt-2">
+      <Col xs={12} sm={6} md={3} className="mt-4">
+        <span style={{ color: '#666666' }} className="me-2">start/end date</span>
+        <Form.Control type="date" className="rounded-5"/>
+      </Col>
 
-    <div className="dropdown mt-4">
-  <button className="btn dropdown-toggle mt-0 px-5 " type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor:'#E6E6E6',fontSize:'15px'}}>
-    auction status
-  </button>
-  <ul className="dropdown-menu">
-  <li><a className="dropdown-item border-bottom" style={{color:'#666666',borderBottomColor:"#666666"}} href="#" onClick={() => setRecords(data)}>All</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleStatusFilter('Active')}>Active</a></li>
-    <li><a className="dropdown-item" href="#"onClick={() => handleStatusFilter('Pending')}>Pending</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleStatusFilter('Sold')}>Sold</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleStatusFilter('Not Sold')}>Not Sold</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleStatusFilter('Listed')}>Listed</a></li>
-  </ul>
-        </div>
+      <Col xs={12} sm={6} md={3} className="mt-5">
+        <Dropdown>
+          <Dropdown.Toggle variant="light" className="w-75" style={{ backgroundColor: '#E6E6E6', fontSize: '15px' }}>
+            auction status
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item href="#" onClick={() => setRecords(data)}>All</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Active')}>Active</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Pending')}>Pending</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Sold')}>Sold</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Not Sold')}>Not Sold</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Listed')}>Listed</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Col>
 
-        <div className="dropdown mt-4">
-  <button className="btn dropdown-toggle mt-0 px-5" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor:'#E6E6E6',fontSize:'15px'}}>
-    auction category
-  </button>
-  <ul className="dropdown-menu">
-  <li><a className="dropdown-item border-bottom" style={{color:'#666666',borderBottomColor:"#666666"}} href="#"onClick={() => setRecords(data)} >All</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Aluminum')}>Aluminum</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Copper')}>Copper</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Plastic')}>Plastic</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Iron')}>Iron</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Stainless Steel')}>Stainless Steel</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Wood')}>Wood</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Glass')}>Glass</a></li>
-    <li><a className="dropdown-item" href="#" onClick={() => handleCategoryFilter('Paper')}>Paper</a></li>
-
-  </ul>
-        </div>
-        </div>
+      <Col xs={12} sm={6} md={3} className="mt-5">
+        <Dropdown>
+          <Dropdown.Toggle variant="light" className="w-75" style={{ backgroundColor: '#E6E6E6', fontSize: '15px' }}>
+            auction category
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item href="#" onClick={() => setRecords(data)}>All</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Aluminum')}>Aluminum</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Copper')}>Copper</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Plastic')}>Plastic</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Iron')}>Iron</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Stainless Steel')}>Stainless Steel</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Wood')}>Wood</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Glass')}>Glass</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Paper')}>Paper</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </Col>
+    </Row>
        
 
-        <div className="m-5">
-            <div className="d-flex justify-content-between mb-4">
-                <div>
-                <span className="me-3">Action</span>
-            <div className="dropdown d-inline">
-  <button className="btn dropdown-toggle mt-0 px-2 " type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{backgroundColor:'#E6E6E6',fontSize:'15px'}}>
-    select
-  </button>
-  <ul className="dropdown-menu">
-    <li><a className="dropdown-item" href="#">Block</a></li>
-    <li><a className="dropdown-item" href="#" >Accept</a></li>
-    <li><a className="dropdown-item" href="#" >Action</a></li>
-  </ul>
-        </div>
-                </div>
-                <div
-                className="col-12 d-flex p-2 m-3 bg-white rounded-5 justify-content-between border border-black "
-                style={{
-                  maxWidth: "250px",
-                  height:'40px',
-                  borderColor:'#003A70',
-                }}
+    <div className="m-5">
+      <Row className="justify-content-between mb-4">
+        <Col xs={12} sm={6} md={4} lg={3} className="mb-3">
+          <div className="d-flex align-items-center">
+            <span className="me-3">Action</span>
+            <Dropdown className="d-inline">
+              <Dropdown.Toggle
+                variant="light"
+                className="px-2"
+                style={{ backgroundColor: '#E6E6E6', fontSize: '15px' }}
               >
-                <input
-                  type="text"
-                  placeholder="Search by auction ID"
-                  className="w-100 border-0 "
-                  style={{
-                    outline: "none"
-                  }}
-                  onChange={handleAuctionFilter}
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="bi bi-search"
-                  viewBox="0 0 16 16"
-                  color="black"
-                >
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                </svg>
-              </div>
-            </div>
-        
+                select
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <Dropdown.Item href="#">Block</Dropdown.Item>
+                <Dropdown.Item href="#">Accept</Dropdown.Item>
+                <Dropdown.Item href="#">Action</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        </Col>
 
-<DataTable
-columns={columns}
-data={records}
-selectableRows
-fixedHeader
-pagination
-responsive
-striped
-highlightOnHover
-selectableRowsHighlight
-customStyles={{
-    rows: {
-      style: {
-        fontSize: '16px', 
-        borderRadius: '0 0 10px 10px'
-      },
-    },
-    headCells: {
-      style: {
-        backgroundColor: '#B87333', 
-        color: 'white', 
-        fontSize: '17px', 
-        fontWeight: 'bold', 
-         borderRadius: '10px 10px 0 0'
-      },
-    },
-  }}
-></DataTable>
-        </div>
+        <Col xs={12} sm={6} md={4} lg={3} className="mb-3">
+          <div
+            className="d-flex align-items-center bg-white rounded-5 border border-black px-2"
+            style={{ maxWidth: '100%', borderColor: '#003A70', height: '40px' }}
+          >
+            <Form.Control
+              type="text"
+              placeholder="Search by auction ID"
+              className="border-0 w-100"
+              style={{ outline: 'none' }}
+              onChange={handleAuctionFilter}
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-search"
+              viewBox="0 0 16 16"
+              color="black"
+            >
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>
+          </div>
+        </Col>
+      </Row>
+
+      <DataTable
+        columns={columns}
+        data={records}
+        selectableRows
+        fixedHeader
+        pagination
+        responsive
+        striped
+        highlightOnHover
+        selectableRowsHighlight
+        customStyles={{
+          rows: {
+            style: {
+              fontSize: '16px',
+              borderRadius: '0 0 10px 10px',
+            },
+          },
+          headCells: {
+            style: {
+              backgroundColor: '#B87333',
+              color: 'white',
+              fontSize: '17px',
+              fontWeight: 'bold',
+              borderRadius: '10px 10px 0 0',
+            },
+          },
+        }}
+      />
+    </div>
 
         <Modal show={showModal} onHide={handleModalClose} size="lg">
                 <Modal.Header closeButton style={{ backgroundColor: '#003A70', color: 'white' }} className="flex justify-content-center text-center" >
