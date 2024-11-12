@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, id }) {
+function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, state, id }) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [timeRemaining, setTimeRemaining] = useState("");
   const [displayBid, setDisplayBid] = useState("-");
@@ -12,18 +12,17 @@ function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, id }) {
       const now = new Date();
       setCurrentTime(now);
       setTimeRemaining(calculateTimeRemaining(now, endTime));
-      
-      if (now >= new Date(startTime) && now <= new Date(endTime)) {
+
+      // Show bid only if auction is "STARTED" or "ENDED"
+      if (state === "STARTED" || state === "ENDED") {
         setDisplayBid(`$${latestBid}`);
-      } else if (now > new Date(endTime)) {
-        setDisplayBid(`Last Bid: $${latestBid}`);
       } else {
         setDisplayBid("-");
       }
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [startTime, endTime, latestBid]);
+  }, [startTime, endTime, latestBid, state]);
 
   function calculateTimeRemaining(current, end) {
     const timeDiff = new Date(end) - current;
@@ -39,30 +38,76 @@ function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, id }) {
 
   return (
     <tr style={{ backgroundColor: "#FFFFFF", transition: "background-color 0.3s ease" }}>
-      <td style={{ padding: "12px 20px" }}>{title}</td>
-      <td style={{ padding: "12px 20px" }}>{new Date(startTime).toLocaleString()}</td>
-      <td style={{ padding: "12px 20px" }}>{new Date(endTime).toLocaleString()}</td>
-      <td style={{ padding: "12px 20px" }}>{displayBid}</td>
-      <td style={{ padding: "12px 20px" }}>{numWatchers}</td>
-      <td style={{ padding: "12px 20px" }}>
-        {currentTime < new Date(startTime) && <span className="text-secondary fw-bold">Starting Soon</span>}
-        {currentTime >= new Date(startTime) && currentTime <= new Date(endTime) && (
-          <span className="text-success fw-bold">{timeRemaining}</span>
-        )}
-        {currentTime > new Date(endTime) && <span className="text-danger fw-bold">Auction Ended</span>}
+      <td style={{ padding: "8px 15px" }}>{title}</td>
+      <td style={{ padding: "8px 15px" }}>{new Date(startTime).toLocaleString()}</td>
+      <td style={{ padding: "8px 15px" }}>{new Date(endTime).toLocaleString()}</td>
+      <td style={{ padding: "8px 15px" }}>{displayBid}</td>
+      <td style={{ padding: "8px 15px" }}>{numWatchers}</td>
+      <td style={{ padding: "8px 15px" }}>
+        {state === "PENDING" && <span className="fw-bold">Pending</span>}
+        {state === "APPROVED" && <span className="text-success fw-bold">Approved</span>}
+        {state === "STARTED" && <span className="text-success fw-bold">{timeRemaining}</span>}
+        {state === "ENDED" && <span className="text-danger fw-bold">Ended</span>}
       </td>
-      <td style={{ padding: "12px 20px" }}>
-        <Link to={`/auction/${id}`}>
-          <Button variant="primary" size="sm">More Details</Button>
-        </Link>
+      <td style={{ padding: "8px 15px" }}>
+        {state !== "PENDING" && state !== "STARTED" ? (
+          <Link to={`/auction`}>
+            <Button variant="primary" size="sm" style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>More Details</Button>
+          </Link>
+        ) : state === "STARTED" ? (
+          <Link to={`/auction`}>
+            <Button variant="primary" size="sm" style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>More Details</Button>
+          </Link>
+        ) : (
+          <Button variant="secondary" size="sm" disabled style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>Not Available</Button>
+        )}
       </td>
     </tr>
   );
 }
 
-function AuctionList({ auctions }) {
+function AuctionList() {
+  const auctionItems = [
+    {
+      id: 1,
+      title: "Scrap Metal",
+      startTime: "2024-11-15T10:00:00Z",
+      endTime: "2024-11-16T10:00:00Z",
+      latestBid: 100,
+      numWatchers: 10,
+      state: "APPROVED",
+    },
+    {
+      id: 2,
+      title: "Old Machinery",
+      startTime: "2024-11-16T12:00:00Z",
+      endTime: "2024-11-17T12:00:00Z",
+      latestBid: 300,
+      numWatchers: 8,
+      state: "PENDING",
+    },
+    {
+      id: 3,
+      title: "Antique Furniture",
+      startTime: "2024-11-18T12:00:00Z",
+      endTime: "2024-11-19T12:00:00Z",
+      latestBid: 220,
+      numWatchers: 12,
+      state: "STARTED",
+    },
+    {
+      id: 4,
+      title: "Industrial Scrap",
+      startTime: "2024-11-10T10:00:00Z",
+      endTime: "2024-11-11T10:00:00Z",
+      latestBid: 150,
+      numWatchers: 5,
+      state: "ENDED",
+    },
+  ];
+
   return (
-    <div className="container mt-3">
+    <div className="container mt-1" style={{ marginLeft: '-15px', marginTop: "-100px" }}>
       <Table
         striped
         responsive
@@ -77,24 +122,24 @@ function AuctionList({ auctions }) {
       >
         <thead>
           <tr style={{ backgroundColor: "#B87333", color: "white", borderBottom: "2px solid #B87333" }}>
-            <th style={{ padding: "12px 20px" }}>Title</th>
-            <th style={{ padding: "12px 20px" }}>Start Time</th>
-            <th style={{ padding: "12px 20px" }}>End Time</th>
-            <th style={{ padding: "12px 20px" }}>Latest Bid</th>
-            <th style={{ padding: "12px 20px" }}>Watchers</th>
-            <th style={{ padding: "12px 20px" }}>Time Remaining</th>
-            <th style={{ padding: "12px 20px" }}>Details</th>
+            <th style={{ padding: "8px 15px" }}>Title</th>
+            <th style={{ padding: "8px 15px" }}>Start Time</th>
+            <th style={{ padding: "8px 15px" }}>End Time</th>
+            <th style={{ padding: "8px 15px" }}>Latest Bid</th>
+            <th style={{ padding: "8px 15px" }}>Watchers</th>
+            <th style={{ padding: "8px 15px" }}>State</th>
+            <th style={{ padding: "8px 15px" }}>Details</th>
           </tr>
         </thead>
         <tbody>
-          {auctions.length === 0 ? (
+          {auctionItems.length === 0 ? (
             <tr>
               <td colSpan="7" className="text-center" style={{ color: "#888" }}>
                 No auctions available.
               </td>
             </tr>
           ) : (
-            auctions.map((auction) => (
+            auctionItems.map((auction) => (
               <AuctionRow
                 key={auction.id}
                 title={auction.title}
@@ -102,6 +147,7 @@ function AuctionList({ auctions }) {
                 endTime={auction.endTime}
                 latestBid={auction.latestBid}
                 numWatchers={auction.numWatchers}
+                state={auction.state}
                 id={auction.id}
               />
             ))

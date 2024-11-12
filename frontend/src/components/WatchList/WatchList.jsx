@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup } from "react-bootstrap";
+import { Button, ButtonGroup, Modal } from "react-bootstrap";
 import { FaTrashAlt } from "react-icons/fa";
 import SearchBar from "@/components/SearchBar/SearchBar";
 
@@ -47,6 +47,10 @@ const WatchList = () => {
     },
   ]);
 
+  const [showBidModal, setShowBidModal] = useState(false);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const handleSortChange = (criteria) => {
     if (criteria === "Price") {
       setItems((prevItems) =>
@@ -65,11 +69,20 @@ const WatchList = () => {
 
   const handleRemoveItem = (itemId) => {
     setItems((items) => items.filter((item) => item.id !== itemId));
+    setShowRemoveModal(false); // Close the modal after removing the item
   };
+
+  const handleBidNow = (item) => {
+    setSelectedItem(item);
+    setShowBidModal(true);
+  };
+
+  const closeBidModal = () => setShowBidModal(false);
+  const closeRemoveModal = () => setShowRemoveModal(false);
 
   return (
     <div className="my-4" style={{ fontFamily: "Lato, sans-serif", color: "#003A70" }}>
-      {/* Add SearchBar here, right before the table */}
+      {/* Add SearchBar here */}
       <div className="d-flex justify-content-start mb-3" style={{ width: "100%", paddingLeft: "15%", marginTop: "-40px" }}>
         <div style={{ width: "100%", maxWidth: "500px" }}>
           <SearchBar />
@@ -80,42 +93,13 @@ const WatchList = () => {
         <ButtonGroup>
           <Button
             onClick={() => handleSortChange("Price")}
-            style={{
-              backgroundColor: "#B87333",
-              color: "white",
-              border: "none",
-              marginRight: "5px",
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-              transition: "background-color 0.3s, transform 0.3s",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#9f6029";
-              e.target.style.transform = "scale(1.05)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = "#B87333";
-              e.target.style.transform = "scale(1)";
-            }}
+            style={{ backgroundColor: "#B87333", color: "white", border: "none", marginRight: "5px" }}
           >
             Sort by Price
           </Button>
           <Button
             onClick={() => handleSortChange("Time")}
-            style={{
-              backgroundColor: "#B87333",
-              color: "white",
-              border: "none",
-              boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.2)",
-              transition: "background-color 0.3s, transform 0.3s",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.backgroundColor = "#9f6029";
-              e.target.style.transform = "scale(1.05)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.backgroundColor = "#B87333";
-              e.target.style.transform = "scale(1)";
-            }}
+            style={{ backgroundColor: "#B87333", color: "white", border: "none" }}
           >
             Sort by Time
           </Button>
@@ -125,15 +109,10 @@ const WatchList = () => {
       {items.length === 0 ? (
         <div className="alert alert-warning text-center">No items in your watch list.</div>
       ) : (
-        <div className="table-responsive" style={{ marginTop: "0px" , borderRadius: '15px'}}>
+        <div className="table-responsive" style={{ marginTop: "0px", borderRadius: "15px" }}>
           <table
             className="table table-striped table-hover"
-            style={{
-              borderRadius: "10px",
-              border: "1px solid #ddd",
-              boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.3)",
-              overflow: "hidden",
-            }}
+            style={{ borderRadius: "10px", border: "1px solid #ddd", boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.3)" }}
           >
             <thead>
               <tr style={{ backgroundColor: "#B87333", color: "white", borderBottom: "2px solid #B87333" }}>
@@ -155,19 +134,21 @@ const WatchList = () => {
                   <td>{item.remainingTime}</td>
                   <td>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <Button variant="primary" className="mr-2" style={{ fontSize: "12px", padding: "6px 12px" }}>
+                      <Button
+                        variant="primary"
+                        className="mr-2"
+                        style={{ fontSize: "12px", padding: "6px 12px" }}
+                        onClick={() => handleBidNow(item)}
+                      >
                         Bid Now
                       </Button>
                       <Button
                         variant="danger"
-                        onClick={() => handleRemoveItem(item.id)}
-                        style={{
-                          backgroundColor: "transparent",
-                          border: "none",
-                          cursor: "pointer",
-                          padding: "5px",
-                          transition: "transform 0.2s, background-color 0.3s",
+                        onClick={() => {
+                          setSelectedItem(item);
+                          setShowRemoveModal(true);
                         }}
+                        style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", padding: "5px",marginLeft: "20px" }}
                       >
                         <FaTrashAlt
                           style={{
@@ -188,6 +169,49 @@ const WatchList = () => {
           </table>
         </div>
       )}
+
+      {/* Bid Modal */}
+      <Modal show={showBidModal} onHide={closeBidModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Place Bid for {selectedItem?.name}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Current bid: ${selectedItem?.currentBid}</p>
+          <input
+            type="number"
+            className="form-control"
+            placeholder="Enter your bid"
+            min={selectedItem?.currentBid + 1}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeBidModal}>
+            Close
+          </Button>
+          <Button variant="primary">Place Bid</Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Remove Modal */}
+      <Modal show={showRemoveModal} onHide={closeRemoveModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Remove {selectedItem?.name} from Watchlist</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to remove this item from your watchlist?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeRemoveModal}>
+            Close
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => handleRemoveItem(selectedItem?.id)}
+          >
+            Remove
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

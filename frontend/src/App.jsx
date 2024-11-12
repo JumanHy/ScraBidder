@@ -20,7 +20,7 @@ import ResetPasswordRequest from "./pages/ResetPasswordRequestForm";
 import ResetPassword from "./pages/ResetPassword";
 import UserAccount from "./Pages/UserAccount.jsx";
 import Companyprofile from "./pages/Companyprofile/Companyprofile";
-import BusinessAccount from "./Pages/BusinessAccount/BusinessAccount.jsx";
+import BusinessAccount from "./pages/BusinessAccount/BusinessAccount.jsx";
 import IndividualRegistration from "./Pages/IndividualRegistration.jsx";
 import AuctionForm from "./Pages/AuctionFormPage/AuctionFormPage";
 import Dashboard from "./Pages/Dashboard/Dashboard";
@@ -44,6 +44,8 @@ export default function App() {
           <Route path="/business-register" element={<BusinessRegistration />} />
           <Route path="/reset-Password" element={<ResetPasswordRequest />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
+          {/* <Route path="/profile" element={<UserProfile />} /> */}
+          {/* //<Route path="/bprofile" element={<BusinessProfile />} /> */}
           <Route path="/cprofile" element={<Companyprofile />} />
           <Route path="/user-account" element={<UserAccount />} />
           <Route path="/dashboard" element={<Dashboard />} />
