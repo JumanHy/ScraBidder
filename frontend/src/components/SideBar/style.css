@@ -1,0 +1,14 @@
+.sidebar{
+    background-color: #003A70;
+}
+.sidebarlink {
+    text-decoration: none;
+    transition: background-color 0.3s ease; 
+  }
+.sidebarlink:hover div{
+    background-color: #005092;
+}
+
+.sidebarlink.active div {
+    background-color: #005092;
+}

@@ -5,31 +5,33 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
-import NavBar from "./components/NavBar/NavBar";
+
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import AuctionDetailsPage from "./pages/AuctionDetailsPage/AuctionDetailsPage";
 import ResultsPage from "./pages/ResultsPage/ResultsPage";
+import NavBar from "./components/NavBar/NavBar";
 import Home from "./Pages/HomePage/Home";
 import Login from "./Pages/Login.jsx";
 import BusinessRegistration from "./Pages/BusinessRegistration.jsx";
 import ResetPasswordRequest from "./pages/ResetPasswordRequestForm";
 import ResetPassword from "./pages/ResetPassword";
-import UserProfile from "./pages/UserProfile";
-import New from"./pages/New";
-import Companyprofile from "./pages/Companyprofile/Companyprofile"
+import UserAccount from "./Pages/UserAccount.jsx";
+import Companyprofile from "./pages/Companyprofile/Companyprofile";
 import BusinessAccount from "./Pages/BusinessAccount/BusinessAccount.jsx";
 import IndividualRegistration from "./Pages/IndividualRegistration.jsx";
 import AuctionForm from "./Pages/AuctionFormPage/AuctionFormPage";
+import Dashboard from "./Pages/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer";
 import "./styles/css/main.min.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function App() {
   return (
     <>
       <Router>
-        <NavBar />
+        <ConditionalNavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auction" element={<AuctionDetailsPage />} />
@@ -45,8 +47,8 @@ export default function App() {
           {/* <Route path="/profile" element={<UserProfile />} /> */}
           {/* //<Route path="/bprofile" element={<BusinessProfile />} /> */}
           <Route path="/cprofile" element={<Companyprofile />} />
-          <Route path="/new" element={<New />}/>
-          <Route path="/user-account" element={<UserProfile />} />
+          <Route path="/user-account" element={<UserAccount />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/business-account" element={<BusinessAccount />} />
           <Route path="/auction-form" element={<AuctionForm />} />
         </Routes>
@@ -64,7 +66,16 @@ const ConditionalFooter = () => {
     "/business-register",
     "/reset-password",
     "/resetPassword",
+    "/business-account",
+    "/user-account",
+    "/dashboard",
   ];
 
   return !hideFooterRoutes.includes(location.pathname) ? <Footer /> : null;
+};
+const ConditionalNavBar = () => {
+  const location = useLocation();
+  const hideNavBarRoutes = ["/dashboard"];
+
+  return !hideNavBarRoutes.includes(location.pathname) ? <NavBar /> : null;
 };

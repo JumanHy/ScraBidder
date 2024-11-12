@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import BAcountSidebar from '../../components/BAcountSidebar/BAcountSidebar';
-import WatchList from '../../components/WatchList/WatchList';
-import TransactionHistory from '../../components/TransactionHistory/TransactionHistory';
-import PaymentMethods from '../../components/PaymentMethods/PaymentMethods';
-import Myauctions from '../../components/Myauctions/Myauctions';  // Import Myauctions
-import UserDetails from '../../components/UserDetails/UserDetails';
+import React, { useState, useEffect } from "react";
+import BAcountSidebar from "../../components/BAcountSidebar/BAcountSidebar";
+import WatchList from "../../components/WatchList/WatchList";
+import TransactionHistory from "../../components/TransactionHistory/TransactionHistory";
+import PaymentMethods from "../../components/PaymentMethods/PaymentMethods";
+import MyAuctions from "../../components/Myauctions/Myauctions";
+import UserDetails from "../../components/UserDetails/UserDetails";
 
 function BusinessProfile() {
   const [activeSection, setActiveSection] = useState("dashboard"); // Default to 'dashboard' section
@@ -52,7 +52,7 @@ function BusinessProfile() {
           <div>
             <h2>My Auctions</h2>
           
-            <Myauctions />  
+            <MyAuctions />  
           </div>
         );
       case "transactions":
