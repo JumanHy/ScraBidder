@@ -1,100 +1,294 @@
 import React, { useState } from 'react';
-import logo from "@/assets/images/ScraBidderLogo.png";
-import userImage from "@/assets/images/UserImage.png";
-import { FaEdit } from 'react-icons/fa';
+import userImage from "@/assets/images/UserImage.png"; // Default image
+import { FaEdit } from 'react-icons/fa'; // Edit icon import
 
 const UserDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [aboutMe, setAboutMe] = useState("This is a short description about me.");
-  const [interestProgress, setInterestProgress] = useState({
-    iron: 40,
-    plastic: 60,
-    copper: 80,
-    aluminum: 30,
-    glass: 50,
+  const [isServiceEditing, setIsServiceEditing] = useState(false); // For editing company service
+  const [uploadedImage, setUploadedImage] = useState(null);
+
+  // State for the form fields
+  const [userInfo, setUserInfo] = useState({
+    username: 'John Doe',
+    email: 'example@example.com',
+    phone: '123-456-7890',
+    password: 'password123',
+    address: '123 Main St, San Francisco, CA',
   });
 
+  // State for company service details
+  const [companyServiceInfo, setCompanyServiceInfo] = useState({
+    companyName: '',
+    serviceDetails: 'Basic service details here...', // Default service details
+  });
+
+  // State for user settings (New flexbox section)
+  const [userSettings, setUserSettings] = useState({
+    notifications: true,
+    darkMode: false,
+    companyPhotos: [] // Array to store uploaded photos
+  });
+
+  // Toggle modal visibility for user details
   const toggleEdit = () => setIsEditing(!isEditing);
-  const handleAboutMeChange = (event) => setAboutMe(event.target.value);
-  const handleLanguageChange = (event) => setLanguage(event.target.value);
+
+  // Toggle edit mode for company service
+  const toggleServiceEdit = () => setIsServiceEditing(!isServiceEditing);
+
+  // Handle image upload
+  const handleImageUpload = (event, index) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const updatedPhotos = [...userSettings.companyPhotos];
+        updatedPhotos[index] = reader.result; // Update the specific photo in the array
+        setUserSettings({ ...userSettings, companyPhotos: updatedPhotos });
+      };
+      reader.readAsDataURL(file); // Convert the image to a Data URL to display it
+    }
+  };
+
+  // Handle form field changes for user details
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setUserInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
+  };
+
+  // Handle company service input change
+  const handleServiceInputChange = (event) => {
+    const { name, value } = event.target;
+    setCompanyServiceInfo((prevInfo) => ({
+      ...prevInfo,
+      [name]: value,
+    }));
+  };
+
+  // Handle user settings toggle
+  const handleSettingsChange = (event) => {
+    const { name, checked } = event.target;
+    setUserSettings((prevSettings) => ({
+      ...prevSettings,
+      [name]: checked,
+    }));
+  };
 
   return (
-    <section style={{ backgroundColor: '#f8f9fa', padding: '10px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)', fontFamily: 'Lato, sans-serif', marginTop: '-10px', width: '90%' }}>
-      <div className="container" style={{ padding: '0' }}>
-        <div className="row">
-          <div className="col-12 col-md-6">
-            <div className="card mb-3 rounded-3" style={{ borderRadius: '10px', border: '1px solid #e0cda1', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff', padding: '10px' }}>
-              <div className="card-body text-center" style={{ padding: '5px' }}>
-                <img
-                  src={userImage}
-                  alt="avatar"
-                  className="rounded-circle img-fluid"
-                  style={{ width: '100px', marginBottom: '10px' }}
-                />
-                <h6 className="my-2">username</h6>
-                
-                {/* Centered Add Photo Button */}
-                <div className="text-center mb-3" style={{ textAlign: 'center' }}>
-                  <button type="button" className="btn btn-sm" style={{ backgroundColor: '#033A70', color: 'white',Align: 'center' }}>
-                    Add Photo
-                  </button>
-                </div>
-
-                <div className="mt-2">
-                  <h6 className="mb-2" style={{ textAlign: 'left' ,margintop: '20px'}}>About Me</h6>
-                  {/* About Me Textarea */}
-                  <textarea
-                    className="form-control"
-                    value={aboutMe}
-                    onChange={handleAboutMeChange}
-                    rows="2"
-                    readOnly={!isEditing}
-                    style={{ fontSize: '12px', padding: '5px', textAlign: 'left' }}
-                  />
-                  <button className="btn btn-sm btn-outline-primary mt-2" onClick={toggleEdit} style={{ backgroundColor: '#003A70', color: 'white' }}>
-                    {isEditing ? "Save" : "Edit"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* User Information Section */}
-          <div className="col-12 col-md-6">
-            <div className="card mb-3 rounded-3" style={{ borderRadius: '10px', border: '1px solid #e0cda1', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)', backgroundColor: '#ffffff', padding: '10px' }}>
-              <div className="card-body" style={{ padding: '5px' }}>
-                {/* User Details Rows */}
-                {[ 
-                  { label: 'Full Name', value: 'Johnatan Smith' },
-                  { label: 'Email', value: 'example@example.com' },
-                  { label: 'Phone', value: '(097) 234-5678' },
-                  { label: 'Address', value: 'Bay Area, San Francisco, CA' },
-
-                  { label: 'Password', value: '********' },
-                ].map(({ label, value }, idx) => (
-                  <div key={idx} className="row mb-2">
-                    <div className="col-4">
-                      <p className="mb-0" style={{ fontSize: '12px' }}>{label}</p>
-                    </div>
-                    <div className="col-6">
-                      <p className="text-muted mb-0" style={{ fontSize: '12px' }}>{value}</p>
-                    </div>
-                    <div className="col-2">
-                      <button className="btn btn-sm btn-outline-secondary">
-                        <FaEdit style={{ fontSize: '10px' }} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        gap: '20px',
+        padding: '20px',
+        backgroundColor: '#fff',
+        borderRadius: '8px',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)',
+        fontFamily: 'Lato, sans-serif',
+      }}
+    >
+      {/* Left Container: User Info */}
+      <div
+        style={{
+          width: '32%', // Set width to make it equal with other sections
+          backgroundColor: '#fff',
+          padding: '20px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)', // Add shadow for consistency
+        }}
+      >
+        <div className="d-flex justify-content-between align-items-center">
+          <h3>User Details</h3>
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={toggleEdit}
+          >
+            <FaEdit /> Edit Info
+          </button>
         </div>
 
-        
+        {/* Image upload */}
+        <img
+          src={uploadedImage || userImage}
+          alt="User Avatar"
+          className="rounded-circle mt-3 mb-3"
+          style={{ width: '100px', height: '100px' }}
+        />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => handleImageUpload(e, 0)} // Use index to differentiate
+          style={{
+            marginTop: '10px',
+            display: 'block',
+          }}
+        />
 
+        <p><strong>Username:</strong> {userInfo.username}</p>
+        <p><strong>Email:</strong> {userInfo.email}</p>
+        <p><strong>Phone:</strong> {userInfo.phone}</p>
+        <p><strong>Address:</strong> {userInfo.address}</p>
+
+        {/* Modal for Editing User Info */}
+        {isEditing && (
+          <div className="modal show fade" style={{ display: 'block' }}>
+            <div
+              className="modal-dialog modal-sm"
+              style={{
+                maxWidth: '300px',
+              }}
+            >
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Edit User Info</h5>
+                  <button type="button" className="btn-close" onClick={toggleEdit}></button>
+                </div>
+                <div className="modal-body">
+                  <form>
+                    <div className="mb-3">
+                      <label htmlFor="username" className="form-label">Username</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="username"
+                        name="username"
+                        value={userInfo.username}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="email" className="form-label">Email</label>
+                      <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        name="email"
+                        value={userInfo.email}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="phone" className="form-label">Phone</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="phone"
+                        name="phone"
+                        value={userInfo.phone}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="password" className="form-label">Password</label>
+                      <input
+                        type="password"
+                        className="form-control"
+                        id="password"
+                        name="password"
+                        value={userInfo.password}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="address" className="form-label">Address</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="address"
+                        name="address"
+                        value={userInfo.address}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </form>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={toggleEdit}>Close</button>
+                  <button type="button" className="btn btn-primary" onClick={toggleEdit}>Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </section>
+
+      {/* Middle Container: Company Service */}
+      <div
+        style={{
+          width: '32%', // Same width as the other containers
+          backgroundColor: '#fff',
+          padding: '20px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)', // Add shadow for consistency
+        }}
+      >
+        <h3>Company Service</h3>
+        <div className="d-flex justify-content-between">
+          <textarea
+            className="form-control"
+            id="serviceDetails"
+            name="serviceDetails"
+            value={companyServiceInfo.serviceDetails}
+            onChange={handleServiceInputChange}
+            disabled={!isServiceEditing}
+            style={{
+              flex: 1,
+              height: '200px',
+              fontSize: '16px',
+              padding: '10px',
+            }}
+          />
+          <FaEdit
+            onClick={toggleServiceEdit}
+            style={{
+              marginLeft: '10px',
+              cursor: 'pointer',
+              fontSize: '20px',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Right Container: Company Photos */}
+      <div
+        style={{
+          width: '32%', // Same width as the other containers
+          backgroundColor: '#fff',
+          padding: '20px',
+          borderRadius: '8px',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.15)', // Add shadow for consistency
+        }}
+      >
+        <h3>Company Photos</h3>
+        <p>Upload up to 3 photos for your company:</p>
+        {[0, 1, 2].map((index) => (
+          <div key={index} className="mb-3">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e, index)} // Use index to differentiate photos
+              style={{
+                marginBottom: '10px',
+              }}
+            />
+            {userSettings.companyPhotos[index] && (
+              <img
+                src={userSettings.companyPhotos[index]}
+                alt={`Uploaded ${index + 1}`}
+                className="img-thumbnail"
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  marginTop: '10px',
+                }}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

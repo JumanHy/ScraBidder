@@ -14,7 +14,6 @@ import BusinessRegistration from "./Pages/BusinessRegistration.jsx";
 import ResetPasswordRequest from "./pages/ResetPasswordRequestForm";
 import ResetPassword from "./pages/ResetPassword";
 import UserProfile from "./pages/UserProfile";
-import BusinessProfile from "./pages/BusinessProfile/BusinessProfile";
 import New from"./pages/New";
 import Companyprofile from "./pages/Companyprofile/Companyprofile"
 import BusinessAccount from "./Pages/BusinessAccount/BusinessAccount.jsx";
@@ -43,8 +42,8 @@ export default function App() {
           <Route path="/business-register" element={<BusinessRegistration />} />
           <Route path="/reset-Password" element={<ResetPasswordRequest />} />
           <Route path="/resetPassword" element={<ResetPassword />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/bprofile" element={<BusinessProfile />} />
+          {/* <Route path="/profile" element={<UserProfile />} /> */}
+          {/* //<Route path="/bprofile" element={<BusinessProfile />} /> */}
           <Route path="/cprofile" element={<Companyprofile />} />
           <Route path="/new" element={<New />}/>
           <Route path="/user-account" element={<UserProfile />} />

@@ -54,7 +54,7 @@ const BusinessRegistration = () => {
       setTimeout(() => {
         setSubmissionMessage("Form submitted successfully!");
         console.log(values);
-      }, 2000);
+      }, 10);
     } else {
       nextStep();
     }
@@ -63,7 +63,7 @@ const BusinessRegistration = () => {
   return (
     <Container
       style={{ maxWidth: "670px" }}
-      className="my-5 shadow rounded justify-content-center"
+      className="my-5 shadow rounded justify-content-center" 
     >
       <Row className="p-4 gap-3">
         <Col
