@@ -1,7 +1,7 @@
 import { Container, Image, Nav, Navbar, Dropdown, Badge } from "react-bootstrap";
 import logo from "../../assets/images/ScraBidderLogo.png";
 import React,{useState} from "react";
-import { Dot,Gear, Bell, Person,BoxArrowRight ,Hammer, Trophy, Upload, CurrencyDollar, ExclamationCircle, Envelope, CheckCircle, Circle, ChatDots, ChatDotsFill} from "react-bootstrap-icons"; // Import Person icon for profile
+import { Dot,Gear, Bell, Person,BoxArrowRight ,Hammer, Trophy, Upload, CurrencyDollar, ExclamationCircle, Envelope, CheckCircle, Circle, ChatDots, ChatDotsFill} from "react-bootstrap-icons"; 
 import "./style.css";
 
 function NavBar() {

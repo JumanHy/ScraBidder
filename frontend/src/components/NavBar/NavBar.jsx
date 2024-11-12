@@ -7,6 +7,7 @@ import {
   Dropdown,
   Modal,
 } from "react-bootstrap";
+import { Dot,Gear, Bell, Person,BoxArrowRight ,Hammer, Trophy, Upload, CurrencyDollar, ExclamationCircle, Envelope, CheckCircle, Circle, ChatDots, ChatDotsFill} from "react-bootstrap-icons"; 
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "@/assets/images/ScraBidderLogo.png";
@@ -17,7 +18,23 @@ import userImage from "@/assets/images/UserImage.png";
 import { useState } from "react";
 
 function NavBar() {
-  const [isLogedin, setIsLogedin] = useState(false);
+  const notifications = [
+    { id: 1, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#005092'}} /> },
+    { id: 2, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#005092'}}/> },
+    { id: 3, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{color:'#005092'}}/> },
+    { id: 4, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{color:'#005092'}}/> },
+    { id: 5, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{color:'#005092'}}/> },
+    { id: 6, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{color:'#005092'}}/> },
+    { id: 7, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{color:'#005092'}}/> },
+    { id: 8, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#005092'}} /> },
+    { id: 9, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#005092'}}/> },
+    { id: 10, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{color:'#005092'}}/> },
+    { id: 11, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{color:'#005092'}}/> },
+    { id: 12, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{color:'#005092'}}/> },
+    { id: 13, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{color:'#005092'}}/> },
+    { id: 14, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{color:'#005092'}}/> }
+  ]
+  const [isLogedin, setIsLogedin] = useState(true);
 
   // State for controlling the profile image modal visibility
   const [showModal, setShowModal] = useState(false);
@@ -71,16 +88,35 @@ function NavBar() {
                 ) : (
                   <div className="d-flex align-items-center gap-2">
                     {/* Notification Icon */}
-                    <Nav.Link className="position-relative">
-                      <FaBell size={20} />
-                      <Badge
-                        bg="danger"
-                        pill
-                        className="position-absolute top-0 start-100 translate-middle p-1"
-                      >
-                        5
-                      </Badge>
-                    </Nav.Link>
+                    <Dropdown align="end">
+              <Dropdown.Toggle variant="link" className="position-relative" id="notifications-dropdown">
+                <Bell size={24} color="black" />
+                {notifications.length > 0 && (
+                  <Badge pill bg="danger" className="position-absolute top-0 start-100 translate-middle">
+                    {notifications.length}
+                  </Badge>
+                )}
+              </Dropdown.Toggle>
+              <Dropdown.Menu className="rounded-4" style={{ maxHeight: "500px", overflowY: "auto" }}>
+                <Dropdown.Header >Notifications</Dropdown.Header>
+                {notifications.length > 0 ? (
+                  notifications.map((notification) => (
+                    <Dropdown.Item key={notification.id} className="d-flex justify-content-between py-3 px-3" >
+              <span className="d-flex ">
+              <span className="me-4">{notification.icon}</span>
+              <span className="d-flex flex-column">
+              <span >{notification.message}</span>
+              <span className="fw-lighter fst-italic fs-6" style={{color:'#005092'}}><Dot/>10 minutes ago</span>
+              </span>
+              </span>
+              <Dot className="text-end" size={40} style={{color:'#005092'}}/>
+            </Dropdown.Item>
+                  ))
+                ) : (
+                  <Dropdown.Item disabled>No new notifications</Dropdown.Item>
+                )}
+              </Dropdown.Menu>
+            </Dropdown>
 
                     {/* Profile Image */}
                     <Nav.Link
