@@ -297,7 +297,7 @@ function UsersData(){
           },
           headCells: {
             style: {
-              backgroundColor: '#B87333',
+              backgroundColor: '#005092',
               color: 'white',
               fontSize: '17px',
               fontWeight: 'bold',
@@ -456,7 +456,7 @@ customStyles={{
     },
     headCells: {
       style: {
-        backgroundColor: '#B87333', 
+        backgroundColor: '#005092', 
         color: 'white', 
         fontSize: '17px', 
         fontWeight: 'bold', 
