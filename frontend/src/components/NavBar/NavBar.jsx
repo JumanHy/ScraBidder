@@ -9,7 +9,7 @@ import userImage from "@/assets/images/UserImage.png";
 import { useState } from "react";
 
 function NavBar() {
-  const [isLogedin, setIsLogedin] = useState(true);
+  const [isLogedin, setIsLogedin] = useState(false);
 
   // State for controlling the profile image modal visibility
   const [showModal, setShowModal] = useState(false);

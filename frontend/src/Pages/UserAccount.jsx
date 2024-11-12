@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import AcountSidebar from "../components/AcountSidebar";
 import WatchList from "../components/WatchList/WatchList";
-import UserDetails from "../components/UserDetails/UserDetails";
+import Usersetting from "../components/Usersetting";
 import TransactionHistory from "../components/TransactionHistory/TransactionHistory";
 import PaymentMethods from "../components/PaymentMethods/PaymentMethods";
 
@@ -33,7 +33,7 @@ function UserAccount() {
       case "settings":
         return (
           <div>
-            <UserDetails />
+            <Usersetting />
           </div>
         );
       default:
