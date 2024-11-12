@@ -30,7 +30,7 @@ function AuctionCard() {
           {/* Countdown Timer */}
           <div>
             <FlipCountdown
-              endAt="2024-11-11 23:55:55"
+              endAt="2024-11-18 23:55:55"
               size="small"
               titlePosition="top"
               hideYear

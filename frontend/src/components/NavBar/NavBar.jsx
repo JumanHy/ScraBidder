@@ -1,4 +1,12 @@
-import { Container, Col, Button, Image, Badge, Dropdown, Modal } from "react-bootstrap";
+import {
+  Container,
+  Col,
+  Button,
+  Image,
+  Badge,
+  Dropdown,
+  Modal,
+} from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "@/assets/images/ScraBidderLogo.png";
@@ -16,7 +24,7 @@ function NavBar() {
 
   // Function to open modal
   const handleShowModal = () => setShowModal(true);
-  
+
   // Function to close modal
   const handleCloseModal = () => setShowModal(false);
 
@@ -43,7 +51,9 @@ function NavBar() {
                   <Nav.Link className="nav-link text-primary">Home</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/results">
-                  <Nav.Link className="nav-link text-primary">Auctions</Nav.Link>
+                  <Nav.Link className="nav-link text-primary">
+                    Auctions
+                  </Nav.Link>
                 </LinkContainer>
                 <Nav.Link className="nav-link text-primary">
                   Help & Support
@@ -73,7 +83,11 @@ function NavBar() {
                     </Nav.Link>
 
                     {/* Profile Image */}
-                    <Nav.Link as="span" onClick={handleShowModal} style={{ cursor: 'pointer' }}>
+                    <Nav.Link
+                      as="span"
+                      onClick={handleShowModal}
+                      style={{ cursor: "pointer" }}
+                    >
                       <Image
                         src={userImage}
                         roundedCircle
@@ -92,10 +106,16 @@ function NavBar() {
                         {/* Empty Toggle for Dropdown Arrow */}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item href="/business-account">My Account</Dropdown.Item>
-                        <Dropdown.Item href="/cprofile">My Profile</Dropdown.Item>
+                        <Dropdown.Item href="/business-account">
+                          My Account
+                        </Dropdown.Item>
+                        <Dropdown.Item href="/cprofile">
+                          My Profile
+                        </Dropdown.Item>
                         <Dropdown.Divider />
-                        <Dropdown.Item href="/">Log Out</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setIsLogedin(false)}>
+                          Log Out
+                        </Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
@@ -108,15 +128,13 @@ function NavBar() {
 
       {/* Modal for Enlarged Profile Image */}
       <Modal show={showModal} onHide={handleCloseModal} centered>
-        <Modal.Body className="text-center"
-        
-        >
+        <Modal.Body className="text-center">
           <Image
             src={userImage}
             alt="User Enlarged"
             roundedCircle
             fluid
-            style={{ maxWidth: "200px",  maxHeight:"100" }} // Adjust the size of the enlarged image here
+            style={{ maxWidth: "200px", maxHeight: "100" }} // Adjust the size of the enlarged image here
           />
         </Modal.Body>
       </Modal>
