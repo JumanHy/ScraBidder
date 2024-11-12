@@ -12,12 +12,13 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "@/assets/images/ScraBidderLogo.png";
 import { LinkContainer } from "react-router-bootstrap";
-import "./style.css";
 import { FaBell } from "react-icons/fa";
 import userImage from "@/assets/images/UserImage.png";
 import { useState } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation hook
 
 function NavBar() {
+<<<<<<< Updated upstream
   const notifications = [
     { id: 1, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#005092'}} /> },
     { id: 2, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#005092'}}/> },
@@ -38,18 +39,25 @@ function NavBar() {
 
   // State for controlling the profile image modal visibility
   const [showModal, setShowModal] = useState(false);
+=======
+  const [isLogedin, setIsLogedin] = useState(true);
+  const [showModal, setShowModal] = useState(false); // Modal state for profile image
+  const location = useLocation(); // Get current route/location
+>>>>>>> Stashed changes
 
   // Function to open modal
   const handleShowModal = () => setShowModal(true);
-
   // Function to close modal
   const handleCloseModal = () => setShowModal(false);
+
+  // Check if the user is on "user-account" or "business-account" page
+  const role = "business";
 
   return (
     <>
       <Navbar expand="md" style={{ backgroundColor: "#FAFAFA" }}>
         <Container fluid>
-          <Col xs={2} md={2} className="">
+          <Col xs={2} md={2}>
             <Navbar.Brand className="d-flex align-items-center gap-1">
               <Image fluid src={logo} style={{ maxWidth: "50px" }} />
               <span style={{ color: "#003A70" }} className="fs-6 fw-bold">
@@ -59,22 +67,15 @@ function NavBar() {
           </Col>
           <Navbar.Toggle className="ms-auto" aria-controls="basic-navbar-nav" />
           <Col xs={12} md={8}>
-            <Navbar.Collapse
-              className="justify-content-between"
-              id="basic-navbar-nav"
-            >
+            <Navbar.Collapse className="justify-content-between" id="basic-navbar-nav">
               <Nav className="m-start gap-md-3 text-center">
                 <LinkContainer to="/">
                   <Nav.Link className="nav-link text-primary">Home</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/results">
-                  <Nav.Link className="nav-link text-primary">
-                    Auctions
-                  </Nav.Link>
+                  <Nav.Link className="nav-link text-primary">Auctions</Nav.Link>
                 </LinkContainer>
-                <Nav.Link className="nav-link text-primary">
-                  Help & Support
-                </Nav.Link>
+                <Nav.Link className="nav-link text-primary">Help & Support</Nav.Link>
                 <Nav.Link className="nav-link text-primary">About Us</Nav.Link>
               </Nav>
 
@@ -82,7 +83,7 @@ function NavBar() {
                 {!isLogedin ? (
                   <LinkContainer to="/login">
                     <Button variant="secondary" className="w-100 text-white">
-                      Login\Register
+                      Login/Register
                     </Button>
                   </LinkContainer>
                 ) : (
@@ -142,12 +143,16 @@ function NavBar() {
                         {/* Empty Toggle for Dropdown Arrow */}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item href="/business-account">
-                          My Account
-                        </Dropdown.Item>
+                   
+                       
+                        <Dropdown.Item href={role == "business" ? "/business-account" : "/user-account"}>
+                              My Account
+                            </Dropdown.Item>
+                   { role == "business" ?
                         <Dropdown.Item href="/cprofile">
                           My Profile
-                        </Dropdown.Item>
+                        </Dropdown.Item> : null
+}
                         <Dropdown.Divider />
                         <Dropdown.Item onClick={() => setIsLogedin(false)}>
                           Log Out
