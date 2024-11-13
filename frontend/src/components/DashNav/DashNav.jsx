@@ -6,26 +6,26 @@ import "./style.css";
 
 function NavBar() {
   const notifications = [
-    { id: 1, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#B87333'}} /> },
-    { id: 2, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#B87333'}}/> },
-    { id: 3, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{color:'#B87333'}}/> },
-    { id: 4, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{color:'#B87333'}}/> },
-    { id: 5, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{color:'#B87333'}}/> },
-    { id: 6, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{color:'#B87333'}}/> },
-    { id: 7, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{color:'#B87333'}}/> },
-    { id: 8, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#B87333'}} /> },
-    { id: 9, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#B87333'}}/> },
-    { id: 10, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{color:'#B87333'}}/> },
-    { id: 11, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{color:'#B87333'}}/> },
-    { id: 12, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{color:'#B87333'}}/> },
-    { id: 13, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{color:'#B87333'}}/> },
-    { id: 14, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{color:'#B87333'}}/> }
+    { id: 1, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#005092'}} /> },
+    { id: 2, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#005092'}}/> },
+    { id: 3, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{color:'#005092'}}/> },
+    { id: 4, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{color:'#005092'}}/> },
+    { id: 5, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{color:'#005092'}}/> },
+    { id: 6, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{color:'#005092'}}/> },
+    { id: 7, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{color:'#005092'}}/> },
+    { id: 8, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{color:'#005092'}} /> },
+    { id: 9, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{color:'#005092'}}/> },
+    { id: 10, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{color:'#005092'}}/> },
+    { id: 11, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{color:'#005092'}}/> },
+    { id: 12, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{color:'#005092'}}/> },
+    { id: 13, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{color:'#005092'}}/> },
+    { id: 14, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{color:'#005092'}}/> }
   ]
 
 
   
   return (
-    <Navbar expand="md" style={{ backgroundColor: "#FAFAFA" }}>
+    <Navbar expand="md" style={{ backgroundColor: "#FAFAFA" }} fixed="top">
       <Container fluid>
         <Navbar.Brand href="#home" className="d-flex align-items-center gap-1" style={{ flex: '1' }}>
           <Image fluid src={logo} style={{ maxWidth: "50px" }} />
@@ -37,9 +37,13 @@ function NavBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="ms-auto" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto gap-md-3 text-center align-items-center">
+<<<<<<< Updated upstream
             <Nav.Link className="dashnav-link fw-bold" style={{ color: "#9F1717" }} href="/">
               Log out
             </Nav.Link>
+=======
+            
+>>>>>>> Stashed changes
 
             <Dropdown>
               <Dropdown.Toggle variant="link" id="settings-dropdown" className="settings-dropdown-toggle">
@@ -50,7 +54,7 @@ function NavBar() {
                 <Dropdown.Item href="#/action-2">Account Settings</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Help</Dropdown.Item>
                 <Dropdown.Divider />
-                <Dropdown.Item href="#/action-4">Logout <BoxArrowRight size={15} className="me-2 ms-2" /></Dropdown.Item>
+                <Dropdown.Item href="#/action-4" className="text-danger fw-bold">Logout <BoxArrowRight size={15} className="me-2 ms-2" /></Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
 
@@ -72,10 +76,10 @@ function NavBar() {
               <span className="me-4">{notification.icon}</span>
               <span className="d-flex flex-column">
               <span >{notification.message}</span>
-              <span className="fw-lighter fst-italic fs-6" style={{color:'#4F2804'}}><Dot/>10 minutes ago</span>
+              <span className="fw-lighter fst-italic fs-6" style={{color:'#005092'}}><Dot/>10 minutes ago</span>
               </span>
               </span>
-              <Dot className="text-end" size={40} style={{color:'#B87333'}}/>
+              <Dot className="text-end" size={40} style={{color:'#005092'}}/>
             </Dropdown.Item>
                   ))
                 ) : (

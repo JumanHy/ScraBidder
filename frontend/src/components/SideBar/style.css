@@ -1,6 +1,12 @@
 .sidebar{
     background-color: #003A70;
+    height: 100vh;
+    position: fixed;
+    color: white;
+    overflow-y: hidden; 
+    z-index: 1000;
 }
+
 .sidebarlink {
     text-decoration: none;
     transition: background-color 0.3s ease; 
@@ -11,4 +17,14 @@
 
 .sidebarlink.active div {
     background-color: #005092;
+}
+.dashboard-component {
+    margin-left: 16.67%; /* Adjust to the sidebar width */
+    height: 100vh;
+    overflow-y: auto; /* Allow scrolling for main content */
+    padding-top: 10px;
+    background-color: #F5F5F5;
+}
+.main-content{
+    padding-top: 75px;
 }

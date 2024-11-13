@@ -111,37 +111,43 @@ function UsersData(){
     return(
         <>
         
-        <div className="pb-3 my-5 border-bottom" >
         <h2 className="text-center pt-3" style={{color:'#003a70'}}>Summary</h2>
-                    <div className="de-flex row justify-content-center">
-                        <div className="shadow col-6 col-lg-3 mx-2 my-3 text-center rounded-3 card-animation card-delay-1">
+        <Container>
+            <Row>
+                <Col>
+                <span className=" col-6 col-lg-3 mx-2 my-3 text-center card-animation card-delay-1">
                             <div className="fs-6 py-3">
                                 <span className="ps-3" style={{color:"#666666"}}>Total Users</span>
                             </div>
                             <div className="fs-3 pb-2 fw-bold" style={{color:'#003A70'}}>233</div>
-                        </div>
-                        <div className="shadow col-6 col-lg-3 mx-2 my-3 text-center rounded-3 card-animation card-delay-2">
+                        </span>
+                </Col>
+                <Col>
+                <span className=" col-6 col-lg-3 mx-2 my-3 text-center card-animation card-delay-2">
                             <div className="fs-6 py-3">
                                 <span className="ps-3" style={{color:"#666666"}}>Active Users</span>
                             </div>
                             <div className="fs-3 pb-2 fw-bold text-success">45</div>
-                        </div>
-                        <div className="shadow col-6 col-lg-3 mx-2 my-3 text-center rounded-3 card-animation card-delay-3">
+                        </span>
+                </Col>
+                <Col>
+                <span className=" col-6 col-lg-3 mx-2 my-3 text-center  card-animation card-delay-3">
                             <div className="fs-6 py-3">
                                 <span className="ps-3" style={{color:"#666666"}}>Pending Users</span>
                             </div>
                             <div className="fs-3 pb-2 fw-bold" style={{color:'#E9D62D'}}>10</div>
-                        </div>
-                        <div className="shadow col-6 col-lg-3 mx-2 my-3 text-center rounded-3 card-animation card-delay-4">
+                        </span>
+                </Col>
+                <Col>
+                <span className=" col-6 col-lg-3 mx-2 my-3 text-center  card-animation card-delay-4">
                             <div className="fs-6 py-3">
                                 <span className="ps-3" style={{color:"#666666"}}>Blocked Users</span>
                             </div>
                             <div className="fs-3 pb-2 fw-bold text-danger" style={{color:'#003A70'}}>3</div>
-                        </div>
-                        
-                    </div>
-        </div>
-
+                        </span>
+                </Col>
+            </Row>
+        </Container>
 
        <Container fluid className="my-4 d-flex flex-wrap justify-content-around">
        <div
@@ -244,7 +250,7 @@ customStyles={{
 ></DataTable>
         </div>
 
-        <Modal show={showModal} onHide={handleModalClose} size="md">
+        <Modal show={showModal} onHide={handleModalClose} size="lg">
                 <Modal.Header closeButton style={{ backgroundColor: '#003A70', color: 'white' }} className="flex justify-content-center text-center" >
                     <Modal.Title>Profile Information</Modal.Title>
                 </Modal.Header>
@@ -310,7 +316,7 @@ customStyles={{
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="text-center w-100 my-3">
-                    <Button className="w-25" variant="secondary" onClick={handleModalClose} style={{backgroundColor:'#B87333' ,borderColor:'#B87333'}}>
+                    <Button className="w-25 text-white" variant="secondary" onClick={handleModalClose} style={{backgroundColor:'#B87333' ,borderColor:'#B87333'}}>
                         Close
                     </Button>
                     </div>

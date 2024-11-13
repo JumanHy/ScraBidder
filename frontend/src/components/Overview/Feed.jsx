@@ -24,19 +24,19 @@ function Feed(){
       <Container 
         id="fade-container" 
         fluid 
-        className="col-12 py-2 rounded-4 mb-5" 
+        className="col-12 py-2 rounded-4" 
         
         style={{
-            maxWidth: '600px',
+            maxWidth: '500px',
             backgroundColor: 'white',
             overflowY: 'auto', // This enables vertical scrolling when content overflows
-            maxHeight: '500px' // Set a maximum height for the container
+            maxHeight: '400px' // Set a maximum height for the container
           }}
       >
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div >
-            <CreditCard size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Payment Received for Sold Auction</span>
+            <CreditCard size={20} color="#B87333" />
+            <span className="ms-3">Payment Received for Sold Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -46,8 +46,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <Person size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">New User Registered</span>
+            <Person size={20} color="#B87333" />
+            <span className="ms-3">New User Registered</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -57,8 +57,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <Hammer size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Auction Closed and Item Sold</span>
+            <Hammer size={20} color="#B87333" />
+            <span className="ms-3">Auction Closed and Item Sold</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -68,8 +68,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <Hammer size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Bid Placed on Auction</span>
+            <Hammer size={20} color="#B87333" />
+            <span className="ms-3">Bid Placed on Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -79,8 +79,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <List size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">New Auction Listed</span>
+            <List size={20} color="#B87333" />
+            <span className="ms-3">New Auction Listed</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -90,8 +90,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <CurrencyDollar size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Bid Placed on Auction</span>
+            <CurrencyDollar size={20} color="#B87333" />
+            <span className="ms-3">Bid Placed on Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -100,8 +100,8 @@ function Feed(){
         </div>
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <CreditCard size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Payment Received for Sold Auction</span>
+            <CreditCard size={20} color="#B87333" />
+            <span className="ms-3">Payment Received for Sold Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -110,19 +110,8 @@ function Feed(){
         </div>
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <CreditCard size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Payment Received for Sold Auction</span>
-          </div>
-          <div>
-            <Dot color="grey" />
-            <span className="fst-italic font-weight-light fs-10" style={{ color: "#666666" }}>10 minutes ago</span>
-          </div>
-        </div>
-  
-        <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
-          <div>
-            <Person size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">New User Registered</span>
+            <CreditCard size={20} color="#B87333" />
+            <span className="ms-3">Payment Received for Sold Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -132,8 +121,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <Hammer size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Auction Closed and Item Sold</span>
+            <Person size={20} color="#B87333" />
+            <span className="ms-3">New User Registered</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -143,8 +132,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <Hammer size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Bid Placed on Auction</span>
+            <Hammer size={20} color="#B87333" />
+            <span className="ms-3">Auction Closed and Item Sold</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -154,8 +143,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <List size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">New Auction Listed</span>
+            <Hammer size={20} color="#B87333" />
+            <span className="ms-3">Bid Placed on Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -165,28 +154,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <CurrencyDollar size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Bid Placed on Auction</span>
-          </div>
-          <div>
-            <Dot color="grey" />
-            <span className="fst-italic font-weight-light fs-10" style={{ color: "#666666" }}>10 minutes ago</span>
-          </div>
-        </div>
-        <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
-          <div>
-            <CreditCard size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Payment Received for Sold Auction</span>
-          </div>
-          <div>
-            <Dot color="grey" />
-            <span className="fst-italic font-weight-light fs-10" style={{ color: "#666666" }}>10 minutes ago</span>
-          </div>
-        </div>
-        <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
-          <div>
-            <CreditCard size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Payment Received for Sold Auction</span>
+            <List size={20} color="#B87333" />
+            <span className="ms-3">New Auction Listed</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -196,8 +165,28 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <Person size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">New User Registered</span>
+            <CurrencyDollar size={20} color="#B87333" />
+            <span className="ms-3">Bid Placed on Auction</span>
+          </div>
+          <div>
+            <Dot color="grey" />
+            <span className="fst-italic font-weight-light fs-10" style={{ color: "#666666" }}>10 minutes ago</span>
+          </div>
+        </div>
+        <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
+          <div>
+            <CreditCard size={20} color="#B87333" />
+            <span className="ms-3">Payment Received for Sold Auction</span>
+          </div>
+          <div>
+            <Dot color="grey" />
+            <span className="fst-italic font-weight-light fs-10" style={{ color: "#666666" }}>10 minutes ago</span>
+          </div>
+        </div>
+        <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
+          <div>
+            <CreditCard size={20} color="#B87333" />
+            <span className="ms-3">Payment Received for Sold Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -207,8 +196,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <Hammer size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Auction Closed and Item Sold</span>
+            <Person size={20} color="#B87333" />
+            <span className="ms-3">New User Registered</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -218,8 +207,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <Hammer size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Bid Placed on Auction</span>
+            <Hammer size={20} color="#B87333" />
+            <span className="ms-3">Auction Closed and Item Sold</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -229,8 +218,8 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <List size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">New Auction Listed</span>
+            <Hammer size={20} color="#B87333" />
+            <span className="ms-3">Bid Placed on Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -240,8 +229,19 @@ function Feed(){
   
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <CurrencyDollar size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Bid Placed on Auction</span>
+            <List size={20} color="#B87333" />
+            <span className="ms-3">New Auction Listed</span>
+          </div>
+          <div>
+            <Dot color="grey" />
+            <span className="fst-italic font-weight-light fs-10" style={{ color: "#666666" }}>10 minutes ago</span>
+          </div>
+        </div>
+  
+        <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
+          <div>
+            <CurrencyDollar size={20} color="#B87333" />
+            <span className="ms-3">Bid Placed on Auction</span>
           </div>
           <div>
             <Dot color="grey" />
@@ -250,8 +250,8 @@ function Feed(){
         </div>
         <div className={`d-flex justify-content-between p-2 m-3 shadow rounded-5 ${isVisible ? 'fade-in' : ''}`}>
           <div>
-            <CreditCard size={30} color="#B87333" />
-            <span className="ms-3 fw-bold">Payment Received for Sold Auction</span>
+            <CreditCard size={20} color="#B87333" />
+            <span className="ms-3">Payment Received for Sold Auction</span>
           </div>
           <div>
             <Dot color="grey" />

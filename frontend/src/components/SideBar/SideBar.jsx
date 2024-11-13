@@ -20,8 +20,8 @@ function SideBar() {
         }
     }, []);
     return (
-        <Container fluid className="p-0 m-0">
-            <Row className="flex-nowrap" >
+        <Container fluid className=" p-0 m-0">
+            <Row className="flex-nowrap main-content" >
                 <Col xs={2} sm={3} lg={2} xl={2} className="sidebar p-0 text-center">
                     <a href="#"  className={`sidebarlink text-decoration-none ${activeComponent === 'overview' ? 'active' : ''}`}
                         onClick={() => handleComponentChange('overview')}>
@@ -53,7 +53,7 @@ function SideBar() {
                     </a>
                 </Col>
 
-                <Col xs={10} sm={9} lg={10} xl={10} style={{ backgroundColor: "#F5F5F5" }} >
+                <Col xs={10} sm={9} lg={10} xl={10} style={{ backgroundColor: "#F5F5F5"}} className="dashboard-component"  >
                 {activeComponent === 'overview' && <Overview />}
                     {activeComponent === 'users' && <UsersData />}
                     {activeComponent === 'auctions' && <AuctionsData />}

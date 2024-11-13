@@ -18,7 +18,7 @@ function UsersData(){
     const [auctionStatus, setAuctionStatus] = useState('');
     const columns=[
         {name:'ID' , selector:row=>row.id,sortable:true },
-        {name:'Auction Title' , selector:row=>row.name,sortable:true,
+        {name:'Auction Title' , width:'300px',selector:row=>row.name,sortable:true,
             cell: row => (
                 <a
                 href="#"
@@ -390,7 +390,7 @@ function UsersData(){
                 </Modal.Body>
                 <Modal.Footer>
                     <div className="text-center w-100 my-3">
-                    <Button className="w-25" variant="secondary" onClick={handleModalClose} style={{backgroundColor:'#B87333' ,borderColor:'#B87333'}}>
+                    <Button className="w-25 text-white" variant="secondary" onClick={handleModalClose} style={{backgroundColor:'#B87333' ,borderColor:'#B87333'}}>
                         Close
                     </Button>
                     </div>
