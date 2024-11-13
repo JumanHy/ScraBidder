@@ -37,9 +37,6 @@ function NavBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="ms-auto" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto gap-md-3 text-center align-items-center">
-            <Nav.Link className="dashnav-link fw-bold" style={{ color: "#9F1717" }} href="/">
-              Log out
-            </Nav.Link>
             <Dropdown>
               <Dropdown.Toggle variant="link" id="settings-dropdown" className="settings-dropdown-toggle">
                 <Gear size={24} color="black" />

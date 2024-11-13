@@ -37,6 +37,7 @@ const ConditionalFooter = () => {
     "/business-register",
     "/reset-password",
     "/resetPassword",
+    "/dashboard"
   ];
 
   return !hideFooterRoutes.includes(location.pathname) ? <Footer /> : null;

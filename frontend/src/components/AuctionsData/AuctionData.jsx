@@ -291,17 +291,17 @@ function UsersData(){
         customStyles={{
           rows: {
             style: {
-              fontSize: '16px',
-              borderRadius: '0 0 10px 10px',
+              fontSize: '16px', 
+              borderRadius: '0 0 10px 10px'
             },
           },
           headCells: {
             style: {
-              backgroundColor: '#B87333',
-              color: 'white',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              borderRadius: '10px 10px 0 0',
+              backgroundColor: '#003A70', 
+              color: 'white', 
+              fontSize: '17px', 
+              fontWeight: 'bold', 
+               borderRadius: '10px 10px 0 0'
             },
           },
         }}
@@ -456,7 +456,7 @@ customStyles={{
     },
     headCells: {
       style: {
-        backgroundColor: '#B87333', 
+        backgroundColor: '#003A70', 
         color: 'white', 
         fontSize: '17px', 
         fontWeight: 'bold', 
