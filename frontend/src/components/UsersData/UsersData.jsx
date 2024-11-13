@@ -111,36 +111,36 @@ function UsersData(){
     return(
         <>
         
-        <h2 className="text-center pt-3" style={{color:'#003a70'}}>Summary</h2>
+        <h2 className="text-center" style={{color:'#003a70'}}>Summary</h2>
         <Container>
             <Row>
-                <Col>
-                <span className=" col-6 col-lg-3 mx-2 my-3 text-center card-animation card-delay-1">
-                            <div className="fs-6 py-3">
+                <Col sm={6} lg={3} mx={2}>
+                <span className="text-center card-animation card-delay-1">
+                            <div className="fs-6">
                                 <span className="ps-3" style={{color:"#666666"}}>Total Users</span>
                             </div>
                             <div className="fs-3 pb-2 fw-bold" style={{color:'#003A70'}}>233</div>
                         </span>
                 </Col>
-                <Col>
-                <span className=" col-6 col-lg-3 mx-2 my-3 text-center card-animation card-delay-2">
-                            <div className="fs-6 py-3">
+                <Col sm={6} lg={3} mx={2}>
+                <span className="text-center card-animation card-delay-2">
+                            <div className="fs-6">
                                 <span className="ps-3" style={{color:"#666666"}}>Active Users</span>
                             </div>
                             <div className="fs-3 pb-2 fw-bold text-success">45</div>
                         </span>
                 </Col>
-                <Col>
-                <span className=" col-6 col-lg-3 mx-2 my-3 text-center  card-animation card-delay-3">
-                            <div className="fs-6 py-3">
+                <Col sm={6} lg={3} mx={2}>
+                <span className="text-center  card-animation card-delay-3">
+                            <div className="fs-6">
                                 <span className="ps-3" style={{color:"#666666"}}>Pending Users</span>
                             </div>
-                            <div className="fs-3 pb-2 fw-bold" style={{color:'#E9D62D'}}>10</div>
+                            <div className="fs-3 pb-2 fw-bold" style={{color:'orange'}}>10</div>
                         </span>
                 </Col>
-                <Col>
-                <span className=" col-6 col-lg-3 mx-2 my-3 text-center  card-animation card-delay-4">
-                            <div className="fs-6 py-3">
+                <Col sm={6} lg={3} mx={2}>
+                <span className="text-center  card-animation card-delay-4">
+                            <div className="fs-6 ">
                                 <span className="ps-3" style={{color:"#666666"}}>Blocked Users</span>
                             </div>
                             <div className="fs-3 pb-2 fw-bold text-danger" style={{color:'#003A70'}}>3</div>

@@ -17,7 +17,7 @@ function UsersData(){
     const [selectedUser, setSelectedUser] = useState({});
     const [auctionStatus, setAuctionStatus] = useState('');
     const columns=[
-        {name:'ID' , selector:row=>row.id,sortable:true },
+        {name:'ID' , width:'100px', selector:row=>row.id,sortable:true },
         {name:'Auction Title' , width:'300px',selector:row=>row.name,sortable:true,
             cell: row => (
                 <a
@@ -101,7 +101,7 @@ function UsersData(){
       
     
     const bidColumns=[
-        {name:'ID' , selector:row=>row.id,sortable:true },
+        {name:'ID' ,  width:'100px',selector:row=>row.id,sortable:true },
         {name:'Bidder Name' , selector:row=>row.name,sortable:true,
             cell: row => (
                 <a
@@ -402,8 +402,8 @@ function UsersData(){
            
         <div style={{height:'100px'}}></div>
 
-        <div className="m-5">
-        <h2 className="text-center pt-3 mb-3" style={{color:'#003a70'}}>Bidding History</h2>
+        <div className="mb-3">
+        <h2 className="text-center mb-3" style={{color:'#003a70'}}>Bidding History</h2>
             
         <div
                 className="col-12 d-flex p-2 m-3 bg-white rounded-5 justify-content-between border border-black "
@@ -437,7 +437,7 @@ function UsersData(){
            
         
 
-<DataTable
+<DataTable 
 columns={bidColumns}
 data={bidRecords}
 selectableRows
