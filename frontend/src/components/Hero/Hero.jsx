@@ -4,7 +4,7 @@ import React from "react";
 import SearchBar from "../SearchBar/SearchBar";
 function Hero() {
   return (
-    <header style={{ paddingLeft: 0, letterSpacing: 5 }}>
+    <header className="" style={{ paddingLeft: 0, letterSpacing: 5 }}>
       <div
         className="p-5 text-center bg-image"
         style={{

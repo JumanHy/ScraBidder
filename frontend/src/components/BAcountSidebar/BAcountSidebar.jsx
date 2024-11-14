@@ -1,6 +1,13 @@
-import React, { useState } from 'react';
-import { Nav, Button, Offcanvas } from 'react-bootstrap';
-import { FaChartBar, FaEye, FaHistory, FaCreditCard, FaCog, FaGavel } from 'react-icons/fa'; // Import FaGavel icon
+import React, { useState } from "react";
+import { Nav, Button, Offcanvas } from "react-bootstrap";
+import {
+  FaChartBar,
+  FaEye,
+  FaHistory,
+  FaCreditCard,
+  FaCog,
+  FaGavel,
+} from "react-icons/fa"; // Import FaGavel icon
 
 const BAcountSidebar = ({ setActiveSection }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -18,7 +25,7 @@ const BAcountSidebar = ({ setActiveSection }) => {
     padding: "10px 15px",
     width: "100%",
     textDecoration: "none",
-    cursor: "pointer"
+    cursor: "pointer",
   });
 
   return (
@@ -28,13 +35,18 @@ const BAcountSidebar = ({ setActiveSection }) => {
         variant="primary"
         className="d-md-none" // Hide on larger screens
         onClick={() => setShowSidebar(true)}
-        style={{ marginLeft: '10px', marginTop: '10px' }}
+        style={{ marginLeft: "10px", marginTop: "10px" }}
       >
         Menu
       </Button>
 
       {/* Offcanvas Sidebar for Mobile */}
-      <Offcanvas className="bg-primary" show={showSidebar} onHide={() => setShowSidebar(false)} placement="start">
+      <Offcanvas
+        className="bg-primary"
+        show={showSidebar}
+        onHide={() => setShowSidebar(false)}
+        placement="start"
+      >
         <Offcanvas.Header className="text-white" closeButton>
           <Offcanvas.Title>Account Menu</Offcanvas.Title>
         </Offcanvas.Header>
@@ -76,10 +88,10 @@ const BAcountSidebar = ({ setActiveSection }) => {
             {/* Add "My Auction" Nav Item with FaGavel icon here */}
             <Nav.Item style={{ marginBottom: "10px" }}>
               <div
-                style={linkStyle(hoveredItem === "MyAuction")}
-                onMouseEnter={() => setHoveredItem("MyAuction")}
+                style={linkStyle(hoveredItem === "MyAuctions")}
+                onMouseEnter={() => setHoveredItem("MyAuctions")}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={() => setActiveSection("MyAuction")}
+                onClick={() => setActiveSection("MyAuctions")}
               >
                 <FaGavel /> My Auction
               </div>
@@ -103,7 +115,7 @@ const BAcountSidebar = ({ setActiveSection }) => {
                 onMouseLeave={() => setHoveredItem(null)}
                 onClick={() => setActiveSection("settings")}
               >
-                <FaCog /> Settings  
+                <FaCog /> Settings
               </div>
             </Nav.Item>
           </Nav>

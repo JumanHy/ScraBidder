@@ -2,7 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, state, id }) {
+function AuctionRow({
+  title,
+  startTime,
+  endTime,
+  latestBid,
+  numWatchers,
+  state,
+  id,
+}) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [timeRemaining, setTimeRemaining] = useState("");
   const [displayBid, setDisplayBid] = useState("-");
@@ -37,29 +45,75 @@ function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, state, 
   }
 
   return (
-    <tr style={{ backgroundColor: "#FFFFFF", transition: "background-color 0.3s ease" }}>
+    <tr
+      style={{
+        backgroundColor: "#FFFFFF",
+        transition: "background-color 0.3s ease",
+      }}
+    >
       <td style={{ padding: "8px 15px" }}>{title}</td>
-      <td style={{ padding: "8px 15px" }}>{new Date(startTime).toLocaleString()}</td>
-      <td style={{ padding: "8px 15px" }}>{new Date(endTime).toLocaleString()}</td>
+      <td style={{ padding: "8px 15px" }}>
+        {new Date(startTime).toLocaleString()}
+      </td>
+      <td style={{ padding: "8px 15px" }}>
+        {new Date(endTime).toLocaleString()}
+      </td>
       <td style={{ padding: "8px 15px" }}>{displayBid}</td>
       <td style={{ padding: "8px 15px" }}>{numWatchers}</td>
       <td style={{ padding: "8px 15px" }}>
         {state === "PENDING" && <span className="fw-bold">Pending</span>}
-        {state === "APPROVED" && <span className="text-success fw-bold">Approved</span>}
-        {state === "STARTED" && <span className="text-success fw-bold">{timeRemaining}</span>}
-        {state === "ENDED" && <span className="text-danger fw-bold">Ended</span>}
+        {state === "APPROVED" && (
+          <span className="text-success fw-bold">Approved</span>
+        )}
+        {state === "STARTED" && (
+          <span className="text-success fw-bold">{timeRemaining}</span>
+        )}
+        {state === "ENDED" && (
+          <span className="text-danger fw-bold">Ended</span>
+        )}
       </td>
       <td style={{ padding: "8px 15px" }}>
         {state !== "PENDING" && state !== "STARTED" ? (
           <Link to={`/auction`}>
-            <Button variant="primary" size="sm" style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>More Details</Button>
+            <Button
+              variant="primary"
+              size="sm"
+              style={{
+                padding: "4px 10px",
+                fontSize: "12px",
+                borderRadius: "10px",
+              }}
+            >
+              More Details
+            </Button>
           </Link>
         ) : state === "STARTED" ? (
           <Link to={`/auction`}>
-            <Button variant="primary" size="sm" style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>More Details</Button>
+            <Button
+              variant="primary"
+              size="sm"
+              style={{
+                padding: "4px 10px",
+                fontSize: "12px",
+                borderRadius: "10px",
+              }}
+            >
+              More Details
+            </Button>
           </Link>
         ) : (
-          <Button variant="secondary" size="sm" disabled style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>Not Available</Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            disabled
+            style={{
+              padding: "4px 10px",
+              fontSize: "12px",
+              borderRadius: "10px",
+            }}
+          >
+            Not Available
+          </Button>
         )}
       </td>
     </tr>
@@ -107,7 +161,10 @@ function AuctionList() {
   ];
 
   return (
-    <div className="container mt-1" style={{ marginLeft: '-15px', marginTop: "-100px" }}>
+    <div
+      className="container mt-1"
+      style={{ marginLeft: "-15px", marginTop: "-100px" }}
+    >
       <Table
         striped
         responsive
@@ -121,7 +178,13 @@ function AuctionList() {
         }}
       >
         <thead>
-          <tr style={{ backgroundColor: "#B87333", color: "white", borderBottom: "2px solid #B87333" }}>
+          <tr
+            style={{
+              backgroundColor: "#B87333",
+              color: "white",
+              borderBottom: "2px solid #B87333",
+            }}
+          >
             <th style={{ padding: "8px 15px" }}>Title</th>
             <th style={{ padding: "8px 15px" }}>Start Time</th>
             <th style={{ padding: "8px 15px" }}>End Time</th>

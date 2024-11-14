@@ -9,7 +9,9 @@ import {
   Image,
 } from "react-bootstrap";
 import ScraBidderLogo from "@/assets/images/ScraBidderLogo.png";
+
 import useForm from "@/hooks/useForm";
+import { Link } from "react-router-dom";
 export default function LoginModal({ show, onHide, onLoginSuccess }) {
   const initialValues = { email: "", password: "" };
 
@@ -87,9 +89,9 @@ export default function LoginModal({ show, onHide, onLoginSuccess }) {
             </div>
 
             <div className="text-center mt-3">
-              <a href="/forgot-password" className="text-muted">
+              <Link to="/reset-password" className="text-muted">
                 Forgot your password?
-              </a>
+              </Link>
             </div>
             <div className="text-center mt-2">
               <span className="text-muted">Don't have an account? </span>

@@ -16,7 +16,7 @@ function BusinessProfile() {
         return (
           <div>
             <h2 style={{ color: "#B87333" }}>Dashboard</h2>
-            <br/>
+            <br />
             <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
               <div style={dashboardCardStyle}>
                 <h4 style={{ color: "#B87333" }}>Total Watchlist Items</h4>
@@ -81,7 +81,10 @@ function BusinessProfile() {
     <div>
       <div style={{ display: "flex", minHeight: "100vh" }}>
         {/* Sidebar */}
-        <BAcountSidebar setActiveSection={setActiveSection} activeSection={activeSection} />
+        <BAcountSidebar
+          setActiveSection={setActiveSection}
+          activeSection={activeSection}
+        />
 
         {/* Main Content Area */}
         <div style={{ flex: 1, padding: "20px", color: "#003A70" }}>
