@@ -61,7 +61,10 @@ function BusinessProfile() {
     <div>
       <div style={{ display: "flex", minHeight: "100vh" }}>
         {/* Sidebar */}
-        <BAcountSidebar setActiveSection={setActiveSection} activeSection={activeSection} />
+        <BAcountSidebar
+          setActiveSection={setActiveSection}
+          activeSection={activeSection}
+        />
 
         {/* Main Content Area with Transition */}
         <div style={{ flex: 1, padding: "20px", color: "#003A70" }}>

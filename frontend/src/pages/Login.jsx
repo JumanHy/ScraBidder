@@ -10,14 +10,10 @@ const Login = () => (
       <Col
         xs={12}
         sm={6}
-        className="shadow-inner h-100 rounded-start-3 p-3 gap-3 d-flex flex-column align-items-center justify-content-center bg-primary text-white"
+        style={{ backgroundColor: "#F0F8FF" }}
+        className="shadow-inner h-100 rounded-start-3 p-3 gap-3 d-flex flex-column align-items-center justify-content-center text-primary fw-bold"
       >
-        <Image
-          src={logoImage}
-          alt="Logo"
-          className=""
-          style={{ width: "150px" }}
-        />
+        <Image src={logoImage} alt="Logo" style={{ width: "200px" }} />
         <blockquote className="fs-5 fst-italic text-center">
           Your Gateway to Industrial Auctions
           <br />

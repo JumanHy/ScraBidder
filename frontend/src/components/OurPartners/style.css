@@ -1,0 +1,20 @@
+/* Ensure to change the default arrow color for this specific carousel */
+.our-partners-carousel .slick-prev,
+.our-partners-carousel .slick-next {
+  color: #003a70 !important; /* Remove default color */
+  background-color: transparent !important; /* Remove any background */
+  padding: 0px;
+}
+
+/* If the arrows are using 'before' pseudo-elements */
+.our-partners-carousel .slick-prev:before,
+.our-partners-carousel .slick-next:before {
+  color: #003a70 !important; /* Change to your preferred color */
+  font-size: 30px; /* Adjust the font size */
+}
+
+/* Optional: Adjust hover colors */
+.our-partners-carousel .slick-prev:hover:before,
+.our-partners-carousel .slick-next:hover:before {
+  color: #003a70 !important; /* Change hover color */
+}

@@ -2,7 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, state, id }) {
+function AuctionRow({
+  title,
+  startTime,
+  endTime,
+  latestBid,
+  numWatchers,
+  state,
+  id,
+}) {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [timeRemaining, setTimeRemaining] = useState("");
   const [displayBid, setDisplayBid] = useState("-");
@@ -49,9 +57,15 @@ function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, state, 
       <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>{numWatchers}</td>
       <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
         {state === "PENDING" && <span className="fw-bold">Pending</span>}
-        {state === "APPROVED" && <span className="text-success fw-bold">Approved</span>}
-        {state === "STARTED" && <span className="text-success fw-bold">{timeRemaining}</span>}
-        {state === "ENDED" && <span className="text-danger fw-bold">Ended</span>}
+        {state === "APPROVED" && (
+          <span className="text-success fw-bold">Approved</span>
+        )}
+        {state === "STARTED" && (
+          <span className="text-success fw-bold">{timeRemaining}</span>
+        )}
+        {state === "ENDED" && (
+          <span className="text-danger fw-bold">Ended</span>
+        )}
       </td>
       <td style={{ padding: "8px 15px", width: "120px", textAlign: "center" }}>
         {state !== "PENDING" && state !== "STARTED" ? (

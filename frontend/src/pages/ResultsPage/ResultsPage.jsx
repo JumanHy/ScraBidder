@@ -24,7 +24,7 @@ function ResultsPage() {
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <Container fluid>
+    <Container fluid className="pt-2">
       <Row className="justify-content-center gap-3">
         <Row className="justify-content-center">
           <SearchBar />

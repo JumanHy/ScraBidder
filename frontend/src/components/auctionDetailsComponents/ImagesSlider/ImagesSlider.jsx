@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import { Container, Row, Col, Image } from "react-bootstrap";
-
 function ImagesSlider() {
   const images = [
     "https://placehold.co/600x400",
@@ -18,6 +17,7 @@ function ImagesSlider() {
   const mainSettings = {
     asNavFor: thumbnailSlider,
     ref: (slider) => setMainSlider(slider),
+    arrows: false,
   };
 
   const thumbnailSettings = {
@@ -28,10 +28,11 @@ function ImagesSlider() {
     ref: (slider) => setThumbnailSlider(slider),
     centerMode: true,
     centerPadding: "50px",
+    arrows: false,
   };
 
   return (
-    <Container>
+    <Container className="">
       <Row className="justify-content-center">
         {/* Main Image Slider */}
         <Col xs={12} className="position-relative p-0">
