@@ -1,41 +1,39 @@
 /* Define keyframes for fade-in and slide-up effect */
 @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px); /* Start slightly lower */
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0); /* End at normal position */
-    }
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Start slightly lower */
   }
-  
-  /* Apply animation to each card */
-  .card-animation {
-    opacity: 0; /* Start hidden */
-    animation: fadeInUp 0.5s ease forwards; /* Apply fadeInUp animation */
+  to {
+    opacity: 1;
+    transform: translateY(0); /* End at normal position */
   }
-  
-  /* Stagger the delay for each card */
-  .card-delay-1 {
-    animation-delay: 0.1s;
-  }
-  .card-delay-2 {
-    animation-delay: 0.2s;
-  }
-  .card-delay-3 {
-    animation-delay: 0.3s;
-  }
-  .card-delay-4 {
-    animation-delay: 0.4s;
-  }
-  .card-delay-5 {
-    animation-delay: 0.5s;
-  }
-  
+}
 
+/* Apply animation to each card */
+.card-animation {
+  opacity: 0; /* Start hidden */
+  animation: fadeInUp 0.5s ease forwards; /* Apply fadeInUp animation */
+}
 
-  @keyframes fadeIn {
+/* Stagger the delay for each card */
+.card-delay-1 {
+  animation-delay: 0.1s;
+}
+.card-delay-2 {
+  animation-delay: 0.2s;
+}
+.card-delay-3 {
+  animation-delay: 0.3s;
+}
+.card-delay-4 {
+  animation-delay: 0.4s;
+}
+.card-delay-5 {
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeIn {
   0% {
     opacity: 0;
   }
