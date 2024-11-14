@@ -25,26 +25,32 @@ function NavBar() {
     { id: 4, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{ color: '#005092' }} /> },
     { id: 5, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{ color: '#005092' }} /> },
     { id: 6, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{ color: '#005092' }} /> },
-    { id: 7, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{ color: '#005092' }} /> },
-    { id: 8, message: "A new bid has been placed on your auction.", isRead: false, icon: <Hammer size={25} style={{ color: '#005092' }} /> },
-    { id: 9, message: "Congratulations! You’ve won the auction.", isRead: false, icon: <Trophy size={25} style={{ color: '#005092' }} /> },
-    { id: 10, message: "Your auction listing is now live.", isRead: false, icon: <Upload size={25} style={{ color: '#005092' }} /> },
-    { id: 11, message: "Payment has been received from the buyer.", isRead: false, icon: <CurrencyDollar size={25} style={{ color: '#005092' }} /> },
-    { id: 12, message: "Your auction has expired without a winning bid.", isRead: false, icon: <ExclamationCircle size={25} style={{ color: '#005092' }} /> },
-    { id: 13, message: "You have a new message from a buyer.", isRead: false, icon: <Envelope size={25} style={{ color: '#005092' }} /> },
-    { id: 14, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{ color: '#005092' }} /> }
+    { id: 7, message: "The status of your auction has been updated to Sold.", isRead: false, icon: <CheckCircle size={25} style={{ color: '#005092' }} /> }
   ];
 
-  const [isLogedin, setIsLogedin] = useState(true); // Only declare state once
+  const [isLogedin, setIsLogedin] = useState(false); // Only declare state once
   const [showModal, setShowModal] = useState(false); // Only declare state once
+  const [uploadedImage, setUploadedImage] = useState(null); // State for storing uploaded image
 
   // Function to open modal
   const handleShowModal = () => setShowModal(true);
   // Function to close modal
   const handleCloseModal = () => setShowModal(false);
 
+  // Handle image upload
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Check if the user is on "user-account" or "business-account" page
-  const role = "business"; // Or get this dynamically as needed
+  const role = "bus"; // Or get this dynamically as needed
 
   return (
     <>
@@ -136,18 +142,10 @@ function NavBar() {
                         {/* Empty Toggle for Dropdown Arrow */}
                       </Dropdown.Toggle>
                       <Dropdown.Menu>
-                        <Dropdown.Item href={role == "business" ? "/business-account" : "/user-account"}>
-                          My Account
-                        </Dropdown.Item>
-                        {role === "business" ? (
-                          <Dropdown.Item href="/cprofile">
-                            My Profile
-                          </Dropdown.Item>
-                        ) : null}
+                        <Dropdown.Item href={role == "business" ? "/business-account" : "/user-account"}>My Account</Dropdown.Item>
+                        {role === "business" ? <Dropdown.Item href="/cprofile">My Profile</Dropdown.Item> : null}
                         <Dropdown.Divider />
-                        <Dropdown.Item onClick={() => setIsLogedin(false)}>
-                          Log Out
-                        </Dropdown.Item>
+                        <Dropdown.Item onClick={() => setIsLogedin(false)}>Log Out</Dropdown.Item>
                       </Dropdown.Menu>
                     </Dropdown>
                   </div>
@@ -158,15 +156,34 @@ function NavBar() {
         </Container>
       </Navbar>
 
-      {/* Modal for Enlarged Profile Image */}
-      <Modal show={showModal} onHide={handleCloseModal} centered>
+      {/* Modal for Enlarged Profile Image with Upload Option */}
+      <Modal 
+        show={showModal} 
+        onHide={handleCloseModal} 
+        centered 
+        style={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }} // Add shadow here
+      >
+        <Modal.Header closeButton>
+          
+        </Modal.Header>
         <Modal.Body className="text-center">
           <Image
-            src={userImage}
-            alt="User Enlarged"
-            roundedCircle
             fluid
-            style={{ maxWidth: "200px", maxHeight: "100" }} // Adjust the size of the enlarged image here
+            src={uploadedImage || userImage}
+            style={{ maxWidth: "150px", borderRadius: "50%", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)" }}
+          />
+          <br />
+          <br />
+          <label htmlFor="image-upload" className="btn btn-primary">
+            <Upload style={{ marginRight: "5px" }} />
+            Change Picture
+          </label>
+          <input
+            id="image-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            style={{ display: "none" }}
           />
         </Modal.Body>
       </Modal>

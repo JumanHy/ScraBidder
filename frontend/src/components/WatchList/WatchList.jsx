@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, ButtonGroup, Modal } from "react-bootstrap";
+import { Button, ButtonGroup, Modal, Table } from "react-bootstrap";
 import { FaTrashAlt } from "react-icons/fa";
 import SearchBar from "@/components/SearchBar/SearchBar";
 
@@ -81,15 +81,15 @@ const WatchList = () => {
   const closeRemoveModal = () => setShowRemoveModal(false);
 
   return (
-    <div className="my-4" style={{ fontFamily: "Lato, sans-serif", color: "#003A70" }}>
-      {/* Add SearchBar here */}
-      <div className="d-flex justify-content-start mb-3" style={{ width: "100%", paddingLeft: "15%", marginTop: "-40px" }}>
-        <div style={{ width: "100%", maxWidth: "500px" }}>
+    <div className="my-4 container" style={{ fontFamily: "Lato, sans-serif", color: "#003A70" }}>
+      {/* SearchBar */}
+      <div className="d-flex justify-content-center mb-3">
+        <div style={{ width: "100%", maxWidth: "500px",marginTop: "-20px" }}>
           <SearchBar />
         </div>
       </div>
 
-      <div className="d-flex justify-content-end mb-3" style={{ marginTop: "-30px" }}>
+      <div className="d-flex justify-content-end mb-3">
         <ButtonGroup>
           <Button
             onClick={() => handleSortChange("Price")}
@@ -109,13 +109,14 @@ const WatchList = () => {
       {items.length === 0 ? (
         <div className="alert alert-warning text-center">No items in your watch list.</div>
       ) : (
-        <div className="table-responsive" style={{ marginTop: "0px", borderRadius: "15px" }}>
-          <table
-            className="table table-striped table-hover"
+        <div className="table-responsive" style={{ borderRadius: "15px" }}>
+          <Table
+            className="table-striped table-hover"
+            responsive="md"
             style={{ borderRadius: "10px", border: "1px solid #ddd", boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.3)" }}
           >
             <thead>
-              <tr style={{ backgroundColor: "#B87333", color: "white", borderBottom: "2px solid #B87333" }}>
+              <tr style={{ backgroundColor: "#B87333", color: "white" }}>
                 <th>Item Name</th>
                 <th>Category</th>
                 <th>Description</th>
@@ -133,7 +134,7 @@ const WatchList = () => {
                   <td style={{ color: "green" }}>${item.currentBid}</td>
                   <td>{item.remainingTime}</td>
                   <td>
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    <div className="d-flex align-items-center">
                       <Button
                         variant="primary"
                         className="mr-2"
@@ -143,12 +144,12 @@ const WatchList = () => {
                         Bid Now
                       </Button>
                       <Button
-                        variant="danger"
+                        variant="link"
                         onClick={() => {
                           setSelectedItem(item);
                           setShowRemoveModal(true);
                         }}
-                        style={{ backgroundColor: "transparent", border: "none", cursor: "pointer", padding: "5px",marginLeft: "20px" }}
+                        style={{ padding: "5px", marginLeft: "10px" }}
                       >
                         <FaTrashAlt
                           style={{
@@ -166,7 +167,7 @@ const WatchList = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         </div>
       )}
 

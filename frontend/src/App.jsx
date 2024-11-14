@@ -26,6 +26,7 @@ import AuctionForm from "./Pages/AuctionFormPage/AuctionFormPage";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer";
 import "./styles/css/main.min.css";
+import Table from "./Pages/Table";
 
 export default function App() {
   return (
@@ -51,6 +52,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/business-account" element={<BusinessAccount />} />
           <Route path="/auction-form" element={<AuctionForm />} />
+          <Route path="/table" element={<Table />} />
         </Routes>
         <ConditionalFooter />
       </Router>

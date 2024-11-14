@@ -1,7 +1,15 @@
-import React from "react";
-import { Carousel, Button } from "react-bootstrap";
+import React, { useState } from "react";
+import { Carousel, Button, Modal } from "react-bootstrap";
 
 function CompanyProfile() {
+  // State to check if the user has won the auction
+  const [hasWonAuction, setHasWonAuction] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+
+  // Toggle the modal
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
   return (
     <div
       style={{
@@ -23,9 +31,7 @@ function CompanyProfile() {
           marginBottom: "20px",
         }}
       >
-        <h2 style={{ fontSize: "2em", fontWeight: "lighter" }}>
-          Company Name Here
-        </h2>
+        <h2 style={{ fontSize: "2em", fontWeight: "lighter" }}>Company Name Here</h2>
         <Button
           style={{
             backgroundColor: "#B87333", // Bronze color for the button
@@ -41,6 +47,7 @@ function CompanyProfile() {
           }}
           onMouseEnter={(e) => e.target.style.backgroundColor = "#8C4A2E"}
           onMouseLeave={(e) => e.target.style.backgroundColor = "#B87333"}
+          onClick={handleShowModal}
         >
           Contact Us
         </Button>
@@ -212,10 +219,41 @@ function CompanyProfile() {
               style={{ border: "0", borderRadius: "8px" }}
               allowFullScreen=""
               loading="lazy"
-            ></iframe>
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       </div>
+
+      {/* Modal for Contact Us */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Contact Information</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {hasWonAuction ? (
+           <div>
+           <p style={{ color: 'green', fontSize: '2em', fontWeight: 'bold', textAlign: 'center' }}>
+             Congratulations!
+           </p>
+           <p>You have won the auction. You can contact us using the following details:</p>
+           <p><strong>Eng. Zaina Alrajabi:</strong> +123 456 7890</p>
+           <p><strong>Email:</strong> info@company.com</p>
+         </div>
+         
+         
+          ) : (
+            <div>
+              <p>Can Wait to be with you , keep biding</p>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

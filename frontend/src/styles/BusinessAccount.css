@@ -1,0 +1,15 @@
+/* Define the vibration effect with slower duration */
+@keyframes vibrate {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(5px); }
+  }
+  
+  /* Apply the animation with a slower vibration on hover */
+  .vibrate-button:hover {
+    animation: vibrate 1s ease-in-out; /* Slower vibration (1 second duration) */
+    animation-iteration-count: infinite;
+  }
+  

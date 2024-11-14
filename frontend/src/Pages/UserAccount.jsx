@@ -4,7 +4,8 @@ import WatchList from "../components/WatchList/WatchList";
 import Usersetting from "../components/Usersetting";
 import TransactionHistory from "../components/TransactionHistory/TransactionHistory";
 import PaymentMethods from "../components/PaymentMethods/PaymentMethods";
-
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import "./../styles/animations.css"; 
 function UserAccount() {
   const [activeSection, setActiveSection] = useState("watchlist"); // Default to 'watchlist' section
 
@@ -51,9 +52,16 @@ function UserAccount() {
         <AcountSidebar setActiveSection={setActiveSection} />
 
         {/* Main Content Area */}
-        <div style={{ flex: 1, padding: "20px" }}>
-          {/* Profile Content */}
-          {renderContent()} {/* Render content based on active section */}
+        <div style={{ flex: 1, padding: "20px", color: "#003A70" }}>
+          <TransitionGroup>
+            <CSSTransition
+              key={activeSection}
+              timeout={300} // Duration of the animation
+              classNames="fade" // Class names for animation
+            >
+              {renderContent()}
+            </CSSTransition>
+          </TransitionGroup>
         </div>
       </div>
     </div>

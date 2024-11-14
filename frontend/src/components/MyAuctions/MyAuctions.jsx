@@ -38,28 +38,63 @@ function AuctionRow({ title, startTime, endTime, latestBid, numWatchers, state, 
 
   return (
     <tr style={{ backgroundColor: "#FFFFFF", transition: "background-color 0.3s ease" }}>
-      <td style={{ padding: "8px 15px" }}>{title}</td>
-      <td style={{ padding: "8px 15px" }}>{new Date(startTime).toLocaleString()}</td>
-      <td style={{ padding: "8px 15px" }}>{new Date(endTime).toLocaleString()}</td>
-      <td style={{ padding: "8px 15px" }}>{displayBid}</td>
-      <td style={{ padding: "8px 15px" }}>{numWatchers}</td>
-      <td style={{ padding: "8px 15px" }}>
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>{title}</td>
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
+        {new Date(startTime).toLocaleString()}
+      </td>
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
+        {new Date(endTime).toLocaleString()}
+      </td>
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>{displayBid}</td>
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>{numWatchers}</td>
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
         {state === "PENDING" && <span className="fw-bold">Pending</span>}
         {state === "APPROVED" && <span className="text-success fw-bold">Approved</span>}
         {state === "STARTED" && <span className="text-success fw-bold">{timeRemaining}</span>}
         {state === "ENDED" && <span className="text-danger fw-bold">Ended</span>}
       </td>
-      <td style={{ padding: "8px 15px" }}>
+      <td style={{ padding: "8px 15px", width: "120px", textAlign: "center" }}>
         {state !== "PENDING" && state !== "STARTED" ? (
           <Link to={`/auction`}>
-            <Button variant="primary" size="sm" style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>More Details</Button>
+            <Button
+              variant="primary"
+              size="sm"
+              style={{
+                padding: "6px 12px",
+                fontSize: "12px",
+                borderRadius: "10px",
+              }}
+            >
+              More Details
+            </Button>
           </Link>
         ) : state === "STARTED" ? (
           <Link to={`/auction`}>
-            <Button variant="primary" size="sm" style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>More Details</Button>
+            <Button
+              variant="primary"
+              size="sm"
+              style={{
+                padding: "6px 12px",
+                fontSize: "12px",
+                borderRadius: "10px",
+              }}
+            >
+              More Details
+            </Button>
           </Link>
         ) : (
-          <Button variant="secondary" size="sm" disabled style={{ padding: "4px 10px", fontSize: "12px", borderRadius: "10px" }}>Not Available</Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            disabled
+            style={{
+              padding: "6px 12px",
+              fontSize: "12px",
+              borderRadius: "10px",
+            }}
+          >
+            Not Available
+          </Button>
         )}
       </td>
     </tr>
@@ -88,7 +123,7 @@ function AuctionList() {
     },
     {
       id: 3,
-      title: "Antique Furniture",
+      title: "Industrial Scrap",
       startTime: "2024-11-18T12:00:00Z",
       endTime: "2024-11-19T12:00:00Z",
       latestBid: 220,
@@ -107,34 +142,66 @@ function AuctionList() {
   ];
 
   return (
-    <div className="container mt-1" style={{ marginLeft: '-15px', marginTop: "-100px" }}>
+    <div className="container mt-1" style={{ marginTop: "30px" }}>
+      <div className="d-flex justify-content-between align-items-center">
+        <h1 style={{ color: "#003A70", fontSize: "30px" }}>My Auction</h1>
+        <Link to="/auction-form">
+          <button
+            className="btn btn-secondary my-3 vibrate-button"
+            style={{
+              width: "150px",
+              height: "40px",
+              borderRadius: "30px",
+              color: "rgba(255, 255, 255, 0.9)",
+              padding: "6px",
+              fontSize: "15px",
+              boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            Add New Auction
+          </button>
+        </Link>
+      </div>
+
       <Table
         striped
         responsive
         hover
-        className="mt-4"
+        className="mt-3"
         style={{
           borderCollapse: "collapse",
           borderRadius: "10px",
           boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.3)",
-          overflow: "hidden",
+          
         }}
       >
         <thead>
-          <tr style={{ backgroundColor: "#B87333", color: "white", borderBottom: "2px solid #B87333" }}>
-            <th style={{ padding: "8px 15px" }}>Title</th>
-            <th style={{ padding: "8px 15px" }}>Start Time</th>
-            <th style={{ padding: "8px 15px" }}>End Time</th>
-            <th style={{ padding: "8px 15px" }}>Latest Bid</th>
-            <th style={{ padding: "8px 15px" }}>Watchers</th>
-            <th style={{ padding: "8px 15px" }}>State</th>
-            <th style={{ padding: "8px 15px" }}>Details</th>
+          <tr
+         
+            style={{
+              backgroundColor: "#B87333",
+              color: "white",
+              borderBottom: "2px solid #B87333",
+
+            }}
+          >
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>Title</th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>Start Time</th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>End Time</th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>Latest Bid</th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>Watchers</th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>State</th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>Details</th>
           </tr>
         </thead>
         <tbody>
           {auctionItems.length === 0 ? (
             <tr>
-              <td colSpan="7" className="text-center" style={{ color: "#888" }}>
+              <td
+                colSpan="7"
+                className="text-center"
+                style={{ color: "#888", padding: "10px" }}
+              >
                 No auctions available.
               </td>
             </tr>
