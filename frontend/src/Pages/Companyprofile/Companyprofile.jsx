@@ -31,7 +31,9 @@ function CompanyProfile() {
           marginBottom: "20px",
         }}
       >
-        <h2 style={{ fontSize: "2em", fontWeight: "lighter" }}>Company Name Here</h2>
+        <h2 style={{ fontSize: "2em", fontWeight: "lighter" }}>
+          Company Name Here
+        </h2>
         <Button
           style={{
             backgroundColor: "#B87333", // Bronze color for the button
@@ -45,11 +47,11 @@ function CompanyProfile() {
             marginRight: "30px",
             transition: "background-color 0.3s ease",
           }}
-          onMouseEnter={(e) => e.target.style.backgroundColor = "#8C4A2E"}
-          onMouseLeave={(e) => e.target.style.backgroundColor = "#B87333"}
+          onMouseEnter={(e) => (e.target.style.backgroundColor = "#8C4A2E")}
+          onMouseLeave={(e) => (e.target.style.backgroundColor = "#B87333")}
           onClick={handleShowModal}
         >
-          Contact Us
+          Contact To Deliver
         </Button>
       </div>
 
@@ -195,18 +197,55 @@ function CompanyProfile() {
           boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", // Shadow added
         }}
       >
-        <h3 style={{ fontSize: "1.8em", fontWeight: "lighter", color: "#003A70", marginBottom: "20px" }}>
+        <h3
+          style={{
+            fontSize: "1.8em",
+            fontWeight: "lighter",
+            color: "#003A70",
+            marginBottom: "20px",
+          }}
+        >
           Contact Us
         </h3>
 
         {/* Contact Details */}
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "20px" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "20px",
+          }}
+        >
           <div style={{ flex: 1 }}>
-            <p><strong>Phone:</strong> +123 456 7890</p>
-            <p><strong>Email:</strong> info@company.com</p>
-            <p><strong>LinkedIn:</strong> <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">Company LinkedIn</a></p>
-            <p><strong>Facebook:</strong> <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Company Facebook</a></p>
-            <p><strong>Location:</strong> 1234 Street Name, City, Country</p>
+            <p>
+              <strong>Phone:</strong> +123 456 7890
+            </p>
+            <p>
+              <strong>Email:</strong> info@company.com
+            </p>
+            <p>
+              <strong>LinkedIn:</strong>{" "}
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Company LinkedIn
+              </a>
+            </p>
+            <p>
+              <strong>Facebook:</strong>{" "}
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Company Facebook
+              </a>
+            </p>
+            <p>
+              <strong>Location:</strong> 1234 Street Name, City, Country
+            </p>
           </div>
 
           {/* Google Maps Embed */}
@@ -232,16 +271,28 @@ function CompanyProfile() {
         </Modal.Header>
         <Modal.Body>
           {hasWonAuction ? (
-           <div>
-           <p style={{ color: 'green', fontSize: '2em', fontWeight: 'bold', textAlign: 'center' }}>
-             Congratulations!
-           </p>
-           <p>You have won the auction. You can contact us using the following details:</p>
-           <p><strong>Eng. Zaina Alrajabi:</strong> +123 456 7890</p>
-           <p><strong>Email:</strong> info@company.com</p>
-         </div>
-         
-         
+            <div>
+              <p
+                style={{
+                  color: "green",
+                  fontSize: "2em",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                Congratulations!
+              </p>
+              <p>
+                You have won the auction. You can contact us using the following
+                details:
+              </p>
+              <p>
+                <strong>Eng. Zaina Alrajabi:</strong> +123 456 7890
+              </p>
+              <p>
+                <strong>Email:</strong> info@company.com
+              </p>
+            </div>
           ) : (
             <div>
               <p>Can Wait to be with you , keep biding</p>

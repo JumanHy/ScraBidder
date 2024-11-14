@@ -120,7 +120,7 @@ function NavBar() {
     },
   ];
 
-  const [isLogedin, setIsLogedin] = useState(false); // Only declare state once
+  const [isLogedin, setIsLogedin] = useState(true); // Only declare state once
   const [showModal, setShowModal] = useState(false); // Only declare state once
   const [uploadedImage, setUploadedImage] = useState(null); // State for storing uploaded image
 
@@ -142,7 +142,7 @@ function NavBar() {
   };
 
   // Check if the user is on "user-account" or "business-account" page
-  const role = "bus"; // Or get this dynamically as needed
+  const role = "business"; // Or get this dynamically as needed
 
   return (
     <>
@@ -302,20 +302,22 @@ function NavBar() {
       </Navbar>
 
       {/* Modal for Enlarged Profile Image with Upload Option */}
-      <Modal 
-        show={showModal} 
-        onHide={handleCloseModal} 
-        centered 
-        style={{ boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }} // Add shadow here
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+        centered
+        style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }} // Add shadow here
       >
-        <Modal.Header closeButton>
-          
-        </Modal.Header>
+        <Modal.Header closeButton></Modal.Header>
         <Modal.Body className="text-center">
           <Image
             fluid
             src={uploadedImage || userImage}
-            style={{ maxWidth: "150px", borderRadius: "50%", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)" }}
+            style={{
+              maxWidth: "150px",
+              borderRadius: "50%",
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
+            }}
           />
           <br />
           <br />

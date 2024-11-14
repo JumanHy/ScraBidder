@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
-import { Nav, Button, Offcanvas } from 'react-bootstrap';
-import { FaChartBar, FaEye, FaHistory, FaCreditCard, FaCog, FaGavel } from 'react-icons/fa'; // Import FaGavel icon
-
+import React, { useState } from "react";
+import { Nav, Button, Offcanvas } from "react-bootstrap";
+import {
+  FaChartBar,
+  FaEye,
+  FaHistory,
+  FaCreditCard,
+  FaCog,
+  FaGavel,
+} from "react-icons/fa"; // Import FaGavel icon
 
 const BAcountSidebar = ({ setActiveSection }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -121,7 +127,6 @@ const BAcountSidebar = ({ setActiveSection }) => {
         style={{
           width: "250px", // Set a smaller width for large screens
           minHeight: "100vh",
-    
         }}
         className="d-none d-md-block  bg-primary p-0 text-white" // Only show on larger screens
       >
