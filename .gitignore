@@ -1,2 +1,31 @@
-
 /frontend/node_modules
+# Build folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+.vs/
+
+# Environment files
+appsettings.*.json
+secrets.json
+
+# IDE files
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Package management
+*.nupkg
+*.snupkg
+
+# Log files
+*.log
+
+# Publish output
+wwwroot/
