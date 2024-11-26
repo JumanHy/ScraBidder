@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Enums;
 
 namespace api.Models
 {
@@ -24,13 +26,16 @@ namespace api.Models
         public string Images { get; set; } // JSON
 
         [Required]
-        public string AuctionStatus { get; set; } // Enum: pending, approved, denied, started, ended
+        public AuctionStatus AuctionStatus { get; set; } // Enum: pending, approved, denied, started, ended
 
         [Required]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal StartingBid { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? CurrentBid { get; set; }
 
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? ReservePrice { get; set; }
 
         [Required]
@@ -45,7 +50,7 @@ namespace api.Models
         public string Address { get; set; } // JSON
 
         [Required]
-        public string Condition { get; set; } // Enum: new, used, mixed
+        public Condition Condition { get; set; } // Enum: new, used, mixed
 
         [Required]
         public decimal Quantity { get; set; }
@@ -54,6 +59,8 @@ namespace api.Models
         public Category Category { get; set; }
 
         public List<BiddingHistory> Biddings { get; set; } = new List<BiddingHistory>();
+        public List<Shipment> Shipments { get; set; } = new List<Shipment>();
+        public List<TransactionHistory> Transactions { get; set; } = new List<TransactionHistory>();
     }
 
 }

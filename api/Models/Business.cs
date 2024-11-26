@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Enums;
 
 namespace api.Models
 {
@@ -21,7 +22,7 @@ namespace api.Models
         public string BusinessServices { get; set; }
 
         [Required]
-        public string BusinessType { get; set; } // Enum: seller, buyer, both
+        public BusinessType BusinessType { get; set; } // Enum: seller, buyer, both
 
         [Required, EmailAddress]
         public string BusinessEmail { get; set; }
