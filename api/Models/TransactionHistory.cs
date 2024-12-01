@@ -29,7 +29,7 @@ namespace api.Models
         [Required]
         public string TransactionType { get; set; } // Enum: deposit, refund, sale
 
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
         public Auction Auction { get; set; }
     }
 

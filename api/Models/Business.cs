@@ -1,24 +1,20 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace api.Models
 {
     public class Business
     {
-
         [Key]
         public int BusinessId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required, MaxLength(100)]
         public string BusinessName { get; set; }
 
-        public string BusinessServices { get; set; }
+        public string? BusinessServices { get; set; } = string.Empty;
 
         [Required]
         public string BusinessType { get; set; } // Enum: seller, buyer, both
@@ -29,12 +25,12 @@ namespace api.Models
         [Required, MaxLength(20)]
         public string BusinessPhoneNumber { get; set; }
 
-        public string Images { get; set; } // JSON
+        public string? Images { get; set; } = string.Empty; // JSON
 
-        public string CompanyVision { get; set; }
+        public string? CompanyVision { get; set; } = string.Empty;
 
         [MaxLength(200)]
-        public string LinkedIn { get; set; }
+        public string? LinkedIn { get; set; } = string.Empty;
 
         [Required]
         public string RegistrationNumber { get; set; }
@@ -56,8 +52,6 @@ namespace api.Models
         [Required, EmailAddress, MaxLength(100)]
         public string PrimaryContactEmail { get; set; }
 
-        public User User { get; set; }
-
-
+        public ApplicationUser User { get; set; }
     }
 }

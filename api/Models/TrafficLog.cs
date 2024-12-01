@@ -18,7 +18,7 @@ namespace api.Models
 
         public DateTime VisitTime { get; set; }
 
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
     }
 
 }

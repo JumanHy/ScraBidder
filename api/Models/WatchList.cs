@@ -18,7 +18,7 @@ namespace api.Models
         [Required]
         public int AuctionId { get; set; }
 
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
         public Auction Auction { get; set; }
     }
 
