@@ -26,7 +26,6 @@ namespace api.Data
         public DbSet<Business> Businesses { get; set; }
         public DbSet<Individual> Individuals { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<WatchList> WatchList { get; set; }
         public DbSet<TransactionHistory> TransactionHistory { get; set; }
         public DbSet<Notification> Notifications { get; set; }
@@ -607,51 +606,51 @@ builder.Entity<Business>().HasData(
     },
 new Business
 {
-BusinessId = 3,
-UserId = "8",
-BusinessName = "Business 3",
-BusinessType = "buyer",
-BusinessEmail = "business3@example.com",
-BusinessPhoneNumber = "323-456-7890",
-RegistrationNumber = "REG32345",
-PrimaryPhoneNumber = "323-456-7890",
-PrimaryContactFirstName = "Mark",
-PrimaryContactLastName = "Brown",
-PrimaryJobTitle = "Owner",
-PrimaryContactEmail = "contact@business3.com",
-Address = "123 Main St, Amman, Jordan"
+    BusinessId = 3,
+    UserId = "8",
+    BusinessName = "Business 3",
+    BusinessType = "buyer",
+    BusinessEmail = "business3@example.com",
+    BusinessPhoneNumber = "323-456-7890",
+    RegistrationNumber = "REG32345",
+    PrimaryPhoneNumber = "323-456-7890",
+    PrimaryContactFirstName = "Mark",
+    PrimaryContactLastName = "Brown",
+    PrimaryJobTitle = "Owner",
+    PrimaryContactEmail = "contact@business3.com",
+    Address = "123 Main St, Amman, Jordan"
 },
 new Business
 {
-BusinessId = 4,
-UserId = "9",
-BusinessName = "Business 4",
-BusinessType = "seller",
-BusinessEmail = "business4@example.com",
-BusinessPhoneNumber = "423-456-7890",
-RegistrationNumber = "REG42345",
-PrimaryPhoneNumber = "423-456-7890",
-PrimaryContactFirstName = "Linda",
-PrimaryContactLastName = "Johnson",
-PrimaryJobTitle = "CEO",
-PrimaryContactEmail = "contact@business4.com",
-Address = "123 Main St, Amman, Jordan"
+    BusinessId = 4,
+    UserId = "9",
+    BusinessName = "Business 4",
+    BusinessType = "seller",
+    BusinessEmail = "business4@example.com",
+    BusinessPhoneNumber = "423-456-7890",
+    RegistrationNumber = "REG42345",
+    PrimaryPhoneNumber = "423-456-7890",
+    PrimaryContactFirstName = "Linda",
+    PrimaryContactLastName = "Johnson",
+    PrimaryJobTitle = "CEO",
+    PrimaryContactEmail = "contact@business4.com",
+    Address = "123 Main St, Amman, Jordan"
 },
 new Business
 {
-BusinessId = 5,
-UserId = "10",
-BusinessName = "Business 5",
-BusinessType = "buyer",
-BusinessEmail = "business5@example.com",
-BusinessPhoneNumber = "523-456-7890",
-RegistrationNumber = "REG52345",
-PrimaryPhoneNumber = "523-456-7890",
-PrimaryContactFirstName = "Sarah",
-PrimaryContactLastName = "Williams",
-PrimaryJobTitle = "Manager",
-PrimaryContactEmail = "contact@business5.com",
-Address = "123 Main St, Amman, Jordan"
+    BusinessId = 5,
+    UserId = "10",
+    BusinessName = "Business 5",
+    BusinessType = "buyer",
+    BusinessEmail = "business5@example.com",
+    BusinessPhoneNumber = "523-456-7890",
+    RegistrationNumber = "REG52345",
+    PrimaryPhoneNumber = "523-456-7890",
+    PrimaryContactFirstName = "Sarah",
+    PrimaryContactLastName = "Williams",
+    PrimaryJobTitle = "Manager",
+    PrimaryContactEmail = "contact@business5.com",
+    Address = "123 Main St, Amman, Jordan"
 }
 // Add other businesses here...
 );
@@ -678,33 +677,33 @@ builder.Entity<Individual>().HasData(
     },
 new Individual
 {
-IndividualId = 3,
-UserId = "13",
-FirstName = "Charlie",
-LastName = "Smith",
-PhoneNumber = "987-654-3230",
-Address = "{\"street\":\"789 Pine St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
-Image = "profilepic3.jpg"
+    IndividualId = 3,
+    UserId = "13",
+    FirstName = "Charlie",
+    LastName = "Smith",
+    PhoneNumber = "987-654-3230",
+    Address = "{\"street\":\"789 Pine St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+    Image = "profilepic3.jpg"
 },
 new Individual
 {
-IndividualId = 4,
-UserId = "14",
-FirstName = "David",
-LastName = "Davis",
-PhoneNumber = "987-654-3240",
-Address = "{\"street\":\"123 Birch St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
-Image = "profilepic4.jpg"
+    IndividualId = 4,
+    UserId = "14",
+    FirstName = "David",
+    LastName = "Davis",
+    PhoneNumber = "987-654-3240",
+    Address = "{\"street\":\"123 Birch St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+    Image = "profilepic4.jpg"
 },
 new Individual
 {
-IndividualId = 5,
-UserId = "15",
-FirstName = "Eva",
-LastName = "Martin",
-PhoneNumber = "987-654-3250",
-Address = "{\"street\":\"456 Maple St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
-Image = "profilepic5.jpg"
+    IndividualId = 5,
+    UserId = "15",
+    FirstName = "Eva",
+    LastName = "Martin",
+    PhoneNumber = "987-654-3250",
+    Address = "{\"street\":\"456 Maple St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+    Image = "profilepic5.jpg"
 }
 );
 
