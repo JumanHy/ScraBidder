@@ -1,32 +1,39 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Spinner } from "react-bootstrap";
 import Title from "@/components/auctionDetailsComponents/Title/Title";
 import ImagesSlider from "@/components/auctionDetailsComponents/ImagesSlider/ImagesSlider";
 import BiddingInfo from "@/components/auctionDetailsComponents/BiddingInfo/BiddingInfo";
 import Description from "@/components/auctionDetailsComponents/Description/Description";
 import Details from "@/components/auctionDetailsComponents/Details/Details";
 import Location from "@/components/auctionDetailsComponents/Location/Location";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useLocation } from "react-router-dom";
 function AuctionDetailsPage() {
+
+  const location = useLocation();
+  const auctionItem = location.state?.auctionItem;
+  
   return (
     <Container>
       <Row>
-        <Title />
+        <Title auctionTitle={auctionItem.title} companyName={auctionItem.seller.email} />
       </Row>
 
       <Row>
         <Col xs={12} md={7} className="">
-          <ImagesSlider />
+          <ImagesSlider auction={auctionItem}/>
         </Col>
 
         <Col xs={12} md={5} className="mt-md-0  mt-2">
-          <BiddingInfo />
+          <BiddingInfo currentItem={auctionItem}/>
         </Col>
       </Row>
       <Row className="mt-3 gap-2 gap-md-0">
         <Col xs={{ span: 12, order: "last" }} md={{ span: 7, order: "first" }}>
-          <Description />
+          <Description auction={auctionItem} />
         </Col>
         <Col xs={12} md={5}>
-          <Details />
+          <Details auction={auctionItem} />
         </Col>
       </Row>
       <Row className="mt-3 gap-2 gap-md-0">

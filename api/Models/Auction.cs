@@ -21,7 +21,7 @@ namespace api.Models
 
         public int CategoryId { get; set; }
 
-        public string Images { get; set; } // JSON
+        public string Images { get; set; }=string.Empty; // JSON
 
         [Required]
         public string AuctionStatus { get; set; } // Enum: pending, approved, denied, started, ended

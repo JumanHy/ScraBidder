@@ -1,38 +1,82 @@
 import "./style.css";
-import{ React , useState}from "react";
+import{ React , useEffect, useState}from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { Modal, Button ,Container,Row,Col,Form,Image,Dropdown} from 'react-bootstrap';
 import DataTable from 'react-data-table-component';
 import scrap from "../../assets/images/scrap.png"
+import axios from "axios";
 
-function UsersData(){
+function UsersData({auctions ,BiddingHistory}){
+
+    const [records,setRecords]=useState([]);
+    const [bidRecords,setBidRecords]=useState(BiddingHistory);
     const [showModal, setShowModal] = useState(false);
-    const handleModalClose = () => setShowModal(false);
+    const [selectedAuction, setSelectedAuction] = useState(null);
+    const [selectedBid, setSelectedBid] = useState(null);
 
-    const handleUserClick = (user) => {
-        setSelectedUser(user);
-        setShowModal(true);
-    };
-    const [selectedUser, setSelectedUser] = useState({});
-    const [auctionStatus, setAuctionStatus] = useState('');
+    const handleModalClose = () => {
+      setShowModal(false);
+      setSelectedAuction(null);
+      setSelectedBid(null);
+    }
+
+    useEffect(() => {
+      if (auctions && auctions.length > 0) {
+          setRecords(auctions);
+      }
+  }, [auctions]);
+
+  useEffect(() => {
+    if (BiddingHistory && BiddingHistory.length > 0) {
+      setBidRecords(BiddingHistory);
+    }
+}, [BiddingHistory]);
+
+const handleAuctionRowClick =async (auction) => {
+  try {
+    const auctionId = auction.auctionId; // Use the correct property for the auction ID
+    const response =await axios.get(`http://localhost:5125/api/auction/${auctionId}`);
+    console.log(response);
+    // Set the selected auction and open the modal
+    setSelectedAuction(response.data);
+    setShowModal(true);
+  } catch (error) {
+    console.error("Error fetching auction details:", error);
+    alert("Could not load auction details.");
+  }         
+};
+const handleBidRowClick =async (bid) => {
+  try {
+    const bidId = bid.bidId; // Use the correct property for the auction ID
+    const response =await axios.get(`http://localhost:5125/api/biddinghistory/${bidId}`);
+    console.log(response);
+    // Set the selected auction and open the modal
+    setSelectedBid(response.data);
+    setShowModal(true);
+  } catch (error) {
+    console.error("Error fetching auction details:", error);
+    alert("Could not load auction details.");
+  }         
+};
+    
     const columns=[
-        {name:'ID' , width:'100px', selector:row=>row.id,sortable:true },
-        {name:'Auction Title' , width:'300px',selector:row=>row.name,sortable:true,
+        {name:'ID' , width:'100px', selector:row=>row.auctionId,sortable:true },
+        {name:'Auction Title' , width:'200px',selector:row=>row.title,sortable:true,
             cell: row => (
                 <a
                 href="#"
                 className="user-name-link" 
-                onClick={() => handleUserClick(row)}
+                onClick={() => handleAuctionRowClick(row)}
             >
-                {row.name}
+                {row.title}
             </a>
             ) },
-        {name:'Seller' , selector:row=>row.seller,sortable:true },
-        {name:'Start Date' , selector:row=>row.start,sortable:true },
-        {name:'End Date' , selector:row=>row.end,sortable:true },
-        {name:'Category' , selector:row=>row.category,sortable:true },
-        {name:'Auction Status' , selector:row=>row.status,sortable:true,
+        {name:'Seller' , selector:row=>row.seller.email,sortable:true },
+        {name:'Start Date' , selector:row=>row.startingTime,sortable:true },
+        {name:'End Date' , selector:row=>row.endingTime,sortable:true },
+        {name:'Category' ,width:'150px', selector:row=>row.category.categoryName,sortable:true },
+        {name:'Status' , width:'150px',selector:row=>row.auctionStatus,sortable:true,
             cell: row => {
                 const colorMap = {
                     Active: 'green',
@@ -49,109 +93,46 @@ function UsersData(){
                             fontWeight: 'bold',
                         }}
                     >
-                        {row.status}
+                        {row.auctionStatus}
                     </span>
                 );
             }
 
         }
     ]
-    const data = [
-        { id: 1, name: 'Scrap Metal Auction - Lot 1', seller: 'Juman', start: '2024-01-10', end: '2024-02-15', category: 'Iron', status: 'Active' },
-        { id: 2, name: 'Scrap Metal Auction - Lot 2', seller: 'Ahmed', start: '2024-01-12', end: '2024-02-16', category: 'Aluminum', status: 'Pending' },
-        { id: 3, name: 'Scrap Metal Auction - Lot 3', seller: 'Khaled', start: '2024-01-14', end: '2024-02-17', category: 'Copper', status: 'Sold' },
-        { id: 4, name: 'Scrap Metal Auction - Lot 4', seller: 'Laila', start: '2024-01-16', end: '2024-02-18', category: 'Plastic', status: 'Not Sold' },
-        { id: 5, name: 'Scrap Metal Auction - Lot 5', seller: 'Sarah', start: '2024-01-18', end: '2024-02-19', category: 'Stainless Steel', status: 'Listed' },
-        { id: 6, name: 'Scrap Metal Auction - Lot 6', seller: 'Ali', start: '2024-01-20', end: '2024-02-20', category: 'Wood', status: 'Active' },
-        { id: 7, name: 'Scrap Metal Auction - Lot 7', seller: 'Zainab', start: '2024-01-22', end: '2024-02-21', category: 'Glass', status: 'Pending' },
-        { id: 8, name: 'Scrap Metal Auction - Lot 8', seller: 'Youssef', start: '2024-01-24', end: '2024-02-22', category: 'Paper', status: 'Sold' },
-        { id: 9, name: 'Scrap Metal Auction - Lot 9', seller: 'Samira', start: '2024-01-26', end: '2024-02-23', category: 'Iron', status: 'Not Sold' },
-        { id: 10, name: 'Scrap Metal Auction - Lot 10', seller: 'Fahad', start: '2024-01-28', end: '2024-02-24', category: 'Aluminum', status: 'Listed' },
-        { id: 11, name: 'Scrap Metal Auction - Lot 11', seller: 'Hassan', start: '2024-01-30', end: '2024-02-25', category: 'Copper', status: 'Active' },
-        { id: 12, name: 'Scrap Metal Auction - Lot 12', seller: 'Layla', start: '2024-02-01', end: '2024-02-26', category: 'Plastic', status: 'Pending' },
-        { id: 13, name: 'Scrap Metal Auction - Lot 13', seller: 'Tariq', start: '2024-02-03', end: '2024-02-27', category: 'Stainless Steel', status: 'Sold' },
-        { id: 14, name: 'Scrap Metal Auction - Lot 14', seller: 'Rania', start: '2024-02-05', end: '2024-02-28', category: 'Wood', status: 'Not Sold' },
-        { id: 15, name: 'Scrap Metal Auction - Lot 15', seller: 'Omar', start: '2024-02-07', end: '2024-03-01', category: 'Glass', status: 'Listed' },
-        { id: 16, name: 'Scrap Metal Auction - Lot 16', seller: 'Jana', start: '2024-02-09', end: '2024-03-02', category: 'Paper', status: 'Active' },
-        { id: 17, name: 'Scrap Metal Auction - Lot 17', seller: 'Yara', start: '2024-02-11', end: '2024-03-03', category: 'Iron', status: 'Pending' },
-        { id: 18, name: 'Scrap Metal Auction - Lot 18', seller: 'Sami', start: '2024-02-13', end: '2024-03-04', category: 'Aluminum', status: 'Sold' },
-        { id: 19, name: 'Scrap Metal Auction - Lot 19', seller: 'Mariam', start: '2024-02-15', end: '2024-03-05', category: 'Copper', status: 'Not Sold' },
-        { id: 20, name: 'Scrap Metal Auction - Lot 20', seller: 'Amina', start: '2024-02-17', end: '2024-03-06', category: 'Plastic', status: 'Listed' },
-        { id: 21, name: 'Scrap Metal Auction - Lot 21', seller: 'Zaid', start: '2024-02-19', end: '2024-03-07', category: 'Stainless Steel', status: 'Active' },
-        { id: 22, name: 'Scrap Metal Auction - Lot 22', seller: 'Lina', start: '2024-02-21', end: '2024-03-08', category: 'Wood', status: 'Pending' },
-        { id: 23, name: 'Scrap Metal Auction - Lot 23', seller: 'Kareem', start: '2024-02-23', end: '2024-03-09', category: 'Glass', status: 'Sold' },
-        { id: 24, name: 'Scrap Metal Auction - Lot 24', seller: 'Fatima', start: '2024-02-25', end: '2024-03-10', category: 'Paper', status: 'Not Sold' },
-        { id: 25, name: 'Scrap Metal Auction - Lot 25', seller: 'Ahmed', start: '2024-02-27', end: '2024-03-11', category: 'Iron', status: 'Listed' },
-        { id: 26, name: 'Scrap Metal Auction - Lot 26', seller: 'Juman', start: '2024-03-01', end: '2024-03-12', category: 'Aluminum', status: 'Active' },
-        { id: 27, name: 'Scrap Metal Auction - Lot 27', seller: 'Mohammed', start: '2024-03-03', end: '2024-03-13', category: 'Copper', status: 'Pending' },
-        { id: 28, name: 'Scrap Metal Auction - Lot 28', seller: 'Khaled', start: '2024-03-05', end: '2024-03-14', category: 'Plastic', status: 'Sold' },
-        { id: 29, name: 'Scrap Metal Auction - Lot 29', seller: 'Laila', start: '2024-03-07', end: '2024-03-15', category: 'Stainless Steel', status: 'Not Sold' },
-        { id: 30, name: 'Scrap Metal Auction - Lot 30', seller: 'Ali', start: '2024-03-09', end: '2024-03-16', category: 'Wood', status: 'Listed' },
-        { id: 31, name: 'Scrap Metal Auction - Lot 31', seller: 'Youssef', start: '2024-03-11', end: '2024-03-17', category: 'Glass', status: 'Active' },
-        { id: 32, name: 'Scrap Metal Auction - Lot 32', seller: 'Samira', start: '2024-03-13', end: '2024-03-18', category: 'Paper', status: 'Pending' },
-        { id: 33, name: 'Scrap Metal Auction - Lot 33', seller: 'Fahad', start: '2024-03-15', end: '2024-03-19', category: 'Iron', status: 'Sold' },
-        { id: 34, name: 'Scrap Metal Auction - Lot 34', seller: 'Rania', start: '2024-03-17', end: '2024-03-20', category: 'Aluminum', status: 'Not Sold' },
-        { id: 35, name: 'Scrap Metal Auction - Lot 35', seller: 'Fatima', start: '2024-03-19', end: '2024-03-21', category: 'Copper', status: 'Listed' },
-        { id: 36, name: 'Scrap Metal Auction - Lot 36', seller: 'Hassan', start: '2024-03-21', end: '2024-03-22', category: 'Plastic', status: 'Active' },
-        { id: 37, name: 'Scrap Metal Auction - Lot 37', seller: 'Layla', start: '2024-03-23', end: '2024-03-23', category: 'Stainless Steel', status: 'Pending' },
-        { id: 38, name: 'Scrap Metal Auction - Lot 38', seller: 'Mariam', start: '2024-03-25', end: '2024-03-24', category: 'Wood', status: 'Sold' },
-        { id: 39, name: 'Scrap Metal Auction - Lot 39', seller: 'Amina', start: '2024-03-27', end: '2024-03-25', category: 'Glass', status: 'Not Sold' },
-        { id: 40, name: 'Scrap Metal Auction - Lot 40', seller: 'Zaid', start: '2024-03-29', end: '2024-03-26', category: 'Paper', status: 'Listed' }
-      ];
+
       
     
     const bidColumns=[
-        {name:'ID' ,  width:'100px',selector:row=>row.id,sortable:true },
-        {name:'Bidder Name' , selector:row=>row.name,sortable:true,
+        {name:'ID' ,  width:'100px',selector:row=>row.bidId,sortable:true },
+        {name:'Bidder Name' , selector:row=>row.bidder.email,sortable:true,
             cell: row => (
                 <a
                 href="#"
                 className="user-name-link" 
-                onClick={() => handleUserClick(row)}
+                onClick={() => handleBidRowClick(row)}
             >
-                {row.name}
+                {row.bidder.email}
             </a>
             ) },
-        {name:'Bid Amount(JOD)' , selector:row=>row.amount,sortable:true },
-        {name:'Bid Time' , selector:row=>row.time,sortable:true },
+        {name:'Bid Amount(JOD)' , selector:row=>row.bidAmount,sortable:true },
+        {name:'Bid Time' , selector:row=>row.bidTime,sortable:true },
+        {name:'Auction ID' , selector:row=>row.auctionId.auctionId,sortable:true,
+          cell: row => (
+              <a
+              href="#"
+              className="user-name-link" 
+              onClick={() => handleUserClick(row)}
+          >
+              {row.auctionId}
+          </a>
+          ) },
 
     ]
-    const bidData=[
-        {id: 1, name: 'Ahmad Zytoon', amount: 500, time: '2024-02-15'},
-  {id: 2, name: 'Mohammad Alghamdi', amount: 450, time: '2024-02-16'},
-  {id: 3, name: 'Laila Hassan', amount: 600, time: '2024-02-17'},
-  {id: 4, name: 'Sarah Khaled', amount: 700, time: '2024-02-18'},
-  {id: 5, name: 'Ali Alsaadi', amount: 550, time: '2024-02-19'},
-  {id: 6, name: 'Zainab Hamdan', amount: 800, time: '2024-02-20'},
-  {id: 7, name: 'Mona Fawzi', amount: 650, time: '2024-02-21'},
-  {id: 8, name: 'Youssef Awad', amount: 750, time: '2024-02-22'},
-  {id: 9, name: 'Samira Nabil', amount: 500, time: '2024-02-23'},
-  {id: 10, name: 'Khaled Ali', amount: 700, time: '2024-02-24'},
-  {id: 11, name: 'Rania Mostafa', amount: 800, time: '2024-02-25'},
-  {id: 12, name: 'Fahad Sultan', amount: 400, time: '2024-02-26'},
-  {id: 13, name: 'Hassan Faris', amount: 900, time: '2024-02-27'},
-  {id: 14, name: 'Layla Issam', amount: 650, time: '2024-02-28'},
-  {id: 15, name: 'Tariq Alhassan', amount: 500, time: '2024-03-01'},
-  {id: 16, name: 'Rasha Yassin', amount: 600, time: '2024-03-02'},
-  {id: 17, name: 'Ahmed Shakir', amount: 700, time: '2024-03-03'},
-  {id: 18, name: 'Fatima Rashed', amount: 750, time: '2024-03-04'},
-  {id: 19, name: 'Omar Hamid', amount: 650, time: '2024-03-05'},
-  {id: 20, name: 'Jana Nour', amount: 800, time: '2024-03-06'},
-  {id: 21, name: 'Yara Asad', amount: 500, time: '2024-03-07'},
-  {id: 22, name: 'Sami Jaber', amount: 900, time: '2024-03-08'},
-  {id: 23, name: 'Mariam Ghanem', amount: 700, time: '2024-03-09'},
-  {id: 24, name: 'Amina Ibrahim', amount: 800, time: '2024-03-10'},
-  {id: 25, name: 'Zaid Alharbi', amount: 600, time: '2024-03-11'},
-  {id: 26, name: 'Lina Nassar', amount: 550, time: '2024-03-12'},
-  {id: 27, name: 'Kareem Abdallah', amount: 750, time: '2024-03-13'},
-  {id: 28, name: 'Mariam Tarek', amount: 800, time: '2024-03-14'},
-  {id: 29, name: 'Ibrahim Khamis', amount: 650, time: '2024-03-15'},
-  {id: 30, name: 'Layla Mounir', amount: 500, time: '2024-03-16'}
-    ]
- 
+  
 
-    const [records,setRecords]=useState(data);
-    const [bidRecords,setBidRecords]=useState(bidData);
+    
+    
     
      function handleBidFilter(event){
         const newData=bidData.filter(row=>{
@@ -161,23 +142,23 @@ function UsersData(){
         setBidRecords(newData)
     }
     function handleAuctionFilter(event){
-        const newData=data.filter(row=>{
-            return row.name.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase())
+        const newData=auctions.filter(row=>{
+            return row.title.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase())
             
         })
         setRecords(newData)
     }
     function handleStatusFilter(event){
-        const newData=data.filter(row=>{
-            return row.status===event;
+        const newData=auctions.filter(row=>{
+          return row.auctionStatus.toLowerCase() === event.toLowerCase();
             
         })
         setRecords(newData)
     }
 
     function handleCategoryFilter(event){
-        const newData=data.filter(row=>{
-            return row.category===event;
+        const newData=auctions.filter(row=>{
+            return row.category.categoryName===event;
             
         })
         setRecords(newData)
@@ -198,7 +179,7 @@ function UsersData(){
             auction status
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item href="#" onClick={() => setRecords(data)}>All</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => setRecords(auctions)}>All</Dropdown.Item>
             <Dropdown.Item href="#" onClick={() => handleStatusFilter('Active')}>Active</Dropdown.Item>
             <Dropdown.Item href="#" onClick={() => handleStatusFilter('Pending')}>Pending</Dropdown.Item>
             <Dropdown.Item href="#" onClick={() => handleStatusFilter('Sold')}>Sold</Dropdown.Item>
@@ -214,7 +195,7 @@ function UsersData(){
             auction category
           </Dropdown.Toggle>
           <Dropdown.Menu>
-            <Dropdown.Item href="#" onClick={() => setRecords(data)}>All</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => setRecords(auctions)}>All</Dropdown.Item>
             <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Aluminum')}>Aluminum</Dropdown.Item>
             <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Copper')}>Copper</Dropdown.Item>
             <Dropdown.Item href="#" onClick={() => handleCategoryFilter('Plastic')}>Plastic</Dropdown.Item>
@@ -288,6 +269,7 @@ function UsersData(){
         striped
         highlightOnHover
         selectableRowsHighlight
+        onRowClicked={handleBidRowClick}
         customStyles={{
           rows: {
             style: {
@@ -295,6 +277,7 @@ function UsersData(){
               borderRadius: '0 0 10px 10px'
             },
           },
+
           headCells: {
             style: {
               backgroundColor: '#003A70', 
@@ -323,29 +306,29 @@ function UsersData(){
                         <Col className="ms-5">
                         <Row className="fw-bold mb-2">
                             <div style={{color:'#003A70'}}>Auction Title</div>
-                            <div>{selectedUser.name}</div>
+                            {selectedAuction && <div>{selectedAuction.title}</div>}
                         </Row>
                         <Row className="fw-bold mb-2">
                             <div style={{color:'#003A70'}}>Starting Price</div>
-                            <div>500 JOD</div>
+                            {selectedAuction && <div>{selectedAuction.startingBid}</div>}
                         </Row>
                         <Row className="fw-bold mb-2">
                             <div style={{color:'#003A70'}}>Reservce Price</div>
-                            <div>1452 JOD</div>
+                            {selectedAuction && <div>{selectedAuction.reservePrice}</div>}
                         </Row>
                         </Col>
                     </Container>
                     <div className="mx-5 mt-3 px-2">
                     <div style={{color:'#003A70'}} className="fw-bold mb-2">Description</div>
-                    <div>Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse quidem iusto aliquid, eius in vitae obcaecati nobis nihil maxime similique ipsum doloribus doloremque, impedit commodi? Nisi, quos alias. Quam, quia!</div>
-                    </div>
+                    {selectedAuction && <div>{selectedAuction.description
+}</div>}                    </div>
                     <div className="text-white p-2 mt-5 mb-5 w-100 text-center rounded"  style={{backgroundColor:"#003A70"}}>Seller Information</div>
 
                     <Container className="d-flex justify-content-between mb-5 border-bottom pb-5">
                         <Col>
                         <Row className="fw-bold mb-4">
                             <div style={{color:'#003A70'}}>Company Name</div>
-                            <div>{selectedUser.name}</div>
+                            {selectedAuction && <div>{selectedAuction.seller.email}</div>}
                         </Row>
                         <Row className="fw-bold">
                             <div style={{color:'#003A70'}}>Phone Number</div>
@@ -355,27 +338,29 @@ function UsersData(){
                         <Col>
                         <Row className="fw-bold mb-4">
                             <div style={{color:'#003A70'}}>Email</div>
-                            <div>email@gmail.com</div>
+                            {selectedAuction && <div>{selectedAuction.seller.email}</div>}
                         </Row>
                         <Row className="fw-bold">
                             <div style={{color:'#003A70'}}>Registration Date</div>
-                            <div>5\2\2024 22:10:23</div>
+                            {selectedAuction && <div>{selectedAuction.seller.createdAt}</div>}
                         </Row>
                         </Col>
                     </Container>
                     <div className="mb-4 d-flex justify-content-between">
+                    {selectedAuction&&
                     <div className="fw-bold" style={{color:'#003A70'}}>Auction Status: <span 
-                            style={{
-                                fontWeight: 'bold',
-                                color: 
-                                    selectedUser.status === 'Active' ? 'green' : 
-                                    selectedUser.status === 'Pending' ? 'orange' : 
-                                    selectedUser.status === 'Sold' ? 'grey' : 
-                                    selectedUser.status === 'Not Sold' ? 'red' :
-                                    selectedUser.status === 'Listed' ? 'blue' :
-                                    '#000000', 
-                            }}>{selectedUser.status}
-                        </span></div>
+                    style={{
+                        fontWeight: 'bold',
+                        color: 
+                        selectedAuction.auctionStatus === 'Active' ? 'green' : 
+                        selectedAuction.auctionStatus === 'Pending' ? 'orange' : 
+                        selectedAuction.auctionStatus === 'Sold' ? 'grey' : 
+                        selectedAuction.auctionStatus === 'Not Sold' ? 'red' :
+                        selectedAuction.auctionStatus === 'Listed' ? 'blue' :
+                            '#000000', 
+                    }}>{selectedAuction.auctionStatus}
+                </span></div>
+                    }
                         <div>
                         <Button variant="success" className="me-2"> Approve</Button>
                         <Button variant="danger">Reject</Button>

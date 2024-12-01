@@ -1,7 +1,8 @@
 import { Card, Button } from "react-bootstrap";
 import FlipCountdown from "@rumess/react-flip-countdown";
 import { LinkContainer } from "react-router-bootstrap";
-function AuctionCard() {
+function AuctionCard({currentAuction}) {
+  console.log("helllo",currentAuction);
   return (
     <Card className="shadow border-0 h-100 rounded-4 text-primary">
       {/* Scrap Image */}
@@ -18,7 +19,7 @@ function AuctionCard() {
       <Card.Body className="d-flex flex-column gap-2 justify-content-between align-items-center">
         {/* Scrap Title */}
         <Card.Title className="text-primary fw-bold text-center">
-          10 Tons of Stainless Steel Scrap
+          {currentAuction.title}
         </Card.Title>
 
         {/* Auction Ending Text */}
@@ -30,7 +31,7 @@ function AuctionCard() {
           {/* Countdown Timer */}
           <div>
             <FlipCountdown
-              endAt="2024-11-18 23:55:55"
+              endAt={currentAuction.endingTime}
               size="small"
               titlePosition="top"
               hideYear
@@ -44,11 +45,16 @@ function AuctionCard() {
         </div>
         {/* Starting Bid Text */}
         <Card.Text className="text-secondary fw-bold text-uppercase">
-          Starting Bid: $500
+          Starting Bid: {currentAuction.startingBid}
         </Card.Text>
 
         {/* Bid Button */}
-        <LinkContainer to="/auction">
+        <LinkContainer 
+        to={{
+          pathname: "/auction",
+        }}
+        state={{ auctionItem: currentAuction }}
+        >
           <div className="d-flex justify-content-center w-100">
             <Button
               variant="secondary"

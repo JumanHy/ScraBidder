@@ -2,14 +2,35 @@
 import { Container, Row, Col } from "react-bootstrap";
 import SearchBar from "@/components/SearchBar/SearchBar";
 import Filters from "@/components/resultsComponents/Filters/Filters";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AuctionCardsList from "@/components/AuctionCardsList/AuctionCardsList";
 import Pager from "@/components/resultsComponents/Pager/Pager";
+import axios from "axios";
 
 function ResultsPage() {
+  const [auctions, setAuctions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  
+  useEffect(() => {
+    // Define multiple API requests
+    const fetchAuctions = axios.get('http://localhost:5125/api/auction'); // Replace with your endpoint
+
+    // Use Promise.all to wait for all requests to complete
+    Promise.all([fetchAuctions])
+      .then(([auctionsResponse]) => {
+        // Update states with data from each API
+        setAuctions(auctionsResponse.data); // Assuming auctionsResponse.data contains the auctions array
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(true);
+        console.error(err);
+      });
+  }, []);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 24; // Show 24 AuctionCards per page
-  const totalItems = 346; // Total number of items
+  const totalItems = auctions.length; // Total number of items
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   // Calculate the current items based on the current page

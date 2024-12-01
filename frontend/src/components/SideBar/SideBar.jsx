@@ -6,8 +6,43 @@ import Overview from "../Overview/Overview";
 import UsersData from "../UsersData/UsersData";
 import AuctionsData from "../AuctionsData/AuctionData";
 import Stats from "../Stats/Stats";
+import axios from "axios";
 
 function SideBar() {
+
+
+
+
+  const [auctions, setAuctions] = useState([]);
+  const [biddings, setBiddings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    // Define multiple API requests
+    const fetchAuctions = axios.get('http://localhost:5125/api/auction'); // Replace with your endpoint
+    const fetchBiddings = axios.get('http://localhost:5125/api/biddinghistory'); // Replace with your endpoint
+
+    // Use Promise.all to wait for all requests to complete
+    Promise.all([fetchAuctions, fetchBiddings])
+      .then(([auctionsResponse, biddingsResponse]) => {
+        // Update states with data from each API
+        setAuctions(auctionsResponse.data); // Assuming auctionsResponse.data contains the auctions array
+        setBiddings(biddingsResponse.data); // Assuming usersResponse.data contains the users array
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(true);
+        console.error(err);
+      });
+  }, []);
+
+
+  const soldAuctionsCount = auctions.filter(
+    (auction) => auction.status && auction.status.toLowerCase() === "sold"
+  ).length;
+
+
   const [activeComponent, setActiveComponent] = useState(
     localStorage.getItem("activeComponent") || "overview"
   );
@@ -83,10 +118,17 @@ function SideBar() {
           style={{ backgroundColor: "#F5F5F5" }}
           className="dashboard-component"
         >
-          {activeComponent === "overview" && <Overview />}
-          {activeComponent === "users" && <UsersData />}
-          {activeComponent === "auctions" && <AuctionsData />}
-          {activeComponent === "stats" && <Stats />}
+          {loading && 
+          <div className="text-center">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+          }
+          {activeComponent === "overview" && !loading &&<Overview />}
+          {activeComponent === "users" && !loading && <UsersData />}
+          {activeComponent === "auctions" && !loading && <AuctionsData auctions={auctions} BiddingHistory={biddings} />}
+          {activeComponent === "stats" && !loading && <Stats auctionsCount={auctions.length} soldAuctions={soldAuctionsCount} />}
         </Col>
       </Row>
     </Container>

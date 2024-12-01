@@ -9,7 +9,6 @@ import { Container } from "react-bootstrap";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-
 import AuctionDetailsPage from "./Pages/AuctionDetailsPage/AuctionDetailsPage";
 import ResultsPage from "./Pages/ResultsPage/ResultsPage";
 import NavBar from "./components/NavBar/NavBar";
@@ -25,6 +24,7 @@ import IndividualRegistration from "./Pages/IndividualRegistration.jsx";
 import AuctionForm from "./Pages/AuctionFormPage/AuctionFormPage";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer";
+import Test from "./Pages/TestPage/Test.jsx";
 
 import "./styles/css/main.min.css";
 import Table from "./Pages/Table";
@@ -40,6 +40,7 @@ export default function App() {
             <Route path="/auction" element={<AuctionDetailsPage />} />
             <Route path="/results" element={<ResultsPage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/test" element={<Test />} />
             <Route
               path="/individual-register"
               element={<IndividualRegistration />}
