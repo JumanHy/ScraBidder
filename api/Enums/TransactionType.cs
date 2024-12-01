@@ -2,6 +2,6 @@ namespace api.Enums
 {
     public enum TransactionType
     {
-        order = 1, authorization, capture, refund
+        Order = 1, Authorization, Capture, Refund
     }
 }

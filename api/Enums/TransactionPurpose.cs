@@ -2,6 +2,6 @@ namespace api.Enums
 {
     public enum TransactionPurpose
     {
-        purchase = 1, deposit
+        Purchase = 1, Deposit
     }
 }

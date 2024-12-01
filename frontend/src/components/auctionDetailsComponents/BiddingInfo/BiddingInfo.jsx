@@ -17,7 +17,7 @@ import Swal from "sweetalert2";
 import WatchButton from "./WatchButton";
 
 export default function BiddingInfo() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isDepositAuthorized, setIsDepositAuthorized] = useState(false);
@@ -167,6 +167,8 @@ export default function BiddingInfo() {
         show={showPaymentModal}
         handleClose={() => setShowPaymentModal(false)}
         amount={depositAmount}
+        userId={1}
+        auctionId={12}
         onPaymentSuccess={handlePaymentSuccess}
       />
     </Card>

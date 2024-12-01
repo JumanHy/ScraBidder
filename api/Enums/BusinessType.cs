@@ -2,6 +2,6 @@ namespace api.Enums
 {
     public enum BusinessType
     {
-        seller = 1, buyer, both
+        Seller = 1, Buyer, Both
     }
 }

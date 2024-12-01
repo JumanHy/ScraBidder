@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Dtos;
 using api.Enums;
 using api.Models;
 
@@ -18,5 +19,7 @@ namespace api.Interfaces
         TransactionType? type = null,
         string? status = null);
         Task AddAsync(TransactionHistory transaction);
+        Task<List<AuthorizedTransactionResultForCapturing>> GetAuthorizedTransactionsForCapturingAsync();
+        Task<List<TransactionHistory?>> GetAuthorizedTransactionsForVoidAsync();
     }
 }

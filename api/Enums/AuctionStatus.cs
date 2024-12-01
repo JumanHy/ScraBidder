@@ -2,6 +2,6 @@ namespace api.Enums
 {
     public enum AuctionStatus
     {
-        pending = 1, approved, denied, started, ended
+        Pending = 1, Approved, Denied, Started, Ended
     }
 }
