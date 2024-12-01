@@ -120,7 +120,7 @@ function NavBar() {
     },
   ];
 
-  const [isLogedin, setIsLogedin] = useState(true); // Only declare state once
+  const [isLogedin, setIsLogedin] = useState(false); // Only declare state once
   const [showModal, setShowModal] = useState(false); // Only declare state once
   const [uploadedImage, setUploadedImage] = useState(null); // State for storing uploaded image
 

@@ -16,7 +16,7 @@ namespace api.Models
         public int AuctionId { get; set; }
 
         [Required]
-        public int BidderId { get; set; }
+        public string BidderId { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18, 2)")]
@@ -26,7 +26,7 @@ namespace api.Models
         public DateTime BidTime { get; set; }
 
         public Auction Auction { get; set; }
-        public User Bidder { get; set; }
+        public ApplicationUser Bidder { get; set; }
     }
 
 }

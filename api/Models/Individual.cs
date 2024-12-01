@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace api.Models
 {
@@ -13,14 +10,22 @@ namespace api.Models
 
         public string PhoneNumber { get; set; }
 
-        public string Image { get; set; }
-
+        public string? Image { get; set; }
+ 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
-        public string Address { get; set; } // JSON
 
-        public User User { get; set; }
+
+
+        public string? Address { get; set; } // JSON
+
+        public ApplicationUser User { get; set; } // Relationship with ApplicationUser
+        [Required]
+        public string FirstName { get; internal set; }
+        [Required]
+        public string LastName { get; internal set; }
+
+        
     }
-
 }

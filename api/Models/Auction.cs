@@ -14,7 +14,7 @@ namespace api.Models
         public int AuctionId { get; set; }
 
         [Required]
-        public int SellerId { get; set; }
+        public string SellerId { get; set; }
 
         [Required, MaxLength(255)]
         public string Title { get; set; }
@@ -55,7 +55,7 @@ namespace api.Models
         [Required]
         public decimal Quantity { get; set; }
 
-        public User Seller { get; set; }
+        public ApplicationUser Seller { get; set; }
         public Category Category { get; set; }
 
         public List<BiddingHistory> Biddings { get; set; } = new List<BiddingHistory>();

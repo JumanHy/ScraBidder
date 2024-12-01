@@ -23,7 +23,7 @@ namespace api.Models
         [Required]
         public DateTime ActionTime { get; set; }
 
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
         public Action Action { get; set; }
     }
 

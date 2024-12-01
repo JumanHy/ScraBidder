@@ -17,7 +17,7 @@ namespace api.Models
         [Required]
         public string NotificationsInfo { get; set; } // JSON
 
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
     }
 
 }
