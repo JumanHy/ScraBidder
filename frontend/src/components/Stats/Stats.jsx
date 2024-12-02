@@ -3,7 +3,7 @@ import { Button, Container, Row, Col, Form } from "react-bootstrap";
 import { Hammer, Person, AwardFill,PersonPlusFill, PersonFill } from "react-bootstrap-icons";
 import LineChart from "../Chart/LineChart";
 import { Chart } from "react-google-charts";
-function Stats() {
+function Stats({auctionsCount,soldAuctions}) {
   const data = [
     ["Task", "Hours per Day"],
     ["Aluminum", 9],
@@ -36,10 +36,10 @@ function Stats() {
         <Container fluid>
           <Row className="justify-content-center">
             {[
-              { label: "Total Auctions", icon: <Hammer size={25} color="#B87333" />, value: 233 },
+              { label: "Total Auctions", icon: <Hammer size={25} color="#B87333" />, value: auctionsCount },
               { label: "New Users", icon: <PersonPlusFill size={25} color="#B87333" />, value: 450 },
               { label: "Active Users", icon: <PersonFill size={25} color="#B87333" />, value: 10 },
-              { label: "Sold Auctions", icon: <Hammer size={25} color="#B87333" />, value: 112 },
+              { label: "Sold Auctions", icon: <Hammer size={25} color="#B87333" />, value: soldAuctions },
               { label: "Top Selling", icon: <AwardFill size={25} color="#B87333" />, value: "Iron" },
             ].map((item, idx) => (
               <Col

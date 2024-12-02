@@ -1,16 +1,23 @@
 import React, { useState } from "react";
 import Slider from "react-slick";
 import { Container, Row, Col, Image } from "react-bootstrap";
-function ImagesSlider() {
-  const images = [
-    "https://placehold.co/600x400",
-    "https://placehold.co/600x400?text=Image+2",
-    "https://placehold.co/600x400?text=Image+3",
-    "https://placehold.co/600x400?text=Image+4",
-    "https://placehold.co/600x400?text=Image+5",
-    "https://placehold.co/600x400?text=Image+6",
-  ];
 
+function ImagesSlider({ auction }) {
+  // Define the base URL for your image paths
+  const baseURL = "./src/assets/images/";
+
+  // Safely parse the auction.images string into an object
+  let images = [];
+  if (auction?.images) {
+    try {
+      const imageObject = JSON.parse(auction.images); // Parse the string into an object
+      images = Object.values(imageObject).map((path) => `${baseURL}${path}`);
+      console.log(Object.values(imageObject));
+    } catch (error) {
+      console.error("Failed to parse auction images:", error);
+    }
+  }
+  console.log(images.length);
   const [mainSlider, setMainSlider] = useState(null);
   const [thumbnailSlider, setThumbnailSlider] = useState(null);
 
@@ -19,7 +26,7 @@ function ImagesSlider() {
     ref: (slider) => setMainSlider(slider),
     arrows: false,
   };
-
+  
   const thumbnailSettings = {
     slidesToShow: 4,
     swipeToSlide: true,
@@ -32,39 +39,30 @@ function ImagesSlider() {
   };
 
   return (
-    <Container className="">
+    <Container>
       <Row className="justify-content-center">
         {/* Main Image Slider */}
         <Col xs={12} className="position-relative p-0">
           <Slider {...mainSettings}>
-            {images.map((image, index) => (
-              <div key={index}>
-                <Image
-                  src={image}
-                  alt={`Main ${index}`}
-                  className="w-100 "
-                  style={{
-                    maxHeight: "400px",
-                    objectFit: "cover",
-                    cursor: "pointer",
-                  }}
-                />
-              </div>
-            ))}
+            {images.length > 0 ? (
+              images.map((image, index) => (
+                <div key={index}>
+                  <Image
+                    src={image}
+                    alt={`Main ${index}`}
+                    className="w-100"
+                    style={{
+                      maxHeight: "400px",
+                      objectFit: "cover",
+                      cursor: "pointer",
+                    }}
+                  />
+                </div>
+              ))
+            ) : (
+              <div>No images available</div>
+            )}
           </Slider>
-          {/* Custom Arrows
-          <ChevronLeft
-            size={30}
-            onClick={() => mainSlider.slickPrev()}
-            className="position-absolute top-50 start-0 translate-middle-y"
-            style={{ cursor: "pointer", color: "#333" }}
-          />
-          <ChevronRight
-            size={30}
-            onClick={() => mainSlider.slickNext()}
-            className="position-absolute top-50 end-0 translate-middle-y"
-            style={{ cursor: "pointer", color: "#333" }}
-          /> */}
         </Col>
       </Row>
 

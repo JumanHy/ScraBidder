@@ -15,20 +15,21 @@ import LoginModal from "./LoginModal";
 import PaymentModal from "@/components/PaymentModal/PaymentModal";
 import Swal from "sweetalert2";
 import WatchButton from "./WatchButton";
+import axios from "axios";
 
-export default function BiddingInfo() {
+export default function BiddingInfo({ currentItem }) {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [isDepositAuthorized, setIsDepositAuthorized] = useState(false);
-  const startingPrice = 500;
-  const [highestBid, setHighestBid] = useState(startingPrice);
+  const [isDepositAuthorized, setIsDepositAuthorized] = useState(true);
+  const startingPrice = currentItem.startingBid;
+  const [highestBid, setHighestBid] = useState(currentItem.currentBid);
   const [bidAmount, setBidAmount] = useState("");
   const [error, setError] = useState("");
 
   const depositAmount = 50; // amount to hold for bidding authorization
 
-  const handleBidNowClick = () => {
+  const handleBidNowClick = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
       return;
@@ -52,6 +53,39 @@ export default function BiddingInfo() {
         icon: "success",
         title: "Bid Placed!",
         text: `Your bid of ${numericBid} JD has been placed.`,
+      });
+    }
+    setError("");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5125/api/biddinghistory",
+        {
+          auctionId: currentItem.auctionId,
+          bidderId: 1,
+          bidAmount: numericBid,
+        },
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      // Update the highest bid and reset input if the request is successful
+      setHighestBid(numericBid);
+      setBidAmount("");
+
+      Swal.fire({
+        icon: "success",
+        title: "Bid Placed!",
+        text: `Your bid of ${numericBid} JD has been placed successfully.`,
+      });
+    } catch (error) {
+      console.error("Error placing bid:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Place Bid",
+        text: "An error occurred while placing your bid. Please try again.",
       });
     }
   };
@@ -80,6 +114,7 @@ export default function BiddingInfo() {
         icon: "success",
       });
     }
+    console.log(currentItem);
   }, [isLoggedIn]);
 
   return (
@@ -88,17 +123,19 @@ export default function BiddingInfo() {
         <Card.Title>
           <Row fluid className="p-0 align-items-center justify-content-between">
             <Col xs="auto" className="text-success">
-              Started
+              {currentItem.auctionStatus}
             </Col>
             <Col xs="auto">
-              <WatchButton />
+              {currentItem.auctionStatus != "Closed" && <WatchButton />}
             </Col>
           </Row>
         </Card.Title>
 
         <Card.Text>
-          <Card.Subtitle className="mb-2 text-muted">Ends After</Card.Subtitle>
-          <Timer />
+          <Card.Subtitle className="mb-2 text-muted">
+            {currentItem.auctionStatus == "Closed" ? "Ended At" : "Ends After"}
+          </Card.Subtitle>
+          <Timer auction={currentItem} />
         </Card.Text>
 
         <Card.Text>
@@ -106,53 +143,62 @@ export default function BiddingInfo() {
             <Row>
               <Stack className="p-0">
                 <p className="m-0">
-                  {highestBid == startingPrice
-                    ? "Starting price "
-                    : "Highest Bid "}
-                  . <BidHistoryModal />
+                  {currentItem.currentBid ? "Highest Bid  " : "Starting price "}
+                  .{" "}
+                  <BidHistoryModal
+                    biddingsList={currentItem.biddings}
+                    startingPrice={currentItem.startingBid}
+                  />
                 </p>
-                <h4>{highestBid} JD</h4>
+                {currentItem.currentBid && <h4>{currentItem.currentBid} JD</h4>}
+                {!currentItem.currentBid && (
+                  <h4>{currentItem.startingBid} JD</h4>
+                )}
               </Stack>
             </Row>
           </Container>
         </Card.Text>
 
-        <Card.Text className="d-flex justify-content-center">
-          <Col xs={12} md={7}>
-            {isLoggedIn && (
-              <Form.Group>
-                <Form.Control
-                  type="number"
-                  placeholder={`Bid Amount (min ${highestBid + 1})`}
-                  min={highestBid + 1} // Set the minimum bid value
-                  value={bidAmount}
-                  step={1} // Whole numbers only
-                  onChange={(e) => {
-                    const inputValue = e.target.value;
-                    if (/^\d*$/.test(inputValue)) {
-                      setBidAmount(inputValue);
-                      setError("");
+        {currentItem.auctionStatus != "Closed" && (
+          <Card.Text className="d-flex justify-content-center">
+            <Col xs={12} md={7}>
+              {isLoggedIn && (
+                <Form.Group>
+                  <Form.Control
+                    type="number"
+                    placeholder={`Bid Amount (min ${
+                      currentItem.currentBid + 1
+                    })`}
+                    min={currentItem.currentBid + 1} // Set the minimum bid value
+                    value={bidAmount}
+                    step={1} // Whole numbers only
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (/^\d*$/.test(inputValue)) {
+                        setBidAmount(inputValue);
+                        setError("");
+                      }
+                    }}
+                    isInvalid={!!error}
+                    className={
+                      !isLoggedIn || !isDepositAuthorized ? "d-none" : ""
                     }
-                  }}
-                  isInvalid={!!error}
-                  className={
-                    !isLoggedIn || !isDepositAuthorized ? "d-none" : ""
-                  }
-                />
-                <Form.Control.Feedback type="invalid">
-                  {error}
-                </Form.Control.Feedback>
-              </Form.Group>
-            )}
-            <Button
-              onClick={handleBidNowClick}
-              className="text-white w-100 rounded-5 mt-2"
-              variant="secondary"
-            >
-              Place Bid
-            </Button>
-          </Col>
-        </Card.Text>
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {error}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
+              <Button
+                onClick={handleBidNowClick}
+                className="text-white w-100 rounded-5 mt-2"
+                variant="secondary"
+              >
+                Place Bid
+              </Button>
+            </Col>
+          </Card.Text>
+        )}
       </Card.Body>
 
       {/* Login Modal */}

@@ -4,13 +4,13 @@ using api.Data;
 using api.Interfaces;
 using api.Repositories;
 using api.Services;
-using api.Interfaces;
 using api.Models;
 using api.Repositories.Implementations;
 using api.Repositories.Interfaces;
 using api.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using api.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -25,6 +25,14 @@ internal class Program
         builder.Services.AddScoped<PaymentService>();
         builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
         builder.Services.AddHostedService<AuctionPaymentHandlerService>();
+        builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IIndividualRepository, IndividualRepository>();
+        builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
+        builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IUserSettingService, UserSettingService>();
+        builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+        builder.Services.AddScoped<IBiddingHistoryRepository, BiddingHistoryRepository>();
+
 
         // Add services to the container
         builder.Services.AddEndpointsApiExplorer();
@@ -32,13 +40,6 @@ internal class Program
         builder.Services.AddDbContext<ApplicationDBContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-        });
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowReactApp",
-                policy => policy.WithOrigins("http://localhost:5173") // Allow your React app's URL
-                                .AllowAnyHeader()
-                                .AllowAnyMethod());
         });
         builder.Services.AddHttpClient<PayPalService>();
         builder.Logging.ClearProviders(); // Clears default providers for clean setup
@@ -49,18 +50,6 @@ internal class Program
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
-
-
-
-        // Add services to the container.
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
-        // Configure ApplicationDBContext with SQL Server
-        builder.Services.AddDbContext<ApplicationDBContext>(options =>
-        {
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-        });
 
         // Configure Identity with ApplicationUser and IdentityRole
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -93,30 +82,39 @@ internal class Program
 
         builder.Services.AddAuthorization();
 
-        // Enable CORS (Add CORS Policy)
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowReactApp", policy =>
-            {
-                policy.WithOrigins("http://localhost:5173")
-                      .AllowAnyHeader()// Allow any origin
-                      .AllowAnyMethod();  // Allow any HTTP method (GET, POST, etc.)
-                                          // Allow any headers
-            });
-        });
 
-        // Add Controllers (for MVC support)
-        builder.Services.AddControllers();
 
-        // Scoped services
-        builder.Services.AddScoped<ITokenService, TokenService>();
-        builder.Services.AddScoped<IIndividualRepository, IndividualRepository>();
-        builder.Services.AddScoped<IBusinessRepository, BusinessRepository>();
-        builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<IUserSettingService, UserSettingService>();
 
         // Build the application
         var app = builder.Build();
+        // Add services to the container
+        builder.Services.AddControllers();
+
+        // Swagger/OpenAPI Configuration
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        // JSON Serialization Configuration
+        builder.Services.AddControllers().AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        });
+
+
+        // CORS Configuration
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowReactApp", policy =>
+                policy.WithOrigins("http://localhost:5173") // Frontend origin
+                      .AllowAnyHeader()
+                      .AllowAnyMethod());
+        });
+
+
+        builder.Services.AddSignalR();
+
+
+
 
         // Configure the HTTP request pipeline
         if (app.Environment.IsDevelopment())
