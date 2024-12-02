@@ -12,7 +12,7 @@ namespace api.Models
         public int LogId { get; set; }
 
         [Required]
-        public int? UserId { get; set; }
+        public string? UserId { get; set; }
 
         [Required, MaxLength(50)]
         public string IpAddress { get; set; } = string.Empty;

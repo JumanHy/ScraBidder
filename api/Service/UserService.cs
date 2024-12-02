@@ -1,5 +1,6 @@
 using api.Data;
 using api.Dtos;
+using api.Enums;
 using api.Interfaces;
 using api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -45,7 +46,7 @@ namespace api.Service
                     UserId = user.Id,
                     UserName = user.UserName,
                     Email = user.Email,
-                    UserType = user.UserType.ToString(),
+
                     Status = user.Status.ToString()
                 })
                 .ToListAsync();
@@ -65,57 +66,58 @@ namespace api.Service
                 UserId = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
-                UserType = user.UserType.ToString(),
+
                 Status = user.Status.ToString()
             };
         }
 
         // Update all users and handle logic for user type and status update
         public async Task<bool> UpdateAllUsersAsync(List<UserUpdateDto> userUpdateDtos)
-{
-    if (userUpdateDtos == null || userUpdateDtos.Count == 0)
-        return false;
-
-    // Fetch users to be updated from the database by matching their IDs
-    var userIds = userUpdateDtos.Select(dto => dto.UserId).ToList();
-    var users = await _context.Users.Where(u => userIds.Contains(u.Id)).ToListAsync();
-
-    if (users == null || users.Count == 0)
-        return false;
-
-    // Create a dictionary for easy lookup
-    var userUpdateMap = userUpdateDtos.ToDictionary(dto => dto.UserId);
-
-    // Loop through each user to update their properties
-    foreach (var user in users)
-    {
-        try
         {
-            if (userUpdateMap.TryGetValue(user.Id, out var updateDto))
+            if (userUpdateDtos == null || userUpdateDtos.Count == 0)
+                return false;
+
+            // Fetch users to be updated from the database by matching their IDs
+            var userIds = userUpdateDtos.Select(dto => dto.UserId).ToList();
+            var users = await _context.Users.Where(u => userIds.Contains(u.Id)).ToListAsync();
+
+            if (users == null || users.Count == 0)
+                return false;
+
+            // Create a dictionary for easy lookup
+            var userUpdateMap = userUpdateDtos.ToDictionary(dto => dto.UserId);
+
+            // Loop through each user to update their properties
+            foreach (var user in users)
             {
-                // Update fields using data from UserUpdateDto
-                if (!string.IsNullOrEmpty(updateDto.UserType))
-                    user.UserType = Enum.Parse<UserType>(updateDto.UserType);
+                try
+                {
+                    if (userUpdateMap.TryGetValue(user.Id, out var updateDto))
+                    {
 
-                if (!string.IsNullOrEmpty(updateDto.Status))
-                    user.Status = Enum.Parse<AccountStatus>(updateDto.Status);
 
-                // Add additional updates as needed
+
+                        if (!string.IsNullOrEmpty(updateDto.Status))
+                            user.Status = Enum.Parse<AccountStatus>(updateDto.Status);
+
+                        // Add additional updates as needed
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log the exception and continue with the next user
+                    Console.WriteLine($"Error updating user {user.Id}: {ex.Message}");
+                }
             }
-        }
-        catch (Exception ex)
-        {
-            // Log the exception and continue with the next user
-            Console.WriteLine($"Error updating user {user.Id}: {ex.Message}");
+
+            // Save changes to the database
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
-
-    // Save changes to the database
-    await _context.SaveChangesAsync();
-    return true;
-}}}
+}
 
 
 
 
-        
+

@@ -25,7 +25,7 @@ namespace api.Data
         public DbSet<BiddingHistory> BiddingHistory { get; set; }
         public DbSet<Business> Businesses { get; set; }
         public DbSet<Individual> Individuals { get; set; }
-        public DbSet<User> Users { get; set; }
+
         public DbSet<WatchList> WatchList { get; set; }
         public DbSet<TransactionHistory> TransactionHistory { get; set; }
         public DbSet<Notification> Notifications { get; set; }
@@ -80,45 +80,41 @@ namespace api.Data
                 .OnDelete(DeleteBehavior.Cascade); // Allow cascade here
 
             // Configure enum properties to be stored as strings
-            modelBuilder.Entity<User>()
-                .Property(u => u.AccountStatus)
+            builder.Entity<ApplicationUser>()
+                .Property(u => u.Status)
                 .HasConversion(
                     v => v.ToString(),
                     v => (AccountStatus)Enum.Parse(typeof(AccountStatus), v));
 
-            modelBuilder.Entity<Auction>()
+            builder.Entity<Auction>()
                 .Property(a => a.AuctionStatus)
                 .HasConversion(
                     v => v.ToString(),
                     v => (AuctionStatus)Enum.Parse(typeof(AuctionStatus), v));
 
-            modelBuilder.Entity<Auction>()
+            builder.Entity<Auction>()
                 .Property(a => a.Condition)
                 .HasConversion(
                     v => v.ToString(),
                     v => (Condition)Enum.Parse(typeof(Condition), v));
 
-            modelBuilder.Entity<TransactionHistory>()
+            builder.Entity<TransactionHistory>()
                 .Property(a => a.TransactionType)
                 .HasConversion(
                     v => v.ToString(),
                     v => (TransactionType)Enum.Parse(typeof(TransactionType), v));
 
-            modelBuilder.Entity<TransactionHistory>()
+            builder.Entity<TransactionHistory>()
     .Property(a => a.TransactionPurpose)
     .HasConversion(
         v => v.ToString(),
         v => (TransactionPurpose)Enum.Parse(typeof(TransactionPurpose), v));
 
             // Seed Roles
-            modelBuilder.Entity<Role>().HasData(
-                new Role { RoleId = 1, RoleName = "Admin" },
-                new Role { RoleId = 2, RoleName = "Individual" },
-                new Role { RoleId = 3, RoleName = "Business" }
-            );
+
 
             // Seed Categories
-            modelBuilder.Entity<Category>().HasData(
+            builder.Entity<Category>().HasData(
                 new Category { CategoryId = 1, CategoryName = "Aluminum" },
                 new Category { CategoryId = 2, CategoryName = "Copper" },
                 new Category { CategoryId = 3, CategoryName = "Plastic" },
@@ -133,47 +129,339 @@ namespace api.Data
             );
 
             // Seed Users
-            modelBuilder.Entity<User>().HasData(
-                new User
+            // Configure ApplicationUser → Business (One-to-One)
+            builder.Entity<ApplicationUser>()
+                .HasOne(u => u.Business)
+                .WithOne(b => b.User)
+                .HasForeignKey<Business>(b => b.UserId);
+
+            // Configure ApplicationUser → Individual (One-to-One)
+            builder.Entity<ApplicationUser>()
+                .HasOne(u => u.Individual)
+                .WithOne(i => i.User)
+                .HasForeignKey<Individual>(i => i.UserId);
+
+
+
+
+
+
+
+
+            builder.Entity<ApplicationUser>()
+            .Property(u => u.Status)
+            .HasConversion(
+                v => v.ToString(), // Convert enum to string when saving
+                v => (AccountStatus)Enum.Parse(typeof(AccountStatus), v) // Convert string back to enum when reading
+            );
+
+
+
+
+
+
+
+            // Define currentDate (now)
+            var currentDate = DateTime.UtcNow;
+
+            // Admin users
+            builder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
                 {
-                    UserId = 1,
-                    RoleId = 1,
-                    Email = "admin@example.com",
-                    AccountStatus = AccountStatus.Approved,
-                    CreatedAt = DateTime.UtcNow
+                    Id = "1",
+                    UserName = "admin1",
+                    Email = "admin1@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+
+
+
                 },
-                new User
+                new ApplicationUser
                 {
-                    UserId = 2,
-                    RoleId = 2,
-                    Email = "individual@example.com",
-                    AccountStatus = AccountStatus.Approved,
-                    CreatedAt = DateTime.UtcNow
+                    Id = "2",
+                    UserName = "admin2",
+                    Email = "admin2@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+
+
                 },
-                new User
+                new ApplicationUser
                 {
-                    UserId = 3,
-                    RoleId = 2,
-                    Email = "individual2@example.com",
-                    AccountStatus = AccountStatus.Approved,
-                    CreatedAt = DateTime.UtcNow
+                    Id = "3",
+                    UserName = "admin3",
+                    Email = "admin3@example.com",
+                    Status = AccountStatus.Blocked,
+                    CreatedAt = currentDate,
+
                 },
-                new User
+                new ApplicationUser
                 {
-                    UserId = 4,
-                    RoleId = 3,
-                    Email = "business@example.com",
-                    AccountStatus = AccountStatus.Approved,
-                    CreatedAt = DateTime.UtcNow
+                    Id = "4",
+                    UserName = "admin4",
+                    Email = "admin4@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+
+                },
+                new ApplicationUser
+                {
+                    Id = "5",
+                    UserName = "admin5",
+                    Email = "admin5@example.com",
+                    Status = AccountStatus.Pending,
+                    CreatedAt = currentDate,
+
                 }
             );
 
+            // Business users
+            builder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
+                {
+                    Id = "6",
+                    UserName = "business1",
+                    Email = "business1@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+
+                },
+                new ApplicationUser
+                {
+                    Id = "7",
+                    UserName = "business2",
+                    Email = "business2@example.com",
+                    Status = AccountStatus.Pending,
+                    CreatedAt = currentDate,
+
+                    // Use enum value instead of string
+                },
+                new ApplicationUser
+                {
+                    Id = "8",
+                    UserName = "business3",
+                    Email = "business3@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+
+                    // Use enum value instead of string
+                },
+                new ApplicationUser
+                {
+                    Id = "9",
+                    UserName = "business4",
+                    Email = "business4@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+
+                    // Use enum value instead of string
+                },
+                new ApplicationUser
+                {
+                    Id = "10",
+                    UserName = "business5",
+                    Email = "business5@example.com",
+                    Status = AccountStatus.Pending,
+                    CreatedAt = currentDate,
+
+                }
+            );
+
+            // Individual users
+            builder.Entity<ApplicationUser>().HasData(
+                new ApplicationUser
+                {
+                    Id = "11",
+                    UserName = "individual1",
+                    Email = "individual1@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+
+                    // Use enum value instead of string
+                },
+                new ApplicationUser
+                {
+                    Id = "12",
+                    UserName = "individual2",
+                    Email = "individual2@example.com",
+                    Status = AccountStatus.Blocked,
+                    CreatedAt = currentDate,
+
+                    // Use enum value instead of string
+                },
+                new ApplicationUser
+                {
+                    Id = "13",
+                    UserName = "individual3",
+                    Email = "individual3@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+                },
+                new ApplicationUser
+                {
+                    Id = "14",
+                    UserName = "individual4",
+                    Email = "individual4@example.com",
+                    Status = AccountStatus.Pending,
+                    CreatedAt = currentDate,
+                },
+                new ApplicationUser
+                {
+                    Id = "15",
+                    UserName = "individual5",
+                    Email = "individual5@example.com",
+                    Status = AccountStatus.Active,
+                    CreatedAt = currentDate,
+
+                }
+            );
+
+            // Seed corresponding Business records
+            builder.Entity<Business>().HasData(
+                new Business
+                {
+                    BusinessId = 1,
+                    UserId = "6",
+                    BusinessName = "Business 1",
+                    BusinessType = BusinessType.Seller,
+                    BusinessEmail = "business1@example.com",
+                    BusinessPhoneNumber = "123-456-7890",
+                    RegistrationNumber = "REG12345",
+                    PrimaryPhoneNumber = "123-456-7890",
+                    PrimaryContactFirstName = "John",
+                    PrimaryContactLastName = "Doe",
+                    PrimaryJobTitle = "CEO",
+                    PrimaryContactEmail = "contact@business1.com",
+                    Address = "123 Main St, Amman, Jordan"
+                }, new Business
+                {
+                    BusinessId = 2,
+                    UserId = "7",
+                    BusinessName = "Business 2",
+                    BusinessType = BusinessType.Seller,
+                    BusinessEmail = "business2@example.com",
+                    BusinessPhoneNumber = "223-456-7890",
+                    RegistrationNumber = "REG22345",
+                    PrimaryPhoneNumber = "223-456-7890",
+                    PrimaryContactFirstName = "Alice",
+                    PrimaryContactLastName = "Smith",
+                    PrimaryJobTitle = "Manager",
+                    PrimaryContactEmail = "contact@business2.com",
+                    Address = "123 Main St, Amman, Jordan"
+                },
+            new Business
+            {
+                BusinessId = 3,
+                UserId = "8",
+                BusinessName = "Business 3",
+                BusinessType = BusinessType.Buyer,
+                BusinessEmail = "business3@example.com",
+                BusinessPhoneNumber = "323-456-7890",
+                RegistrationNumber = "REG32345",
+                PrimaryPhoneNumber = "323-456-7890",
+                PrimaryContactFirstName = "Mark",
+                PrimaryContactLastName = "Brown",
+                PrimaryJobTitle = "Owner",
+                PrimaryContactEmail = "contact@business3.com",
+                Address = "123 Main St, Amman, Jordan"
+            },
+            new Business
+            {
+                BusinessId = 4,
+                UserId = "9",
+                BusinessName = "Business 4",
+                BusinessType = BusinessType.Seller,
+                BusinessEmail = "business4@example.com",
+                BusinessPhoneNumber = "423-456-7890",
+                RegistrationNumber = "REG42345",
+                PrimaryPhoneNumber = "423-456-7890",
+                PrimaryContactFirstName = "Linda",
+                PrimaryContactLastName = "Johnson",
+                PrimaryJobTitle = "CEO",
+                PrimaryContactEmail = "contact@business4.com",
+                Address = "123 Main St, Amman, Jordan"
+            },
+            new Business
+            {
+                BusinessId = 5,
+                UserId = "10",
+                BusinessName = "Business 5",
+                BusinessType = BusinessType.Seller,
+                BusinessEmail = "business5@example.com",
+                BusinessPhoneNumber = "523-456-7890",
+                RegistrationNumber = "REG52345",
+                PrimaryPhoneNumber = "523-456-7890",
+                PrimaryContactFirstName = "Sarah",
+                PrimaryContactLastName = "Williams",
+                PrimaryJobTitle = "Manager",
+                PrimaryContactEmail = "contact@business5.com",
+                Address = "123 Main St, Amman, Jordan"
+            }
+            // Add other businesses here...
+            );
+
+            // Seed corresponding Individual records
+            builder.Entity<Individual>().HasData(
+                new Individual
+                {
+                    IndividualId = 1,
+                    UserId = "11",
+                    FirstName = "Alice",
+                    LastName = "Williams",
+                    PhoneNumber = "987-654-3210",
+                    Address = "{\"street\":\"123 Main St\",\"city\":\"Amman\",\"country\":\"Jordan\"}"
+                }, new Individual
+                {
+                    IndividualId = 2,
+                    UserId = "12",
+                    FirstName = "Bob",
+                    LastName = "Johnson",
+                    PhoneNumber = "987-654-3220",
+                    Address = "{\"street\":\"456 Oak St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                    Image = "profilepic2.jpg"
+                },
+            new Individual
+            {
+                IndividualId = 3,
+                UserId = "13",
+                FirstName = "Charlie",
+                LastName = "Smith",
+                PhoneNumber = "987-654-3230",
+                Address = "{\"street\":\"789 Pine St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                Image = "profilepic3.jpg"
+            },
+            new Individual
+            {
+                IndividualId = 4,
+                UserId = "14",
+                FirstName = "David",
+                LastName = "Davis",
+                PhoneNumber = "987-654-3240",
+                Address = "{\"street\":\"123 Birch St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                Image = "profilepic4.jpg"
+            },
+            new Individual
+            {
+                IndividualId = 5,
+                UserId = "15",
+                FirstName = "Eva",
+                LastName = "Martin",
+                PhoneNumber = "987-654-3250",
+                Address = "{\"street\":\"456 Maple St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                Image = "profilepic5.jpg"
+            }
+            );
+
+
+
+
             // Seed Auctions
-            modelBuilder.Entity<Auction>().HasData(
+            builder.Entity<Auction>().HasData(
          new Auction
          {
              AuctionId = 1,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Aluminum Scrap Bundle",
              Description = "A collection of high-grade aluminum scraps.",
              CategoryId = 1, // Aluminum
@@ -192,7 +480,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 2,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Copper Wiring Scrap",
              Description = "Various grades of copper wiring ready for recycling.",
              CategoryId = 2, // Copper
@@ -211,7 +499,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 3,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Plastic Waste",
              Description = "Recyclable plastic waste from industrial sources.",
              CategoryId = 3, // Plastic
@@ -230,7 +518,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 4,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Iron Sheets",
              Description = "Scrap iron sheets from old construction projects.",
              CategoryId = 4, // Iron
@@ -249,7 +537,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 5,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Stainless Steel Scraps",
              Description = "Premium-grade stainless steel scrap materials.",
              CategoryId = 5, // Stainless Steel
@@ -268,7 +556,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 6,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Wooden Pallets",
              Description = "Recyclable wooden pallets from warehouses.",
              CategoryId = 6, // Wood
@@ -287,7 +575,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 7,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Glass Shards",
              Description = "Glass shards from old construction materials.",
              CategoryId = 7, // Glass
@@ -306,7 +594,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 8,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Paper Waste",
              Description = "Paper waste from old documents and magazines.",
              CategoryId = 8, // Paper
@@ -325,7 +613,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 9,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Rubber Tires",
              Description = "Used rubber tires ready for recycling.",
              CategoryId = 9, // Rubber
@@ -344,7 +632,7 @@ namespace api.Data
          new Auction
          {
              AuctionId = 10,
-             SellerId = 4,
+             SellerId = "4",
              Title = "Ceramic Tiles",
              Description = "Scrap ceramic tiles from construction sites.",
              CategoryId = 11, // Ceramic
@@ -367,344 +655,5 @@ namespace api.Data
 
     }
 }
-                .OnDelete(DeleteBehavior.Cascade);
-
-// Configure ApplicationUser → Business (One-to-One)
-builder.Entity<ApplicationUser>()
-    .HasOne(u => u.Business)
-    .WithOne(b => b.User)
-    .HasForeignKey<Business>(b => b.UserId);
-
-// Configure ApplicationUser → Individual (One-to-One)
-builder.Entity<ApplicationUser>()
-    .HasOne(u => u.Individual)
-    .WithOne(i => i.User)
-    .HasForeignKey<Individual>(i => i.UserId);
-
-
-
-
-
-
-
-
-builder.Entity<ApplicationUser>()
-.Property(u => u.Status)
-.HasConversion(
-    v => v.ToString(), // Convert enum to string when saving
-    v => (AccountStatus)Enum.Parse(typeof(AccountStatus), v) // Convert string back to enum when reading
-);
-
-
-
-
-// Convert UserType enum to string in the database
-builder.Entity<ApplicationUser>()
-    .Property(u => u.UserType)
-    .HasConversion(
-        v => v.ToString(), // Convert enum to string when saving
-        v => (UserType)Enum.Parse(typeof(UserType), v) // Convert string back to enum when reading
-    );
-
-
-
-
-
-
-// Define currentDate (now)
-var currentDate = DateTime.UtcNow;
-
-// Admin users
-builder.Entity<ApplicationUser>().HasData(
-    new ApplicationUser
-    {
-        Id = "1",
-        UserName = "admin1",
-        Email = "admin1@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Admin
-
-
-    },
-    new ApplicationUser
-    {
-        Id = "2",
-        UserName = "admin2",
-        Email = "admin2@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Admin
-
-    },
-    new ApplicationUser
-    {
-        Id = "3",
-        UserName = "admin3",
-        Email = "admin3@example.com",
-        Status = AccountStatus.Blocked,
-        CreatedAt = currentDate,
-        UserType = UserType.Admin // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "4",
-        UserName = "admin4",
-        Email = "admin4@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Admin // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "5",
-        UserName = "admin5",
-        Email = "admin5@example.com",
-        Status = AccountStatus.Pending,
-        CreatedAt = currentDate,
-        UserType = UserType.Admin // Use enum value instead of string
-    }
-);
-
-// Business users
-builder.Entity<ApplicationUser>().HasData(
-    new ApplicationUser
-    {
-        Id = "6",
-        UserName = "business1",
-        Email = "business1@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Business // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "7",
-        UserName = "business2",
-        Email = "business2@example.com",
-        Status = AccountStatus.Pending,
-        CreatedAt = currentDate,
-        UserType = UserType.Business
-        // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "8",
-        UserName = "business3",
-        Email = "business3@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Business
-        // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "9",
-        UserName = "business4",
-        Email = "business4@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Business
-        // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "10",
-        UserName = "business5",
-        Email = "business5@example.com",
-        Status = AccountStatus.Pending,
-        CreatedAt = currentDate,
-        UserType = UserType.Business
-        // Use enum value instead of string
-    }
-);
-
-// Individual users
-builder.Entity<ApplicationUser>().HasData(
-    new ApplicationUser
-    {
-        Id = "11",
-        UserName = "individual1",
-        Email = "individual1@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Individual,
-        // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "12",
-        UserName = "individual2",
-        Email = "individual2@example.com",
-        Status = AccountStatus.Blocked,
-        CreatedAt = currentDate,
-        UserType = UserType.Individual,
-        // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "13",
-        UserName = "individual3",
-        Email = "individual3@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Individual
-        // Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "14",
-        UserName = "individual4",
-        Email = "individual4@example.com",
-        Status = AccountStatus.Pending,
-        CreatedAt = currentDate,
-        UserType = UserType.Individual// Use enum value instead of string
-    },
-    new ApplicationUser
-    {
-        Id = "15",
-        UserName = "individual5",
-        Email = "individual5@example.com",
-        Status = AccountStatus.Active,
-        CreatedAt = currentDate,
-        UserType = UserType.Individual // Use enum value instead of string
-    }
-);
-
-// Seed corresponding Business records
-builder.Entity<Business>().HasData(
-    new Business
-    {
-        BusinessId = 1,
-        UserId = "6",
-        BusinessName = "Business 1",
-        BusinessType = "seller",
-        BusinessEmail = "business1@example.com",
-        BusinessPhoneNumber = "123-456-7890",
-        RegistrationNumber = "REG12345",
-        PrimaryPhoneNumber = "123-456-7890",
-        PrimaryContactFirstName = "John",
-        PrimaryContactLastName = "Doe",
-        PrimaryJobTitle = "CEO",
-        PrimaryContactEmail = "contact@business1.com",
-        Address = "123 Main St, Amman, Jordan"
-    }, new Business
-    {
-        BusinessId = 2,
-        UserId = "7",
-        BusinessName = "Business 2",
-        BusinessType = "seller",
-        BusinessEmail = "business2@example.com",
-        BusinessPhoneNumber = "223-456-7890",
-        RegistrationNumber = "REG22345",
-        PrimaryPhoneNumber = "223-456-7890",
-        PrimaryContactFirstName = "Alice",
-        PrimaryContactLastName = "Smith",
-        PrimaryJobTitle = "Manager",
-        PrimaryContactEmail = "contact@business2.com",
-        Address = "123 Main St, Amman, Jordan"
-    },
-new Business
-{
-    BusinessId = 3,
-    UserId = "8",
-    BusinessName = "Business 3",
-    BusinessType = "buyer",
-    BusinessEmail = "business3@example.com",
-    BusinessPhoneNumber = "323-456-7890",
-    RegistrationNumber = "REG32345",
-    PrimaryPhoneNumber = "323-456-7890",
-    PrimaryContactFirstName = "Mark",
-    PrimaryContactLastName = "Brown",
-    PrimaryJobTitle = "Owner",
-    PrimaryContactEmail = "contact@business3.com",
-    Address = "123 Main St, Amman, Jordan"
-},
-new Business
-{
-    BusinessId = 4,
-    UserId = "9",
-    BusinessName = "Business 4",
-    BusinessType = "seller",
-    BusinessEmail = "business4@example.com",
-    BusinessPhoneNumber = "423-456-7890",
-    RegistrationNumber = "REG42345",
-    PrimaryPhoneNumber = "423-456-7890",
-    PrimaryContactFirstName = "Linda",
-    PrimaryContactLastName = "Johnson",
-    PrimaryJobTitle = "CEO",
-    PrimaryContactEmail = "contact@business4.com",
-    Address = "123 Main St, Amman, Jordan"
-},
-new Business
-{
-    BusinessId = 5,
-    UserId = "10",
-    BusinessName = "Business 5",
-    BusinessType = "buyer",
-    BusinessEmail = "business5@example.com",
-    BusinessPhoneNumber = "523-456-7890",
-    RegistrationNumber = "REG52345",
-    PrimaryPhoneNumber = "523-456-7890",
-    PrimaryContactFirstName = "Sarah",
-    PrimaryContactLastName = "Williams",
-    PrimaryJobTitle = "Manager",
-    PrimaryContactEmail = "contact@business5.com",
-    Address = "123 Main St, Amman, Jordan"
-}
-// Add other businesses here...
-);
-
-// Seed corresponding Individual records
-builder.Entity<Individual>().HasData(
-    new Individual
-    {
-        IndividualId = 1,
-        UserId = "11",
-        FirstName = "Alice",
-        LastName = "Williams",
-        PhoneNumber = "987-654-3210",
-        Address = "{\"street\":\"123 Main St\",\"city\":\"Amman\",\"country\":\"Jordan\"}"
-    }, new Individual
-    {
-        IndividualId = 2,
-        UserId = "12",
-        FirstName = "Bob",
-        LastName = "Johnson",
-        PhoneNumber = "987-654-3220",
-        Address = "{\"street\":\"456 Oak St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
-        Image = "profilepic2.jpg"
-    },
-new Individual
-{
-    IndividualId = 3,
-    UserId = "13",
-    FirstName = "Charlie",
-    LastName = "Smith",
-    PhoneNumber = "987-654-3230",
-    Address = "{\"street\":\"789 Pine St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
-    Image = "profilepic3.jpg"
-},
-new Individual
-{
-    IndividualId = 4,
-    UserId = "14",
-    FirstName = "David",
-    LastName = "Davis",
-    PhoneNumber = "987-654-3240",
-    Address = "{\"street\":\"123 Birch St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
-    Image = "profilepic4.jpg"
-},
-new Individual
-{
-    IndividualId = 5,
-    UserId = "15",
-    FirstName = "Eva",
-    LastName = "Martin",
-    PhoneNumber = "987-654-3250",
-    Address = "{\"street\":\"456 Maple St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
-    Image = "profilepic5.jpg"
-}
-);
 
 

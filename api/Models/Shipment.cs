@@ -16,14 +16,14 @@ namespace api.Models
         public int AuctionId { get; set; }
 
         [Required]
-        public int SellerId { get; set; } // Seller responsible for shipping
+        public string SellerId { get; set; } // Seller responsible for shipping
 
         [Required]
         public DeliveryStatus DeliveryStatus { get; set; } // Enum: pending, shipped, in-transit, delivered, canceled
 
         [Required]
         public DateTime CreatedAt { get; set; }
-        public User Seller { get; set; }
+        public ApplicationUser Seller { get; set; }
 
         public Auction Auction { get; set; }
     }

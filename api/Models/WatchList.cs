@@ -13,7 +13,7 @@ namespace api.Models
         public int WatchId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; } = string.Empty;
 
         [Required]
         public int AuctionId { get; set; }

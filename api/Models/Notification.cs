@@ -12,7 +12,7 @@ namespace api.Models
         public int NotificationsId { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
 
         [Required]
         public string NotificationsInfo { get; set; } // JSON

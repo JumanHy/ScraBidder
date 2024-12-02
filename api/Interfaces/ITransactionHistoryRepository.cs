@@ -13,7 +13,7 @@ namespace api.Interfaces
         Task<List<TransactionHistory>> GetTransactionsAsync(
         string? transactionId = null,
         string? relatedId = null,
-        int? userId = null,
+        string? userId = null,
         int? auctionId = null,
         TransactionPurpose? purpose = null,
         TransactionType? type = null,

@@ -8,7 +8,7 @@ namespace api.Dtos
 {
     public class CreateOrderRequestDto
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int AuctionId { get; set; }
         public decimal Amount { get; set; }
         public TransactionPurpose Purpose { get; set; }

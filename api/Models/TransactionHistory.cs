@@ -14,7 +14,7 @@ namespace api.Models
                 public string TransactionId { get; set; }
 
                 [Required]
-                public int UserId { get; set; }
+                public string UserId { get; set; }
 
                 [Required]
                 public int AuctionId { get; set; }

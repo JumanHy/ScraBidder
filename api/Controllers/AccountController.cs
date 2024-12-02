@@ -49,11 +49,13 @@ namespace api.Controllers
             var result = await _signinManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
             if (!result.Succeeded)
                 return Unauthorized("Invalid email or password.");
-
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.FirstOrDefault();
             // Generate token
             return Ok(new NewUserDto
             {
-                UserName = user.UserName,
+                UserId = user.Id,
+                Role = role,
                 Email = user.Email,
                 Token = await _tokenService.CreateToken(user)
             });
@@ -101,10 +103,13 @@ namespace api.Controllers
             {
                 return BadRequest("The account is not created");
             }
-
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.FirstOrDefault();
+            // Generate token
             return Ok(new NewUserDto
             {
-
+                UserId = user.Id,
+                Role = role,
                 Email = user.Email,
                 Token = await _tokenService.CreateToken(user)
             });
@@ -160,8 +165,12 @@ namespace api.Controllers
             {
                 return BadRequest("The account is not created");
             }
+            var roles = await _userManager.GetRolesAsync(user);
+            var role = roles.FirstOrDefault();
             return Ok(new NewUserDto
             {
+                UserId = user.Id,
+                Role = role,
                 Email = user.Email,
                 Token = await _tokenService.CreateToken(user)
             });

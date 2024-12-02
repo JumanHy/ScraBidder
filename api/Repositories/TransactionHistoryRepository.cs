@@ -22,7 +22,7 @@ namespace api.Repositories
         public async Task<List<TransactionHistory>> GetTransactionsAsync(
             string? transactionId = null,
             string? relatedId = null,
-            int? userId = null,
+            string? userId = null,
             int? auctionId = null,
             TransactionPurpose? purpose = null,
             TransactionType? type = null,
@@ -37,8 +37,8 @@ namespace api.Repositories
             if (!string.IsNullOrEmpty(transactionId))
                 query = query.Where(t => t.TransactionId == transactionId);
 
-            if (userId.HasValue)
-                query = query.Where(t => t.UserId == userId.Value);
+            if (!string.IsNullOrEmpty(userId))
+                query = query.Where(t => t.UserId == userId);
 
             if (auctionId.HasValue)
                 query = query.Where(t => t.AuctionId == auctionId.Value);

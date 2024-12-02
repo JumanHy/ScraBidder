@@ -51,7 +51,7 @@ internal class Program
             });
 
 
-        var app = builder.Build();
+
         // Add services to the container.
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
