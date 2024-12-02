@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Dtos.BiddingHistory
+namespace api.Dtos.Auction
 {
-    public class BidDto
+    public class AuctionBiddingDto
     {
+        public string Username { get; set; }
         public int BidId { get; set; }
         public decimal BidAmount { get; set; }
         public DateTime BidTime { get; set; }
-
-        public BidderDto Bidder { get; set; }
-
-        public AuctionDto Auction { get; set; }
     }
 }

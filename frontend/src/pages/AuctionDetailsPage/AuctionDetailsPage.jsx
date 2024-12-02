@@ -9,23 +9,25 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 function AuctionDetailsPage() {
-
   const location = useLocation();
   const auctionItem = location.state?.auctionItem;
-  
+  console.log(auctionItem.auctionId);
   return (
     <Container>
       <Row>
-        <Title auctionTitle={auctionItem.title} companyName={auctionItem.seller.email} />
+        <Title
+          auctionTitle={auctionItem.title}
+          companyName={auctionItem.seller.businessName}
+        />
       </Row>
 
       <Row>
         <Col xs={12} md={7} className="">
-          <ImagesSlider auction={auctionItem}/>
+          <ImagesSlider auction={auctionItem} />
         </Col>
 
         <Col xs={12} md={5} className="mt-md-0  mt-2">
-          <BiddingInfo currentItem={auctionItem}/>
+          <BiddingInfo currentItem={auctionItem} />
         </Col>
       </Row>
       <Row className="mt-3 gap-2 gap-md-0">

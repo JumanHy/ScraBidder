@@ -5,10 +5,9 @@ using System.Threading.Tasks;
 
 namespace api.Dtos.BiddingHistory
 {
-    public class CreateBidDto
+    public class AuctionDto
     {
         public int AuctionId { get; set; }
-        public string BidderId { get; set; }
-        public decimal BidAmount { get; set; }
+        public string Title { get; set; }
     }
 }

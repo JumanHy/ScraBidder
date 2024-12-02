@@ -26,7 +26,7 @@ function ImagesSlider({ auction }) {
     ref: (slider) => setMainSlider(slider),
     arrows: false,
   };
-  
+
   const thumbnailSettings = {
     slidesToShow: 4,
     swipeToSlide: true,

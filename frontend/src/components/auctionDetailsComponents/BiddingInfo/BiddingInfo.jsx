@@ -59,10 +59,10 @@ export default function BiddingInfo({ currentItem }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:5125/api/biddinghistory",
+        "http://localhost:5192/api/biddinghistory",
         {
           auctionId: currentItem.auctionId,
-          bidderId: 1,
+          bidderId: "e7264600-4a18-4862-9b3b-9f0ccb1c9a86",
           bidAmount: numericBid,
         },
         {
@@ -126,14 +126,14 @@ export default function BiddingInfo({ currentItem }) {
               {currentItem.auctionStatus}
             </Col>
             <Col xs="auto">
-              {currentItem.auctionStatus != "Closed" && <WatchButton />}
+              {currentItem.auctionStatus != "Ended" && <WatchButton />}
             </Col>
           </Row>
         </Card.Title>
 
         <Card.Text>
           <Card.Subtitle className="mb-2 text-muted">
-            {currentItem.auctionStatus == "Closed" ? "Ended At" : "Ends After"}
+            {currentItem.auctionStatus == "Ended" ? "Ended At" : "Ends After"}
           </Card.Subtitle>
           <Timer auction={currentItem} />
         </Card.Text>
@@ -159,7 +159,7 @@ export default function BiddingInfo({ currentItem }) {
           </Container>
         </Card.Text>
 
-        {currentItem.auctionStatus != "Closed" && (
+        {currentItem.auctionStatus != "Ended" && (
           <Card.Text className="d-flex justify-content-center">
             <Col xs={12} md={7}>
               {isLoggedIn && (

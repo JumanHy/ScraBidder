@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { Button, Modal, ListGroup } from "react-bootstrap";
 
-function BidHistoryModal({biddingsList,startingPrice}) {
+function BidHistoryModal({ biddingsList, startingPrice }) {
   const [show, setShow] = useState(false);
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
-
-  
-  
 
   return (
     <>
@@ -26,17 +23,20 @@ function BidHistoryModal({biddingsList,startingPrice}) {
         <Modal.Body style={{ maxHeight: "300px", overflowY: "auto" }}>
           <ListGroup variant="flush">
             {/* Bid History */}
-            {biddingsList.slice().reverse().map((bid, index) => (
-              <ListGroup.Item key={index}>
-                <div>
-                  <strong>{bid.bidder.email}</strong>{" "}
-                  <span className="float-end">{bid.bidAmount}</span>
-                </div>
-                <div style={{ fontSize: "0.9em", color: "gray" }}>
-                  {bid.bidTime}
-                </div>
-              </ListGroup.Item>
-            ))}
+            {biddingsList
+              .slice()
+              .reverse()
+              .map((bid, index) => (
+                <ListGroup.Item key={index}>
+                  <div>
+                    <strong>{bid.username}</strong>{" "}
+                    <span className="float-end">{bid.bidAmount} JD</span>
+                  </div>
+                  <div style={{ fontSize: "0.9em", color: "gray" }}>
+                    {bid.bidTime}
+                  </div>
+                </ListGroup.Item>
+              ))}
             {/* Starting Price */}
             <ListGroup.Item>
               <strong>Starting Price</strong>{" "}

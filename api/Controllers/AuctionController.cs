@@ -15,37 +15,43 @@ namespace api.Controllers
 {
     [ApiController]
     [Route("api/auction")]
-   
-    public class AuctionController:ControllerBase
+
+    public class AuctionController : ControllerBase
     {
         private readonly IAuctionRepository _auctionRepo;
         private readonly ApplicationDBContext _context;
-        public AuctionController(ApplicationDBContext context,IAuctionRepository auctionRepo)
+        public AuctionController(ApplicationDBContext context, IAuctionRepository auctionRepo)
         {
-            _auctionRepo=auctionRepo;
-            _context=context;
+            _auctionRepo = auctionRepo;
+            _context = context;
         }
         [HttpGet]
         public async Task<IActionResult> GetAllAuctions([FromQuery] QueryObject query)
         {
-            var auctions=await _auctionRepo.GetAllAuctionsAsync(query);
-            var result=auctions;
-            return Ok(result);
+            var auctions = await _auctionRepo.GetAllAuctionsAsync(query);
+            var auctionDtos = auctions.Select(a => a.ToAuctionDto()).ToList();
+
+            return Ok(auctionDtos);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAuctionById([FromRoute]int id)
+        public async Task<IActionResult> GetAuctionById([FromRoute] int id)
         {
-            var auction=await _auctionRepo.GetAuctionByIdAsync(id);
-            if(auction==null){
+            var auction = await _auctionRepo.GetAuctionByIdAsync(id);
+
+            if (auction == null)
+            {
                 return NotFound();
             }
-            return Ok(auction);
+
+            var auctionDto = auction.ToAuctionDto();
+            return Ok(auctionDto);
         }
         [HttpPost]
-        public async Task<IActionResult> CreateAuction([FromForm] CreateAuctionRequestDto createDto)
+        public async Task<IActionResult>
+        Auction([FromForm] CreateAuctionRequestDto createDto)
         {
-            var auction=createDto.ToAuctionFromCreateDto();
-            if(auction==null) return BadRequest();
+            var auction = createDto.ToAuctionFromCreateDto();
+            if (auction == null) return BadRequest();
             await _auctionRepo.CreateAuctionAsync(auction);
             return Ok();
         }
@@ -53,8 +59,8 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> UpdateAuction([FromRoute] int id, [FromForm] UpdateAuctionDto updatedto)
         {
-            var auction =await _auctionRepo.UpdateAuctionAsync(id,updatedto);
-            if(auction==null)
+            var auction = await _auctionRepo.UpdateAuctionAsync(id, updatedto);
+            if (auction == null)
             {
                 return NotFound();
             }
@@ -64,8 +70,8 @@ namespace api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> DeleteAuction([FromRoute] int id)
         {
-            var auction =await _auctionRepo.DeleteAuctionAsync(id);
-            if(auction==null)
+            var auction = await _auctionRepo.DeleteAuctionAsync(id);
+            if (auction == null)
             {
                 return NotFound();
             }

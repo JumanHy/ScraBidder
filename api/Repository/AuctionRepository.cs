@@ -17,10 +17,10 @@ namespace api.Repository
         private readonly ApplicationDBContext _context;
         public AuctionRepository(ApplicationDBContext context)
         {
-            _context=context;
+            _context = context;
         }
 
-        public async  Task<Auction> CreateAuctionAsync(Auction auction)
+        public async Task<Auction> CreateAuctionAsync(Auction auction)
         {
             await _context.Auctions.AddAsync(auction);
             await _context.SaveChangesAsync();
@@ -29,8 +29,8 @@ namespace api.Repository
 
         public async Task<Auction?> DeleteAuctionAsync(int id)
         {
-            var auction =await _context.Auctions.FirstOrDefaultAsync(x=>x.AuctionId==id);
-            if(auction==null)
+            var auction = await _context.Auctions.FirstOrDefaultAsync(x => x.AuctionId == id);
+            if (auction == null)
             {
                 return null;
             }
@@ -41,42 +41,47 @@ namespace api.Repository
 
         public async Task<List<Auction>> GetAllAuctionsAsync(QueryObject query)
         {
-            var result=_context.Auctions.Include(b=>b.Biddings).Include(s=>s.Seller).Include(c=>c.Category).AsQueryable();
-            if(!string.IsNullOrWhiteSpace(query.Category))
+            var result = _context.Auctions.Include(a => a.Biddings).ThenInclude(b => b.Bidder).ThenInclude(b => b.Business)
+                                            .Include(a => a.Biddings).ThenInclude(b => b.Bidder).ThenInclude(b => b.Individual)
+                                            .Include(a => a.Seller).ThenInclude(s => s.Business).Include(a => a.Category).AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.Category))
             {
-                result=result.Where(x=>x.Category.CategoryName.Contains(query.Category));
+                result = result.Where(x => x.Category.CategoryName.Contains(query.Category));
             }
-            if(!string.IsNullOrWhiteSpace(query.Status))
+            if (query.Status != null)
             {
-                result=result.Where(x=>x.AuctionStatus.Contains(query.Status));
+                result = result.Where(x => x.AuctionStatus == query.Status);
             }
             return await result.ToListAsync();
         }
 
         public async Task<Auction?> GetAuctionByIdAsync(int id)
         {
-            return await _context.Auctions.Include(b=>b.Biddings).Include(s=>s.Seller).Include(c=>c.Category).FirstOrDefaultAsync(i=> i.AuctionId==id);
+            return await _context.Auctions.Include(a => a.Biddings).ThenInclude(b => b.Bidder).ThenInclude(b => b.Business)
+                                            .Include(a => a.Biddings).ThenInclude(b => b.Bidder).ThenInclude(b => b.Individual)
+                                            .Include(a => a.Seller).ThenInclude(s => s.Business).Include(a => a.Category)
+                                            .FirstOrDefaultAsync(i => i.AuctionId == id);
         }
 
         public async Task<Auction?> UpdateAuctionAsync(int id, UpdateAuctionDto updatedto)
         {
             var auctionModel = await _context.Auctions.FirstOrDefaultAsync(x => x.AuctionId == id);
-            if(auctionModel==null)
+            if (auctionModel == null)
             {
                 return null;
             }
-            auctionModel.Title=updatedto.Title;
-            auctionModel.Description=updatedto.Description;
-            auctionModel.CategoryId=updatedto.CategoryId;
-            auctionModel.Images=updatedto.Images;
-            auctionModel.AuctionStatus=updatedto.AuctionStatus;
-            auctionModel.StartingBid=updatedto.StartingBid;
-            auctionModel.ReservePrice=updatedto.ReservePrice;
-            auctionModel.StartingTime=updatedto.StartingTime;
-            auctionModel.EndingTime=updatedto.EndingTime;
-            auctionModel.Address=updatedto.Address;
-            auctionModel.Condition=updatedto.Condition;
-            auctionModel.Quantity=updatedto.Quantity;
+            auctionModel.Title = updatedto.Title;
+            auctionModel.Description = updatedto.Description;
+            auctionModel.CategoryId = updatedto.CategoryId;
+            auctionModel.Images = updatedto.Images;
+            auctionModel.AuctionStatus = updatedto.AuctionStatus;
+            auctionModel.StartingBid = updatedto.StartingBid;
+            auctionModel.ReservePrice = updatedto.ReservePrice;
+            auctionModel.StartingTime = updatedto.StartingTime;
+            auctionModel.EndingTime = updatedto.EndingTime;
+            auctionModel.Address = updatedto.Address;
+            auctionModel.Condition = updatedto.Condition;
+            auctionModel.Quantity = updatedto.Quantity;
 
             await _context.SaveChangesAsync();
             return auctionModel;

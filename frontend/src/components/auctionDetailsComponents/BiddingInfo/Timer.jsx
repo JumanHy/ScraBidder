@@ -3,36 +3,38 @@ import FlipCountdown from "@rumess/react-flip-countdown";
 import axios from "axios";
 import { useState } from "react";
 import Swal from "sweetalert2";
-function Timer({auction}) {
-
+function Timer({ auction }) {
   const updatedData = {
-    AuctionStatus:"Closed",
-    title:auction.title ,
+    AuctionStatus: "Closed",
+    title: auction.title,
     description: auction.description,
     images: auction.images,
     StartingBid: auction.startingBid,
     ReservePrice: auction.reservePrice,
     StartingTime: auction.startingTime,
     EndingTime: auction.endingTime,
-    Address:  auction.address,
+    Address: auction.address,
     condition: auction.condition,
     quantity: auction.quantity,
     CategoryId: auction.categoryId,
   };
 
- console.log(auction.data);
+  //console.log(auction.data);
   const handleTimeUp = async () => {
     const formData = new FormData();
-Object.entries(updatedData).forEach(([key, value]) => {
-  formData.append(key, value);
-});
+    Object.entries(updatedData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
     try {
       // Example PUT request to update auction status
       const response = await axios.put(
-        `http://localhost:5125/api/auction/${auction.auctionId}`,formData,
-        {headers: {
-          "Content-Type": "multipart/form-data",
-        },}
+        `http://localhost:5125/api/auction/${auction.auctionId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
       Swal.fire({
@@ -53,7 +55,6 @@ Object.entries(updatedData).forEach(([key, value]) => {
   };
 
   return (
-    
     <Container fluid>
       <Row className="justify-content-between p-2  align-items-center bg-secondary bg-opacity-50 text-center text-primary-emphasis rounded-3">
         <FlipCountdown

@@ -1,23 +1,27 @@
 import { Card, Button } from "react-bootstrap";
 import FlipCountdown from "@rumess/react-flip-countdown";
 import { LinkContainer } from "react-router-bootstrap";
-function AuctionCard({currentAuction}) {
-  console.log("helllo",currentAuction);
+
+function AuctionCard({ currentAuction }) {
+  if (!currentAuction) {
+    return null; // Handle case when currentAuction is not passed or is empty
+  }
+
+  console.log("Auction Details:", currentAuction);
+
   return (
     <Card className="shadow border-0 h-100 rounded-4 text-primary">
-      {/* Scrap Image */}
+      {/* Auction Image */}
       <Card.Img
-        src={"https://placehold.co/600x400"}
+        src={currentAuction.imageUrl || "https://placehold.co/600x400"}
         fluid
-        alt="Scrap"
+        alt={currentAuction.title || "Auction Image"}
         className="rounded-top-4 w-100 object-fit-cover"
-        style={{
-          maxHeight: "200px",
-        }}
+        style={{ maxHeight: "200px" }}
       />
 
       <Card.Body className="d-flex flex-column gap-2 justify-content-between align-items-center">
-        {/* Scrap Title */}
+        {/* Auction Title */}
         <Card.Title className="text-primary fw-bold text-center">
           {currentAuction.title}
         </Card.Title>
@@ -43,17 +47,18 @@ function AuctionCard({currentAuction}) {
             />
           </div>
         </div>
-        {/* Starting Bid Text */}
+
+        {/* Starting Bid */}
         <Card.Text className="text-secondary fw-bold text-uppercase">
-          Starting Bid: {currentAuction.startingBid}
+          Starting Bid: ${currentAuction.startingBid}
         </Card.Text>
 
         {/* Bid Button */}
-        <LinkContainer 
-        to={{
-          pathname: "/auction",
-        }}
-        state={{ auctionItem: currentAuction }}
+        <LinkContainer
+          to={{
+            pathname: "/auction",
+          }}
+          state={{ auctionItem: currentAuction }}
         >
           <div className="d-flex justify-content-center w-100">
             <Button

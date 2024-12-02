@@ -1,18 +1,16 @@
 using System.Text.Json.Serialization;
-using api.Controllers;
 using api.Data;
 using api.Interfaces;
-using api.Repositories;
-using api.Services;
 using api.Models;
+using api.Repositories;
 using api.Repositories.Implementations;
 using api.Repositories.Interfaces;
+using api.Repository;
 using api.Service;
+using api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using api.Repository;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 internal class Program
@@ -21,7 +19,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-
+        // Register services here
         builder.Services.AddScoped<PaymentService>();
         builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
         builder.Services.AddHostedService<AuctionPaymentHandlerService>();
@@ -33,25 +31,21 @@ internal class Program
         builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
         builder.Services.AddScoped<IBiddingHistoryRepository, BiddingHistoryRepository>();
 
-
-        // Add services to the container
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<ApplicationDBContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
+
         builder.Services.AddHttpClient<PayPalService>();
-        builder.Logging.ClearProviders(); // Clears default providers for clean setup
+        builder.Logging.ClearProviders();
         builder.Logging.AddConsole();
-        // Add support for controllers
+
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
-        // Configure Identity with ApplicationUser and IdentityRole
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
             options.Password.RequireDigit = true;
@@ -63,7 +57,6 @@ internal class Program
         .AddEntityFrameworkStores<ApplicationDBContext>()
         .AddDefaultTokenProviders();
 
-        // Add Authentication and Authorization
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -82,41 +75,23 @@ internal class Program
 
         builder.Services.AddAuthorization();
 
-
-
-
-        // Build the application
-        var app = builder.Build();
-        // Add services to the container
-        builder.Services.AddControllers();
-
-        // Swagger/OpenAPI Configuration
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        // JSON Serialization Configuration
-        builder.Services.AddControllers().AddNewtonsoftJson(options =>
-        {
-            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-        });
-
-
-        // CORS Configuration
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowReactApp", policy =>
-                policy.WithOrigins("http://localhost:5173") // Frontend origin
+                policy.WithOrigins("http://localhost:5173")
                       .AllowAnyHeader()
                       .AllowAnyMethod());
         });
 
-
         builder.Services.AddSignalR();
 
+        // Build the application
+        var app = builder.Build();
 
-
-
-        // Configure the HTTP request pipeline
+        // Configure middleware and HTTP pipeline
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -125,18 +100,14 @@ internal class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
-        // Use CORS middleware to allow requests from front-end (React app)
         app.UseCors("AllowReactApp");
 
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
 
-        // Map controllers
         app.MapControllers();
 
-        // Run the application
         app.Run();
     }
 }
