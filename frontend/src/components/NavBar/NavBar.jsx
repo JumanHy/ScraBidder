@@ -1,7 +1,6 @@
 import {
   Container,
   Col,
-  Row,
   Button,
   Image,
   Badge,
@@ -9,124 +8,30 @@ import {
   Modal,
   Stack,
 } from "react-bootstrap";
-import {
-  Dot,
-  Gear,
-  Bell,
-  Person,
-  BoxArrowRight,
-  Hammer,
-  Trophy,
-  Upload,
-  CurrencyDollar,
-  ExclamationCircle,
-  Envelope,
-  CheckCircle,
-} from "react-bootstrap-icons";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { Bell, Dot, Upload } from "react-bootstrap-icons";
 import { LinkContainer } from "react-router-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "@/assets/images/ScraBidderLogo.png";
-
 import userImage from "@/assets/images/UserImage.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios"; // Importing Axios
 import "./style.css";
+import formatTimeAgo from "../../helpers/formatTimeAgo";
 
 function NavBar() {
-  const notifications = [
-    {
-      id: 1,
-      message: "A new bid has been placed on your auction.",
-      isRead: false,
-      icon: <Hammer size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 2,
-      message: "Congratulations! You’ve won the auction.",
-      isRead: false,
-      icon: <Trophy size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 3,
-      message: "Your auction listing is now live.",
-      isRead: false,
-      icon: <Upload size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 4,
-      message: "Payment has been received from the buyer.",
-      isRead: false,
-      icon: <CurrencyDollar size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 5,
-      message: "Your auction has expired without a winning bid.",
-      isRead: false,
-      icon: <ExclamationCircle size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 6,
-      message: "You have a new message from a buyer.",
-      isRead: false,
-      icon: <Envelope size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 7,
-      message: "The status of your auction has been updated to Sold.",
-      isRead: false,
-      icon: <CheckCircle size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 8,
-      message: "A new bid has been placed on your auction.",
-      isRead: false,
-      icon: <Hammer size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 9,
-      message: "Congratulations! You’ve won the auction.",
-      isRead: false,
-      icon: <Trophy size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 10,
-      message: "Your auction listing is now live.",
-      isRead: false,
-      icon: <Upload size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 11,
-      message: "Payment has been received from the buyer.",
-      isRead: false,
-      icon: <CurrencyDollar size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 12,
-      message: "Your auction has expired without a winning bid.",
-      isRead: false,
-      icon: <ExclamationCircle size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 13,
-      message: "You have a new message from a buyer.",
-      isRead: false,
-      icon: <Envelope size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 14,
-      message: "The status of your auction has been updated to Sold.",
-      isRead: false,
-      icon: <CheckCircle size={25} style={{ color: "#005092" }} />,
-    },
-  ];
+  const [notifications, setNotifications] = useState([]);
+  const [isLogedin, setIsLogedin] = useState(
+    localStorage.getItem("token") ? true : false
+  );
+  const [showModal, setShowModal] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [connection, setConnection] = useState(null); // Track the connection instance
 
-  const [isLogedin, setIsLogedin] = useState(false); // Only declare state once
-  const [showModal, setShowModal] = useState(false); // Only declare state once
-  const [uploadedImage, setUploadedImage] = useState(null); // State for storing uploaded image
+  const role = "business"; // Or get this dynamically as needed
 
-  // Function to open modal
   const handleShowModal = () => setShowModal(true);
-  // Function to close modal
   const handleCloseModal = () => setShowModal(false);
 
   // Handle image upload
@@ -141,14 +46,87 @@ function NavBar() {
     }
   };
 
-  // Check if the user is on "user-account" or "business-account" page
-  const role = "business"; // Or get this dynamically as needed
+  // Fetch notifications on mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5192/api/notifications",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setNotifications(response.data); // Set the fetched notifications in state
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+
+    // Establish SignalR connection
+    const newConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5192/notificationHub", {
+        accessTokenFactory: () => token,
+        withCredentials: true,
+      })
+      .withAutomaticReconnect()
+      .build();
+
+    newConnection
+      .start()
+      .then(() => {
+        console.log("SignalR connected");
+
+        // Register listener for ReceiveNotification
+        newConnection.on("ReceiveNotification", (message) => {
+          console.log("Notification received:", message);
+          setNotifications((prevNotifications) => [
+            message,
+            ...prevNotifications,
+          ]);
+        });
+
+        setConnection(newConnection); // Store the connection for reuse
+      })
+      .catch((err) => console.error("SignalR connection error:", err));
+
+    // Cleanup connection on component unmount
+    return () => {
+      newConnection.stop();
+    };
+  }, []);
+
+  const handleNotificationClick = async (index) => {
+    if (!connection) {
+      console.error("SignalR connection not established");
+      return;
+    }
+
+    // Mark the notification as read in the backend (SignalR call)
+    try {
+      await connection.invoke("MarkNotificationAsRead", index);
+
+      // Mark the notification as read locally
+      setNotifications((prevNotifications) => {
+        const updatedNotifications = [...prevNotifications];
+        updatedNotifications[index].isRead = true;
+        return updatedNotifications;
+      });
+    } catch (err) {
+      console.error("Error marking notification as read:", err);
+    }
+  };
 
   return (
     <>
       <Navbar expand="md" className="bg-light shadow-lg fixed-top">
         <Container fluid>
-          <Col xs={2} md={2} className="">
+          <Col xs={2} md={2}>
             <LinkContainer to="/">
               <Navbar.Brand className="d-flex align-items-center gap-1">
                 <Image fluid src={logo} style={{ maxWidth: "50px" }} />
@@ -159,17 +137,16 @@ function NavBar() {
           {isLogedin && (
             <Col xs={{ span: "auto" }} md={{ order: "last" }}>
               <Stack direction="horizontal" className="gap-2">
-                {/* Notification Icon */}
                 <Dropdown className="position-relative">
                   <Dropdown.Toggle variant="link" id="notifications-dropdown">
                     <Bell size={24} color="black" />
-                    {notifications.length > 0 && (
+                    {notifications.filter((n) => !n.isRead).length > 0 && (
                       <Badge
                         pill
                         bg="danger"
                         className="position-absolute top-0 translate-middle"
                       >
-                        {notifications.length}
+                        {notifications.filter((n) => !n.isRead).length}
                       </Badge>
                     )}
                   </Dropdown.Toggle>
@@ -183,13 +160,15 @@ function NavBar() {
                   >
                     <Dropdown.Header>Notifications</Dropdown.Header>
                     {notifications.length > 0 ? (
-                      notifications.map((notification) => (
+                      notifications.map((notification, index) => (
                         <Dropdown.Item
-                          key={notification.id}
-                          className="d-flex justify-content-between text-wrap py-3 px-3"
+                          key={index}
+                          className={`d-flex justify-content-between text-wrap py-3 px-3 ${
+                            !notification.isRead ? "bg-primary-subtle" : ""
+                          }`}
+                          onClick={() => handleNotificationClick(index)}
                         >
                           <span className="d-flex ">
-                            <span className="me-4">{notification.icon}</span>
                             <span className="d-flex flex-column">
                               <span>{notification.message}</span>
                               <span
@@ -197,15 +176,10 @@ function NavBar() {
                                 style={{ color: "#005092" }}
                               >
                                 <Dot />
-                                10 minutes ago
+                                {formatTimeAgo(notification.createdAt)}
                               </span>
                             </span>
                           </span>
-                          <Dot
-                            className="text-end"
-                            size={40}
-                            style={{ color: "#005092" }}
-                          />
                         </Dropdown.Item>
                       ))
                     ) : (
@@ -238,16 +212,16 @@ function NavBar() {
                   <Dropdown.Menu>
                     <Dropdown.Item
                       href={
-                        role == "business"
+                        role === "business"
                           ? "/business-account"
                           : "/user-account"
                       }
                     >
                       My Account
                     </Dropdown.Item>
-                    {role === "business" ? (
+                    {role === "business" && (
                       <Dropdown.Item href="/cprofile">My Profile</Dropdown.Item>
-                    ) : null}
+                    )}
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={() => setIsLogedin(false)}>
                       Log Out
@@ -306,7 +280,7 @@ function NavBar() {
         show={showModal}
         onHide={handleCloseModal}
         centered
-        style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }} // Add shadow here
+        style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }}
       >
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body className="text-center">

@@ -4,19 +4,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Auction;
+using api.Dtos.Notification;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
+using api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
 {
     public class AuctionRepository : IAuctionRepository
     {
+        private readonly NotificationService _notificationService;
         private readonly ApplicationDBContext _context;
-        public AuctionRepository(ApplicationDBContext context)
+        public AuctionRepository(ApplicationDBContext context, NotificationService notificationService)
         {
+            _notificationService = notificationService;
             _context = context;
         }
 
@@ -70,6 +74,11 @@ namespace api.Repository
             {
                 return null;
             }
+            var statusChanged = false;
+            if (auctionModel.AuctionStatus != updatedto.AuctionStatus)
+            {
+                statusChanged = true;
+            }
             auctionModel.Title = updatedto.Title;
             auctionModel.Description = updatedto.Description;
             auctionModel.CategoryId = updatedto.CategoryId;
@@ -82,8 +91,21 @@ namespace api.Repository
             auctionModel.Address = updatedto.Address;
             auctionModel.Condition = updatedto.Condition;
             auctionModel.Quantity = updatedto.Quantity;
-
             await _context.SaveChangesAsync();
+
+
+            if (statusChanged)
+            {
+                var sellerNotification = new NotificationItem
+                {
+                    Message = $"Your auction '{auctionModel.Title}' status has been updated to {updatedto.AuctionStatus}.",
+                    CreatedAt = DateTime.UtcNow,
+                    Type = "AuctionStatusUpdated"
+                };
+
+                await _notificationService.AddNotification(auctionModel.SellerId, sellerNotification);
+
+            }
             return auctionModel;
         }
     }
