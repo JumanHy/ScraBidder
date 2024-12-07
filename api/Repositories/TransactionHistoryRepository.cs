@@ -4,19 +4,24 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Dtos;
 using api.Enums;
+using api.Events;
 using api.Interfaces;
+using api.Mappers;
 using api.Models;
+using api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories
 {
     public class TransactionHistoryRepository : ITransactionHistoryRepository
     {
+        private readonly EventDispatcher _eventDispatcher;
         private readonly ApplicationDBContext _context;
 
-        public TransactionHistoryRepository(ApplicationDBContext context)
+        public TransactionHistoryRepository(ApplicationDBContext context, EventDispatcher eventDispatcher)
         {
             _context = context;
+            _eventDispatcher = eventDispatcher;
         }
 
         public async Task<List<TransactionHistory>> GetTransactionsAsync(
@@ -61,6 +66,12 @@ namespace api.Repositories
         {
             await _context.TransactionHistory.AddAsync(transaction);
             await _context.SaveChangesAsync();
+            if (transaction.TransactionType != TransactionType.Order)
+            {
+                var auctionEvent = new TransactionEvent(transaction.AuctionId, transaction.UserId, transaction.TransactionPurpose, transaction.TransactionType);
+
+                await _eventDispatcher.Dispatch(auctionEvent);
+            }
         }
 
         public async Task<List<TransactionHistory?>> GetAuthorizedTransactionsForVoidAsync()
@@ -110,5 +121,18 @@ namespace api.Repositories
             return authorizedTransactions;
         }
 
+        public async Task<List<TransactionHistory>> GetTransactionHistoryByUserIdAsync(string userId)
+        {
+
+
+            var transactionsModel = await _context.TransactionHistory
+                                            .Include(t => t.Auction)
+                                            .Where(t => t.UserId == userId)
+                                            .OrderByDescending(t => t.CreatedAt)
+                                            .ToListAsync();
+
+            return transactionsModel;
+
+        }
     }
 }

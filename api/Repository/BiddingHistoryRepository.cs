@@ -4,8 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Enums;
+using api.Events;
 using api.Interfaces;
 using api.Models;
+using api.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository
@@ -13,13 +15,17 @@ namespace api.Repository
     public class BiddingHistoryRepository : IBiddingHistoryRepository
     {
         private readonly ApplicationDBContext _context;
-        public BiddingHistoryRepository(ApplicationDBContext context)
+        private readonly EventDispatcher _eventDispatcher;
+
+
+        public BiddingHistoryRepository(ApplicationDBContext context, EventDispatcher eventDispatcher)
         {
             _context = context;
+            _eventDispatcher = eventDispatcher;
         }
         public async Task<BiddingHistory> CreateBidAsync(BiddingHistory bid)
         {
-            var auction = _context.Auctions.FirstOrDefault(a => a.AuctionId == bid.AuctionId);
+            var auction = _context.Auctions.Include(A => A.Biddings).Include(A => A.watches).FirstOrDefault(a => a.AuctionId == bid.AuctionId);
 
             if (auction.AuctionStatus != AuctionStatus.Started)
             {
@@ -46,6 +52,15 @@ namespace api.Repository
 
             await _context.BiddingHistory.AddAsync(bid);
             await _context.SaveChangesAsync();
+            var watchersIds = new List<string>();
+
+            foreach (var watcher in auction.watches)
+            {
+                watchersIds.Add(watcher.UserId);
+            }
+            var NewBidding = new NewBiddingEvent(auction.Title, bid.BidAmount, auction.SellerId, watchersIds);
+            await _eventDispatcher.Dispatch(NewBidding);
+
             return bid;
         }
 

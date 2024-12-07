@@ -13,12 +13,16 @@ namespace api.Services
     public class PaymentService
     {
         private readonly ITransactionHistoryRepository _transactionRepository;
+        private readonly IAuctionRepository _auctionRepository;
+        private readonly IShipmentService _shipmentService;
         private readonly PayPalService _payPalService;
 
-        public PaymentService(ITransactionHistoryRepository transactionRepository, PayPalService payPalService)
+        public PaymentService(ITransactionHistoryRepository transactionRepository, PayPalService payPalService, IAuctionRepository auctionRepository, IShipmentService shipmentService)
         {
             _transactionRepository = transactionRepository;
             _payPalService = payPalService;
+            _auctionRepository = auctionRepository;
+            _shipmentService = shipmentService;
         }
         public async Task<object> CreateOrderAsync(CreateOrderRequestDto request)
         {
@@ -103,6 +107,18 @@ namespace api.Services
             };
             await _transactionRepository.AddAsync(authorizationTransaction);
 
+            if (request.Purpose == TransactionPurpose.Purchase)
+            {
+                var auction = await _auctionRepository.GetAuctionByIdAsync(request.AuctionId);
+                var newShipment = new Shipment
+                {
+                    BuyerId = request.UserId,
+                    AuctionId = request.AuctionId,
+                    SellerId = auction.SellerId,
+                };
+
+                await _shipmentService.CreateShipmentAsync(newShipment);
+            }
             // Return the final authorization result
             return authorizationResult;
         }

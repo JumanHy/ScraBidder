@@ -2,10 +2,10 @@ import { Container, Row, Col, Stack } from "react-bootstrap";
 import FlipCountdown from "@rumess/react-flip-countdown";
 import axios from "axios";
 import { useState } from "react";
-import Swal from "sweetalert2";
+
 function Timer({ auction }) {
   const updatedData = {
-    AuctionStatus: "Closed",
+    AuctionStatus: "Ended",
     title: auction.title,
     description: auction.description,
     images: auction.images,
@@ -46,11 +46,6 @@ function Timer({ auction }) {
       console.log("Auction closed successfully:", response.data);
     } catch (error) {
       console.error("Error closing auction:", error);
-      Swal.fire({
-        title: "Error!",
-        text: "Failed to close the auction. Please try again.",
-        icon: "error",
-      });
     }
   };
 

@@ -3,12 +3,12 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import BAcountSidebar from "../../components/BAcountSidebar/BAcountSidebar";
 import WatchList from "../../components/WatchList/WatchList";
 import TransactionHistory from "../../components/TransactionHistory/TransactionHistory";
-import PaymentMethods from "../../components/PaymentMethods/PaymentMethods";
 import MyAuctions from "../../components/Myauctions/Myauctions";
 import UserDetails from "../../components/UserDetails/UserDetails";
+import Orders from "../../components/Orders/Orders"; // Import Orders component
 import "../../styles/BusinessAccount.css";
 import BusinessDashboard from "../../components/BusinessDashboard/BusinessDashboard";
-import "../../styles/animations.css"; 
+import "../../styles/animations.css";
 
 function BusinessProfile() {
   const [activeSection, setActiveSection] = useState("dashboard");
@@ -27,7 +27,11 @@ function BusinessProfile() {
         return <WatchList key="watchlist" />;
       case "MyAuctions":
         return (
-          <div className="justify-content-center align-items-center flex-column" style={{ marginTop: "-15px", padding: "0px" }} key="MyAuctions">
+          <div
+            className="justify-content-center align-items-center flex-column"
+            style={{ marginTop: "-15px", padding: "0px" }}
+            key="MyAuctions"
+          >
             <MyAuctions />
           </div>
         );
@@ -38,11 +42,11 @@ function BusinessProfile() {
             <TransactionHistory />
           </div>
         );
-      case "payment-methods":
+      case "orders": // New case for Orders
         return (
-          <div key="payment-methods">
-            <h2 style={{ color: "#003A70" }}>Payment Methods</h2>
-            <PaymentMethods />
+          <div key="orders">
+            <h2 style={{ color: "#003A70" }}>Orders</h2>
+            <Orders />
           </div>
         );
       case "settings":

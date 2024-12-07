@@ -64,31 +64,31 @@ namespace api.Controllers
 
 
         [HttpPost("update-selected-users")]
-public async Task<IActionResult> UpdateAllUsers([FromBody] List<UserUpdateDto> userUpdateDtos)
-{
-    if (userUpdateDtos == null || userUpdateDtos.Count == 0)
-    {
-        return BadRequest("The list of users to update cannot be empty.");
-    }
-
-    try
-    {
-        var result = await _userService.UpdateAllUsersAsync(userUpdateDtos);
-
-        if (result)
+        public async Task<IActionResult> UpdateAllUsers([FromBody] List<UserUpdateDto> userUpdateDtos)
         {
-            return Ok("Users updated successfully.");
+            if (userUpdateDtos == null || userUpdateDtos.Count == 0)
+            {
+                return BadRequest("The list of users to update cannot be empty.");
+            }
+
+            try
+            {
+                var result = await _userService.UpdateAllUsersAsync(userUpdateDtos);
+
+                if (result)
+                {
+                    return Ok("Users updated successfully.");
+                }
+                else
+                {
+                    return NotFound("No matching users found to update.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
-        else
-        {
-            return NotFound("No matching users found to update.");
-        }
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(500, $"An error occurred: {ex.Message}");
-    }
-}
 
 
     }

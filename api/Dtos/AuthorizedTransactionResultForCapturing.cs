@@ -8,9 +8,9 @@ namespace api.Dtos
 {
     public class AuthorizedTransactionResultForCapturing
     {
-        public TransactionHistory Transaction { get; set; }
+        public Models.TransactionHistory Transaction { get; set; }
         public Models.Auction Auction { get; set; }
         public Models.BiddingHistory? WinningBid { get; set; }
-        public Shipment? LatestShipment { get; set; }
+        public Models.Shipment? LatestShipment { get; set; }
     }
 }

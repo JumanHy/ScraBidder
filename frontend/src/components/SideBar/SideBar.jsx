@@ -9,10 +9,6 @@ import Stats from "../Stats/Stats";
 import axios from "axios";
 
 function SideBar() {
-
-
-
-
   const [auctions, setAuctions] = useState([]);
   const [biddings, setBiddings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,8 +16,8 @@ function SideBar() {
 
   useEffect(() => {
     // Define multiple API requests
-    const fetchAuctions = axios.get('http://localhost:5125/api/auction'); // Replace with your endpoint
-    const fetchBiddings = axios.get('http://localhost:5125/api/biddinghistory'); // Replace with your endpoint
+    const fetchAuctions = axios.get("http://localhost:5192/api/auction"); // Replace with your endpoint
+    const fetchBiddings = axios.get("http://localhost:5192/api/biddinghistory"); // Replace with your endpoint
 
     // Use Promise.all to wait for all requests to complete
     Promise.all([fetchAuctions, fetchBiddings])
@@ -37,11 +33,9 @@ function SideBar() {
       });
   }, []);
 
-
   const soldAuctionsCount = auctions.filter(
     (auction) => auction.status && auction.status.toLowerCase() === "sold"
   ).length;
-
 
   const [activeComponent, setActiveComponent] = useState(
     localStorage.getItem("activeComponent") || "overview"
@@ -118,17 +112,24 @@ function SideBar() {
           style={{ backgroundColor: "#F5F5F5" }}
           className="dashboard-component"
         >
-          {loading && 
-          <div className="text-center">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
+          {loading && (
+            <div className="text-center">
+              <div className="spinner-border" role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
             </div>
-          </div>
-          }
-          {activeComponent === "overview" && !loading &&<Overview />}
+          )}
+          {activeComponent === "overview" && !loading && <Overview />}
           {activeComponent === "users" && !loading && <UsersData />}
-          {activeComponent === "auctions" && !loading && <AuctionsData auctions={auctions} BiddingHistory={biddings} />}
-          {activeComponent === "stats" && !loading && <Stats auctionsCount={auctions.length} soldAuctions={soldAuctionsCount} />}
+          {activeComponent === "auctions" && !loading && (
+            <AuctionsData auctions={auctions} BiddingHistory={biddings} />
+          )}
+          {activeComponent === "stats" && !loading && (
+            <Stats
+              auctionsCount={auctions.length}
+              soldAuctions={soldAuctionsCount}
+            />
+          )}
         </Col>
       </Row>
     </Container>

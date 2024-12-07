@@ -28,7 +28,7 @@ const materialCategories = [
 ];
 
 function AuctionFormPage() {
-  const [submitted,setSubmitted]=useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyD164boEAkDOWxKojpHFaPRyRyK5sQoPpY", // Replace with your API key
   });
@@ -59,8 +59,8 @@ function AuctionFormPage() {
     }
   };
   const [formData, setFormData] = useState({
-    SellerId:"1",
-    AuctionStatus:"Accepted",
+    SellerId: localStorage.getItem("userId"),
+    AuctionStatus: "Approved",
     title: "",
     description: "",
     images: [],
@@ -68,7 +68,7 @@ function AuctionFormPage() {
     ReservePrice: "",
     StartingTime: "",
     EndingTime: "",
-    Address:  "Amman",
+    Address: "Amman",
     condition: "",
     quantity: "",
     CategoryId: "",
@@ -76,6 +76,7 @@ function AuctionFormPage() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -86,9 +87,9 @@ function AuctionFormPage() {
     const files = Array.from(e.target.files);
     setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...files], 
+      images: [...prev.images, ...files],
     }));
-    e.target.value = ""; 
+    e.target.value = "";
   };
 
   const handleImageDelete = (index) => {
@@ -97,29 +98,42 @@ function AuctionFormPage() {
       images: prev.images.filter((_, i) => i !== index),
     }));
   };
+  const convertToUTC = (localDateTime) => {
+    const date = new Date(localDateTime); // Local time
+    return date.toISOString(); // Convert to ISO string in UTC
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
-  
+    // Convert StartingTime and EndingTime to UTC
+    const formDataWithUTC = {
+      ...formData,
+      StartingTime: convertToUTC(formData.StartingTime),
+      EndingTime: convertToUTC(formData.EndingTime),
+    };
     for (const [key, value] of Object.entries(formData)) {
       if (key === "images") {
         value.forEach((file) => data.append("images", file));
       } else if (typeof value === "object" && value !== null) {
         data.append(key, JSON.stringify(value));
       } else {
-        data.append(key, value); 
+        data.append(key, value);
       }
     }
     for (const [key, value] of data.entries()) {
       console.log(key, value); // This will log each key-value pair in the FormData object
     }
     try {
-      const response = await axios.post("http://localhost:5125/api/auction", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:5192/api/auction",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       setSubmitted(true);
     } catch (error) {
       console.error("Error submitting auction:", error);
@@ -129,7 +143,6 @@ function AuctionFormPage() {
 
   return (
     <Container className="p-0 rounded-4 shadow">
-      
       <h2 className="text-center  rounded-top-4 bg-primary p-4 text-white">
         Create New Auction
       </h2>
@@ -352,11 +365,7 @@ function AuctionFormPage() {
           <Row className="g-3">
             <h4 className="text-decoration-underline">Location</h4>
             <Col>
-              <Button
-                variant="secondary"
-                className="text-white"
-                
-              >
+              <Button variant="secondary" className="text-white">
                 Current Location
               </Button>
             </Col>
@@ -396,11 +405,11 @@ function AuctionFormPage() {
               Submit
             </Button>
           </Col>
-          {submitted &&
-      <div className="alert alert-success mt-5" role="alert">
-      Auction Form Submitted Successfully !
-    </div>
-      }
+          {submitted && (
+            <div className="alert alert-success mt-5" role="alert">
+              Auction Form Submitted Successfully !
+            </div>
+          )}
         </Row>
       </Form>
     </Container>

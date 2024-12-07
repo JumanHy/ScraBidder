@@ -7,7 +7,10 @@ function AuctionCard({ currentAuction }) {
     return null; // Handle case when currentAuction is not passed or is empty
   }
 
-  console.log("Auction Details:", currentAuction);
+  console.log(
+    "Auction Details:",
+    new Date(currentAuction.endingTime).toLocaleString()
+  );
 
   return (
     <Card className="shadow border-0 h-100 rounded-4 text-primary">
@@ -35,7 +38,7 @@ function AuctionCard({ currentAuction }) {
           {/* Countdown Timer */}
           <div>
             <FlipCountdown
-              endAt={currentAuction.endingTime}
+              endAt={new Date(currentAuction.endingTime).toLocaleString()}
               size="small"
               titlePosition="top"
               hideYear

@@ -36,6 +36,24 @@ namespace api.Data
         {
             base.OnModelCreating(builder);
 
+
+            builder.Entity<Shipment>()
+                .HasOne(s => s.Seller)
+                .WithMany() // Assuming no navigation property on Seller side
+                .HasForeignKey(s => s.SellerId)
+                .OnDelete(DeleteBehavior.Restrict); // Specify Restrict or NoAction
+
+            builder.Entity<Shipment>()
+                .HasOne(s => s.Buyer)
+                .WithMany() // Assuming no navigation property on Buyer side
+                .HasForeignKey(s => s.BuyerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Shipment>()
+                .HasOne(s => s.Auction)
+                .WithMany(a => a.Shipments) // Assuming Auction has a collection of Shipments
+                .HasForeignKey(s => s.AuctionId)
+                .OnDelete(DeleteBehavior.Restrict);
             // Seed IdentityRoles
             List<IdentityRole> roles = new List<IdentityRole>
             {

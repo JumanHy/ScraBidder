@@ -21,5 +21,7 @@ namespace api.Interfaces
         Task AddAsync(TransactionHistory transaction);
         Task<List<AuthorizedTransactionResultForCapturing>> GetAuthorizedTransactionsForCapturingAsync();
         Task<List<TransactionHistory?>> GetAuthorizedTransactionsForVoidAsync();
+
+        Task<List<TransactionHistory>> GetTransactionHistoryByUserIdAsync(string userId);
     }
 }

@@ -23,7 +23,7 @@ namespace api.Models
 
         public int CategoryId { get; set; }
 
-        public string Images { get; set; }=string.Empty; // JSON
+        public string Images { get; set; } = string.Empty; // JSON
 
         [Required]
         public AuctionStatus AuctionStatus { get; set; } // Enum: pending, approved, denied, started, ended
@@ -61,6 +61,8 @@ namespace api.Models
         public List<BiddingHistory> Biddings { get; set; } = new List<BiddingHistory>();
         public List<Shipment> Shipments { get; set; } = new List<Shipment>();
         public List<TransactionHistory> Transactions { get; set; } = new List<TransactionHistory>();
+        public List<WatchList> watches { get; set; } = new List<WatchList>();
+
     }
 
 }

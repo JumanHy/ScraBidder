@@ -21,13 +21,27 @@ export default function BiddingInfo({ currentItem }) {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [isDepositAuthorized, setIsDepositAuthorized] = useState(true);
-  const startingPrice = currentItem.startingBid;
-  const [highestBid, setHighestBid] = useState(currentItem.currentBid);
+  const [isDepositAuthorized, setIsDepositAuthorized] = useState(false);
+  const [highestBid, setHighestBid] = useState(
+    currentItem.currentBid || currentItem.startingBid
+  );
   const [bidAmount, setBidAmount] = useState("");
   const [error, setError] = useState("");
-
+  const [paymentPurpose, setPaymentPurpose] = useState("deposit");
+  const userId = localStorage.getItem("userId");
   const depositAmount = 50; // amount to hold for bidding authorization
+
+  const winnerId =
+    currentItem.auctionStatus == "Ended" &&
+    currentItem.biddings &&
+    currentItem.biddings.length > 0 &&
+    currentItem.biddings.reduce(
+      (highest, bid) => (bid.bidAmount > highest.bidAmount ? bid : highest),
+      { bidAmount: 0 }
+    ).bidderId;
+
+  const isWinner =
+    userId === winnerId && highestBid >= currentItem.reservePrice;
 
   const handleBidNowClick = async () => {
     if (!isLoggedIn) {
@@ -36,6 +50,7 @@ export default function BiddingInfo({ currentItem }) {
     }
 
     if (!isDepositAuthorized) {
+      setPaymentPurpose("deposit");
       setShowPaymentModal(true);
       return;
     }
@@ -46,48 +61,43 @@ export default function BiddingInfo({ currentItem }) {
     } else if (numericBid <= highestBid) {
       setError(`Bid amount must be at least ${highestBid + 1} JD.`);
     } else {
-      setHighestBid(numericBid);
-      setBidAmount("");
-      setError("");
-      Swal.fire({
-        icon: "success",
-        title: "Bid Placed!",
-        text: `Your bid of ${numericBid} JD has been placed.`,
-      });
-    }
-    setError("");
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5192/api/biddinghistory",
-        {
-          auctionId: currentItem.auctionId,
-          bidderId: "e7264600-4a18-4862-9b3b-9f0ccb1c9a86",
-          bidAmount: numericBid,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
+      try {
+        const response = await axios.post(
+          "http://localhost:5192/api/biddinghistory",
+          {
+            auctionId: currentItem.auctionId,
+            bidderId: userId,
+            bidAmount: numericBid,
           },
-        }
-      );
-      // Update the highest bid and reset input if the request is successful
-      setHighestBid(numericBid);
-      setBidAmount("");
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
-      Swal.fire({
-        icon: "success",
-        title: "Bid Placed!",
-        text: `Your bid of ${numericBid} JD has been placed successfully.`,
-      });
-    } catch (error) {
-      console.error("Error placing bid:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Failed to Place Bid",
-        text: "An error occurred while placing your bid. Please try again.",
-      });
+        setHighestBid(numericBid);
+        setBidAmount("");
+        setError("");
+        Swal.fire({
+          icon: "success",
+          title: "Bid Placed!",
+          text: `Your bid of ${numericBid} JD has been placed successfully.`,
+        });
+      } catch (error) {
+        console.error("Error placing bid:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Failed to Place Bid",
+          text: "An error occurred while placing your bid. Please try again.",
+        });
+      }
     }
+  };
+
+  const handlePurchaseClick = () => {
+    setPaymentPurpose("purchase");
+    setShowPaymentModal(true);
   };
 
   const handleLoginSuccess = () => {
@@ -97,13 +107,22 @@ export default function BiddingInfo({ currentItem }) {
   };
 
   const handlePaymentSuccess = () => {
-    setIsDepositAuthorized(true); // Enable bidding after deposit authorization
-    setShowPaymentModal(false);
-    Swal.fire({
-      title: "Deposit Authorized",
-      text: `A hold of ${depositAmount} JD has been placed on your account.`,
-      icon: "success",
-    });
+    if (paymentPurpose === "deposit") {
+      setIsDepositAuthorized(true);
+      setShowPaymentModal(false);
+      Swal.fire({
+        title: "Deposit Authorized",
+        text: `A hold of ${depositAmount} JD has been placed on your account.`,
+        icon: "success",
+      });
+    } else if (paymentPurpose === "purchase") {
+      setShowPaymentModal(false);
+      Swal.fire({
+        title: "Purchase Complete",
+        text: `Congratulations! You have successfully purchased the item for ${highestBid} JD.`,
+        icon: "success",
+      });
+    }
   };
 
   useEffect(() => {
@@ -126,14 +145,16 @@ export default function BiddingInfo({ currentItem }) {
               {currentItem.auctionStatus}
             </Col>
             <Col xs="auto">
-              {currentItem.auctionStatus != "Ended" && <WatchButton />}
+              {currentItem.auctionStatus !== "Ended" && (
+                <WatchButton auctionId={currentItem.auctionId} />
+              )}
             </Col>
           </Row>
         </Card.Title>
 
         <Card.Text>
           <Card.Subtitle className="mb-2 text-muted">
-            {currentItem.auctionStatus == "Ended" ? "Ended At" : "Ends After"}
+            {currentItem.auctionStatus === "Ended" ? "Ended At" : "Ends After"}
           </Card.Subtitle>
           <Timer auction={currentItem} />
         </Card.Text>
@@ -159,19 +180,17 @@ export default function BiddingInfo({ currentItem }) {
           </Container>
         </Card.Text>
 
-        {currentItem.auctionStatus != "Ended" && (
+        {currentItem.auctionStatus !== "Ended" && (
           <Card.Text className="d-flex justify-content-center">
             <Col xs={12} md={7}>
               {isLoggedIn && (
                 <Form.Group>
                   <Form.Control
                     type="number"
-                    placeholder={`Bid Amount (min ${
-                      currentItem.currentBid + 1
-                    })`}
-                    min={currentItem.currentBid + 1} // Set the minimum bid value
+                    placeholder={`Bid Amount (min ${highestBid + 1})`}
+                    min={highestBid + 1}
                     value={bidAmount}
-                    step={1} // Whole numbers only
+                    step={1}
                     onChange={(e) => {
                       const inputValue = e.target.value;
                       if (/^\d*$/.test(inputValue)) {
@@ -199,22 +218,31 @@ export default function BiddingInfo({ currentItem }) {
             </Col>
           </Card.Text>
         )}
+
+        {currentItem.auctionStatus === "Ended" && isWinner && (
+          <Button
+            onClick={handlePurchaseClick}
+            className="text-white w-100 rounded-5 mt-2"
+            variant="success"
+          >
+            Purchase for {highestBid} JD
+          </Button>
+        )}
       </Card.Body>
 
-      {/* Login Modal */}
       <LoginModal
         show={showLoginModal}
         onHide={() => setShowLoginModal(false)}
         onLoginSuccess={handleLoginSuccess}
       />
 
-      {/* Payment Modal */}
       <PaymentModal
         show={showPaymentModal}
         handleClose={() => setShowPaymentModal(false)}
-        amount={depositAmount}
-        userId={1}
-        auctionId={12}
+        amount={paymentPurpose === "deposit" ? depositAmount : highestBid}
+        userId={userId}
+        auctionId={currentItem.auctionId}
+        purpose={paymentPurpose}
         onPaymentSuccess={handlePaymentSuccess}
       />
     </Card>

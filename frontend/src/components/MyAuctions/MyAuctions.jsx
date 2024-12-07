@@ -45,16 +45,27 @@ function AuctionRow({
   }
 
   return (
-    <tr style={{ backgroundColor: "#FFFFFF", transition: "background-color 0.3s ease" }}>
-      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>{title}</td>
+    <tr
+      style={{
+        backgroundColor: "#FFFFFF",
+        transition: "background-color 0.3s ease",
+      }}
+    >
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
+        {title}
+      </td>
       <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
         {new Date(startTime).toLocaleString()}
       </td>
       <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
         {new Date(endTime).toLocaleString()}
       </td>
-      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>{displayBid}</td>
-      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>{numWatchers}</td>
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
+        {displayBid}
+      </td>
+      <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
+        {numWatchers}
+      </td>
       <td style={{ padding: "3px 10px", width: "120px", textAlign: "center" }}>
         {state === "PENDING" && <span className="fw-bold">Pending</span>}
         {state === "APPROVED" && (
@@ -158,7 +169,7 @@ function AuctionList() {
   return (
     <div className="container mt-1" style={{ marginTop: "30px" }}>
       <div className="d-flex justify-content-between align-items-center">
-        <h1 style={{ color: "#003A70", fontSize: "30px" }}>My Auction</h1>
+        <h1 style={{ color: "#003A70", fontSize: "30px" }}>My Auctions</h1>
         <Link to="/auction-form">
           <button
             className="btn btn-secondary my-3 vibrate-button"
@@ -186,26 +197,33 @@ function AuctionList() {
           borderCollapse: "collapse",
           borderRadius: "10px",
           boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.3)",
-          
         }}
       >
         <thead>
           <tr
-         
             style={{
               backgroundColor: "#B87333",
               color: "white",
               borderBottom: "2px solid #B87333",
-
             }}
           >
             <th style={{ padding: "10px 15px", textAlign: "center" }}>Title</th>
-            <th style={{ padding: "10px 15px", textAlign: "center" }}>Start Time</th>
-            <th style={{ padding: "10px 15px", textAlign: "center" }}>End Time</th>
-            <th style={{ padding: "10px 15px", textAlign: "center" }}>Latest Bid</th>
-            <th style={{ padding: "10px 15px", textAlign: "center" }}>Watchers</th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>
+              Start Time
+            </th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>
+              End Time
+            </th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>
+              Latest Bid
+            </th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>
+              Watchers
+            </th>
             <th style={{ padding: "10px 15px", textAlign: "center" }}>State</th>
-            <th style={{ padding: "10px 15px", textAlign: "center" }}>Details</th>
+            <th style={{ padding: "10px 15px", textAlign: "center" }}>
+              Details
+            </th>
           </tr>
         </thead>
         <tbody>

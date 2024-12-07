@@ -1,8 +1,10 @@
 using api.Data;
 using api.Dtos;
 using api.Enums;
+using api.Events;
 using api.Interfaces;
 using api.Models;
+using api.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +15,13 @@ namespace api.Service
     public class UserService : IUserService
     {
         private readonly ApplicationDBContext _context;
+        private readonly EventDispatcher _eventDispatcher;
 
         // Constructor to inject the ApplicationDBContext into the service
-        public UserService(ApplicationDBContext context)
+        public UserService(ApplicationDBContext context, EventDispatcher eventDispatcher)
         {
             _context = context;
+            _eventDispatcher = eventDispatcher;
         }
 
         // Fetch dashboard statistics
@@ -86,7 +90,7 @@ namespace api.Service
 
             // Create a dictionary for easy lookup
             var userUpdateMap = userUpdateDtos.ToDictionary(dto => dto.UserId);
-
+            var updatedUsers = new List<ApplicationUser>();
             // Loop through each user to update their properties
             foreach (var user in users)
             {
@@ -98,8 +102,10 @@ namespace api.Service
 
 
                         if (!string.IsNullOrEmpty(updateDto.Status))
+                        {
                             user.Status = Enum.Parse<AccountStatus>(updateDto.Status);
-
+                            updatedUsers.Add(user);
+                        }
                         // Add additional updates as needed
                     }
                 }
@@ -107,11 +113,18 @@ namespace api.Service
                 {
                     // Log the exception and continue with the next user
                     Console.WriteLine($"Error updating user {user.Id}: {ex.Message}");
+                    throw new Exception("Error updating users");
                 }
             }
 
             // Save changes to the database
             await _context.SaveChangesAsync();
+            foreach (var user in updatedUsers)
+            {
+                var userStatus = new UserStatusUpdatedEvent(user.Id, user.Status.ToString());
+
+                await _eventDispatcher.Dispatch(userStatus);
+            }
             return true;
         }
     }

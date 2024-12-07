@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Auction;
 using api.Dtos.Notification;
+using api.Enums;
+using api.Events;
 using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
@@ -16,11 +18,13 @@ namespace api.Repository
 {
     public class AuctionRepository : IAuctionRepository
     {
-        private readonly NotificationService _notificationService;
+
+        private readonly EventDispatcher _eventDispatcher;
         private readonly ApplicationDBContext _context;
-        public AuctionRepository(ApplicationDBContext context, NotificationService notificationService)
+        public AuctionRepository(ApplicationDBContext context, EventDispatcher eventDispatcher)
         {
-            _notificationService = notificationService;
+
+            _eventDispatcher = eventDispatcher;
             _context = context;
         }
 
@@ -69,16 +73,23 @@ namespace api.Repository
 
         public async Task<Auction?> UpdateAuctionAsync(int id, UpdateAuctionDto updatedto)
         {
-            var auctionModel = await _context.Auctions.FirstOrDefaultAsync(x => x.AuctionId == id);
+            var auctionModel = await _context.Auctions.Include(A => A.watches).Include(A => A.Biddings).FirstOrDefaultAsync(x => x.AuctionId == id);
             if (auctionModel == null)
             {
                 return null;
             }
-            var statusChanged = false;
+            var approvedOrDenied = false;
+            var startedOrEnded = false;
             if (auctionModel.AuctionStatus != updatedto.AuctionStatus)
             {
-                statusChanged = true;
+                approvedOrDenied = (updatedto.AuctionStatus == AuctionStatus.Approved) || (updatedto.AuctionStatus == AuctionStatus.Denied);
             }
+            if (auctionModel.AuctionStatus != updatedto.AuctionStatus)
+            {
+
+                startedOrEnded = (updatedto.AuctionStatus == AuctionStatus.Started) || (updatedto.AuctionStatus == AuctionStatus.Ended);
+            }
+
             auctionModel.Title = updatedto.Title;
             auctionModel.Description = updatedto.Description;
             auctionModel.CategoryId = updatedto.CategoryId;
@@ -92,19 +103,47 @@ namespace api.Repository
             auctionModel.Condition = updatedto.Condition;
             auctionModel.Quantity = updatedto.Quantity;
             await _context.SaveChangesAsync();
+            var watcherIds = auctionModel.watches.Select(w => w.UserId).ToList();
 
-
-            if (statusChanged)
+            if (approvedOrDenied)
             {
-                var sellerNotification = new NotificationItem
+                var auctionEvent = new AuctionStatusChangedEvent(auctionModel.AuctionId, auctionModel.Title, auctionModel.SellerId, updatedto.AuctionStatus);
+                // Dispatch the event to handlers
+                await _eventDispatcher.Dispatch(auctionEvent);
+            }
+
+            if (startedOrEnded)
+            {
+                if (updatedto.AuctionStatus == AuctionStatus.Started)
                 {
-                    Message = $"Your auction '{auctionModel.Title}' status has been updated to {updatedto.AuctionStatus}.",
-                    CreatedAt = DateTime.UtcNow,
-                    Type = "AuctionStatusUpdated"
-                };
+                    var auctionStartedEvent = new AuctionStartedEvent(
+                        auctionModel.AuctionId,
+                        auctionModel.Title,
+                        auctionModel.SellerId,
+                        watcherIds
+                    );
+                    await _eventDispatcher.Dispatch(auctionStartedEvent);
+                }
+                else if (updatedto.AuctionStatus == AuctionStatus.Ended)
+                {
+                    // Determine the winner ID
+                    var winningBid = auctionModel.Biddings
+                        .Where(b => b.BidAmount >= (auctionModel.ReservePrice ?? 0))
+                        .OrderByDescending(b => b.BidAmount)
+                        .ThenBy(b => b.BidTime) // Tie-breaker: earliest bid
+                        .FirstOrDefault();
 
-                await _notificationService.AddNotification(auctionModel.SellerId, sellerNotification);
+                    var winnerId = winningBid?.BidderId;
 
+                    var auctionEndedEvent = new AuctionEndedEvent(
+                        auctionModel.AuctionId,
+                        auctionModel.Title,
+                        auctionModel.SellerId,
+                        watcherIds,
+                        winnerId
+                    );
+                    await _eventDispatcher.Dispatch(auctionEndedEvent);
+                }
             }
             return auctionModel;
         }
