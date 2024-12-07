@@ -18,12 +18,15 @@ using Microsoft.IdentityModel.Tokens;
 
 internal class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        // Add SignalR for real-time communication
         builder.Services.AddSignalR();
         builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
-        // Register services here
+
+        // Dependency Injection for services and repositories
         builder.Services.AddScoped<PaymentService>();
         builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
         builder.Services.AddHostedService<AuctionPaymentHandlerService>();
@@ -36,21 +39,23 @@ internal class Program
         builder.Services.AddScoped<IBiddingHistoryRepository, BiddingHistoryRepository>();
         builder.Services.AddScoped<NotificationService>();
 
+        // Configure Database
         builder.Services.AddDbContext<ApplicationDBContext>(options =>
         {
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
+        // Add HttpClient for external API calls
         builder.Services.AddHttpClient<PayPalService>();
-        builder.Logging.ClearProviders();
-        builder.Logging.AddConsole();
 
+        // Add Controllers and configure JSON serialization
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
+        // Configure Identity
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
             options.Password.RequireDigit = true;
@@ -62,50 +67,49 @@ internal class Program
         .AddEntityFrameworkStores<ApplicationDBContext>()
         .AddDefaultTokenProviders();
 
+        // Configure JWT Authentication
         builder.Services.AddAuthentication(options =>
- {
-     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
- })
-      .AddJwtBearer(options =>
-     {
-         options.TokenValidationParameters = new TokenValidationParameters
-         {
-             ValidateIssuer = true,
-             ValidIssuer = builder.Configuration["JWT:Issuer"],
-             ValidateAudience = true,
-             ValidAudience = builder.Configuration["JWT:Audience"],
-             ValidateIssuerSigningKey = true,
-             IssuerSigningKey = new SymmetricSecurityKey(
-                 Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigninKey"])
-             )
-         };
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = builder.Configuration["JWT:Issuer"],
+                ValidateAudience = true,
+                ValidAudience = builder.Configuration["JWT:Audience"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigninKey"])
+                )
+            };
 
-         options.Events = new JwtBearerEvents
-         {
-             OnMessageReceived = context =>
-             {
-                 // Extract token from the query string
-                 var accessToken = context.Request.Query["access_token"];
-                 var path = context.HttpContext.Request.Path;
-                 if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
-                 {
-                     context.Token = accessToken;
-                 }
-                 return Task.CompletedTask;
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
+                    {
+                        context.Token = accessToken;
+                    }
+                    return Task.CompletedTask;
+                }
+            };
+        });
 
-
-             }
-         };
-
-     });
-
-
+        // Add Authorization
         builder.Services.AddAuthorization();
 
+        // Enable Swagger for API documentation
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Configure CORS
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowReactApp", policy =>
@@ -115,20 +119,33 @@ internal class Program
                       .AllowCredentials());
         });
 
-
-
-        // Build the application
         var app = builder.Build();
+
+        // Seed Admin User
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                await AdminSeeder.SeedAdminUser(services);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error seeding admin user: {ex.Message}");
+            }
+        }
 
         // Configure middleware and HTTP pipeline
         if (app.Environment.IsDevelopment())
         {
+            app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
         app.UseCors("AllowReactApp");
 
         app.UseRouting();

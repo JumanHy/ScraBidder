@@ -37,6 +37,7 @@ namespace api.Service
         new Claim(JwtRegisteredClaimNames.Email, user.Email),
          new Claim(JwtRegisteredClaimNames.NameId, user.Id),
         new Claim(JwtRegisteredClaimNames.GivenName, user.UserName)
+        
     };
 
             // Add roles to the claims

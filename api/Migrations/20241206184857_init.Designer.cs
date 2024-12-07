@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241206184857_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,19 +54,19 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "711255cc-ff15-43e7-8812-9e21981b4921",
+                            Id = "5381a63b-8c4f-4b19-b632-cd1cfee004df",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "25ceffff-03eb-48d1-974b-67708bf1ac6c",
+                            Id = "432645a4-83a7-4efc-b4e3-f40525335424",
                             Name = "Individual",
                             NormalizedName = "INDIVIDUAL"
                         },
                         new
                         {
-                            Id = "75be44f7-14a1-4bb6-a56a-875f6c811f51",
+                            Id = "b6808b7c-44e6-4b41-ac9d-1a8f663ba71d",
                             Name = "Business",
                             NormalizedName = "BUSINESS"
                         });
@@ -301,13 +304,13 @@ namespace api.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6d5511b0-3cdd-4a4a-99d5-2c98e52c96ec",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "fc0d6d7a-65de-49f3-95b7-0d03f40ddcd1",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "admin1@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "eef3bfd8-9460-43eb-8474-c2f06cac675b",
+                            SecurityStamp = "23a17022-c623-42f8-95d2-7aeaf3857fb5",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "admin1"
@@ -316,13 +319,13 @@ namespace api.Migrations
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6d5bea72-d21e-4f82-b217-64e777210d79",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "58415efc-1473-484e-ac66-6e5d2c5651dc",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "admin2@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "1a83461e-02c4-4734-9462-a6f2e0ea19a1",
+                            SecurityStamp = "0c3df2a2-8c69-4cc3-85b4-a47902b2ac53",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "admin2"
@@ -331,13 +334,13 @@ namespace api.Migrations
                         {
                             Id = "3",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "acb7ef53-dd82-4a1f-9088-773824d699f0",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "47208e3d-50da-4a40-be29-ff36ca75d2f7",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "admin3@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "76a75bf3-7331-48b7-a879-a4368da74a8e",
+                            SecurityStamp = "0cc8837b-a1d3-43cc-afc3-25ebcfd98bec",
                             Status = "Blocked",
                             TwoFactorEnabled = false,
                             UserName = "admin3"
@@ -346,13 +349,13 @@ namespace api.Migrations
                         {
                             Id = "4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5b5e6d2c-f6dd-49a7-9e79-4468d7dd07bf",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "d817e7f7-466c-4764-9eb7-554f1faaf9a0",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "admin4@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5eefa3a3-3e04-44d1-8248-955e8e0f0980",
+                            SecurityStamp = "aecb71a7-62ec-484c-95e9-a8c1c3689bb5",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "admin4"
@@ -361,13 +364,13 @@ namespace api.Migrations
                         {
                             Id = "5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a457ccec-c660-4ca5-96ed-f9d6364af6c8",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "a32d4c5d-0d28-4066-af77-35c2ee4420f8",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "admin5@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b7efdb26-d34f-4782-bea2-cf3d25709b65",
+                            SecurityStamp = "6d7d9191-3e00-4c1e-8568-b69989c5d592",
                             Status = "Pending",
                             TwoFactorEnabled = false,
                             UserName = "admin5"
@@ -376,13 +379,13 @@ namespace api.Migrations
                         {
                             Id = "6",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a59accc3-0f8e-41f5-9560-fd9760b700b1",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "b12d5cf0-7f8e-4d3b-9ad7-475d7e391940",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "business1@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "64419605-2c54-4636-9c63-cee0b235fda0",
+                            SecurityStamp = "12627563-0bf4-4fa2-8bc8-dea297f39f45",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "business1"
@@ -391,13 +394,13 @@ namespace api.Migrations
                         {
                             Id = "7",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "036db0fe-ae96-43ec-842f-828c2777956e",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "94cd9bdf-ef9d-4987-aa1c-9cb415451519",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "business2@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0af50ef4-5cf2-40b7-996d-3e355cfbe8b9",
+                            SecurityStamp = "083f7597-7109-48de-8703-7e6c7d765be6",
                             Status = "Pending",
                             TwoFactorEnabled = false,
                             UserName = "business2"
@@ -406,13 +409,13 @@ namespace api.Migrations
                         {
                             Id = "8",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b5f90ddb-1408-4b95-8c22-a58af38d2dae",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "2dbf1a9d-c3f9-465a-864d-816a1b508bbf",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "business3@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4044fb71-efc3-4c6f-b670-0d74bcb8ca33",
+                            SecurityStamp = "6e324ea5-c1fd-46e2-9b3c-b953b88bc8d0",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "business3"
@@ -421,13 +424,13 @@ namespace api.Migrations
                         {
                             Id = "9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "dd25cf05-9723-4bac-a45e-af51ec4d7424",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "4d139191-9471-438a-9eed-096d0a204952",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "business4@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "42449709-74d2-4fdc-b241-89c834bb69f2",
+                            SecurityStamp = "0cfa33d9-33fa-46b0-9aaf-8702c60e4b44",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "business4"
@@ -436,13 +439,13 @@ namespace api.Migrations
                         {
                             Id = "10",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d498d51-57a0-490b-a28b-2bd6ce96b73e",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "38ae3c24-cfbc-4eb5-8818-15e780f91dee",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "business5@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "807a4a10-d624-4c27-a27a-07318daed04e",
+                            SecurityStamp = "521f685d-0a06-44c7-877f-d72cebcf264d",
                             Status = "Pending",
                             TwoFactorEnabled = false,
                             UserName = "business5"
@@ -451,13 +454,13 @@ namespace api.Migrations
                         {
                             Id = "11",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "88ef9bc1-09b5-44a0-b421-638b588e6090",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "ece84f36-cf56-49bc-b567-b6457cb4f53e",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "individual1@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "097ae36f-fa27-4bdb-9304-98aed57ce155",
+                            SecurityStamp = "f014bafc-7858-40a3-972a-a24ff80d6968",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "individual1"
@@ -466,13 +469,13 @@ namespace api.Migrations
                         {
                             Id = "12",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "fcb3b21d-a9c4-4e59-8727-354f82aa6a10",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "521fb37c-bf61-4893-aecc-4cc068becac6",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "individual2@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "367186e5-6dd7-472a-9937-c91c225acb40",
+                            SecurityStamp = "1920b8c7-e4cc-41ee-a43a-0e2202856fe1",
                             Status = "Blocked",
                             TwoFactorEnabled = false,
                             UserName = "individual2"
@@ -481,13 +484,13 @@ namespace api.Migrations
                         {
                             Id = "13",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1e88b3b9-ad1e-4ceb-afe0-8746427ccb71",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "726e647e-fce4-4391-8155-a7f4034b4d61",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "individual3@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aafb32cd-de2a-4e05-a4e8-591bfafc0006",
+                            SecurityStamp = "bd9af5c8-a48a-4ec5-904e-234719fc5e20",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "individual3"
@@ -496,13 +499,13 @@ namespace api.Migrations
                         {
                             Id = "14",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7702e073-abd2-4871-b936-6b3b611c70a6",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "a5d068bd-690b-4fe1-aeb4-e7c641538dfa",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "individual4@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "db764433-2314-4791-95c8-bcf704035697",
+                            SecurityStamp = "0ee6d9e1-7f7b-44cd-90ee-47a595dd059d",
                             Status = "Pending",
                             TwoFactorEnabled = false,
                             UserName = "individual4"
@@ -511,13 +514,13 @@ namespace api.Migrations
                         {
                             Id = "15",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7d7a10ea-95ff-40fe-ac7e-651743dfa303",
-                            CreatedAt = new DateTime(2024, 12, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(1808),
+                            ConcurrencyStamp = "c8bd8e35-1217-46a4-9510-7b819510c9b0",
+                            CreatedAt = new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898),
                             Email = "individual5@example.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "50428ff4-dbd2-4521-993a-0f93248a3acd",
+                            SecurityStamp = "784e6f7b-e597-44c2-a20e-67bf67d57a31",
                             Status = "Active",
                             TwoFactorEnabled = false,
                             UserName = "individual5"
@@ -601,16 +604,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 1,
                             Condition = "Mixed",
-                            CreatedAt = new DateTime(2024, 11, 27, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2657),
+                            CreatedAt = new DateTime(2024, 11, 26, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4526),
                             CurrentBid = 650.00m,
                             Description = "A collection of high-grade aluminum scraps.",
-                            EndingTime = new DateTime(2024, 12, 12, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2668),
+                            EndingTime = new DateTime(2024, 12, 11, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4537),
                             Images = "[\"aluminum1.jpg\", \"aluminum2.jpg\"]",
                             Quantity = 100m,
                             ReservePrice = 800.00m,
                             SellerId = "4",
                             StartingBid = 500.00m,
-                            StartingTime = new DateTime(2024, 12, 2, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2667),
+                            StartingTime = new DateTime(2024, 12, 1, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4534),
                             Title = "Aluminum Scrap Bundle"
                         },
                         new
@@ -620,16 +623,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 2,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 11, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2682),
+                            CreatedAt = new DateTime(2024, 11, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4550),
                             CurrentBid = 1200.00m,
                             Description = "Various grades of copper wiring ready for recycling.",
-                            EndingTime = new DateTime(2024, 11, 22, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2685),
+                            EndingTime = new DateTime(2024, 11, 21, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4552),
                             Images = "[\"copper1.jpg\", \"copper2.jpg\"]",
                             Quantity = 200m,
                             ReservePrice = 1500.00m,
                             SellerId = "4",
                             StartingBid = 1000.00m,
-                            StartingTime = new DateTime(2024, 11, 12, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2684),
+                            StartingTime = new DateTime(2024, 11, 11, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4551),
                             Title = "Copper Wiring Scrap"
                         },
                         new
@@ -639,16 +642,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 3,
                             Condition = "New",
-                            CreatedAt = new DateTime(2024, 12, 2, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2764),
+                            CreatedAt = new DateTime(2024, 12, 1, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4556),
                             CurrentBid = 450.00m,
                             Description = "Recyclable plastic waste from industrial sources.",
-                            EndingTime = new DateTime(2024, 12, 14, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2768),
+                            EndingTime = new DateTime(2024, 12, 13, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4557),
                             Images = "[\"plastic1.jpg\"]",
                             Quantity = 50m,
                             ReservePrice = 600.00m,
                             SellerId = "4",
                             StartingBid = 300.00m,
-                            StartingTime = new DateTime(2024, 12, 4, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2766),
+                            StartingTime = new DateTime(2024, 12, 3, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4557),
                             Title = "Plastic Waste"
                         },
                         new
@@ -658,16 +661,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 4,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 11, 17, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2776),
+                            CreatedAt = new DateTime(2024, 11, 16, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4562),
                             CurrentBid = 800.00m,
                             Description = "Scrap iron sheets from old construction projects.",
-                            EndingTime = new DateTime(2024, 11, 27, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2779),
+                            EndingTime = new DateTime(2024, 11, 26, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4563),
                             Images = "[\"iron1.jpg\", \"iron2.jpg\"]",
                             Quantity = 300m,
                             ReservePrice = 1000.00m,
                             SellerId = "4",
                             StartingBid = 700.00m,
-                            StartingTime = new DateTime(2024, 11, 19, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2777),
+                            StartingTime = new DateTime(2024, 11, 18, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4562),
                             Title = "Iron Sheets"
                         },
                         new
@@ -677,16 +680,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 5,
                             Condition = "New",
-                            CreatedAt = new DateTime(2024, 11, 29, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2789),
+                            CreatedAt = new DateTime(2024, 11, 28, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4568),
                             CurrentBid = 1600.00m,
                             Description = "Premium-grade stainless steel scrap materials.",
-                            EndingTime = new DateTime(2024, 12, 10, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2792),
+                            EndingTime = new DateTime(2024, 12, 9, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4569),
                             Images = "[\"steel1.jpg\", \"steel2.jpg\"]",
                             Quantity = 150m,
                             ReservePrice = 2000.00m,
                             SellerId = "4",
                             StartingBid = 1500.00m,
-                            StartingTime = new DateTime(2024, 11, 30, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2791),
+                            StartingTime = new DateTime(2024, 11, 29, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4569),
                             Title = "Stainless Steel Scraps"
                         },
                         new
@@ -696,16 +699,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 6,
                             Condition = "Mixed",
-                            CreatedAt = new DateTime(2024, 10, 18, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2801),
+                            CreatedAt = new DateTime(2024, 10, 17, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4574),
                             CurrentBid = 250.00m,
                             Description = "Recyclable wooden pallets from warehouses.",
-                            EndingTime = new DateTime(2024, 10, 28, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2804),
+                            EndingTime = new DateTime(2024, 10, 27, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4575),
                             Images = "[\"wood1.jpg\", \"wood2.jpg\"]",
                             Quantity = 500m,
                             ReservePrice = 300.00m,
                             SellerId = "4",
                             StartingBid = 200.00m,
-                            StartingTime = new DateTime(2024, 10, 20, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2802),
+                            StartingTime = new DateTime(2024, 10, 19, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4574),
                             Title = "Wooden Pallets"
                         },
                         new
@@ -715,16 +718,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 7,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 11, 27, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2812),
+                            CreatedAt = new DateTime(2024, 11, 26, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4579),
                             CurrentBid = 550.00m,
                             Description = "Glass shards from old construction materials.",
-                            EndingTime = new DateTime(2024, 12, 9, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2815),
+                            EndingTime = new DateTime(2024, 12, 8, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4580),
                             Images = "[\"glass1.jpg\"]",
                             Quantity = 250m,
                             ReservePrice = 700.00m,
                             SellerId = "4",
                             StartingBid = 400.00m,
-                            StartingTime = new DateTime(2024, 11, 30, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2813),
+                            StartingTime = new DateTime(2024, 11, 29, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4579),
                             Title = "Glass Shards"
                         },
                         new
@@ -734,16 +737,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 8,
                             Condition = "Mixed",
-                            CreatedAt = new DateTime(2024, 11, 12, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2823),
+                            CreatedAt = new DateTime(2024, 11, 11, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4584),
                             CurrentBid = 150.00m,
                             Description = "Paper waste from old documents and magazines.",
-                            EndingTime = new DateTime(2024, 11, 22, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2826),
+                            EndingTime = new DateTime(2024, 11, 21, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4585),
                             Images = "[\"paper1.jpg\"]",
                             Quantity = 1000m,
                             ReservePrice = 200.00m,
                             SellerId = "4",
                             StartingBid = 100.00m,
-                            StartingTime = new DateTime(2024, 11, 17, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2825),
+                            StartingTime = new DateTime(2024, 11, 16, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4585),
                             Title = "Paper Waste"
                         },
                         new
@@ -753,16 +756,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 9,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 12, 2, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2835),
+                            CreatedAt = new DateTime(2024, 12, 1, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4590),
                             CurrentBid = 350.00m,
                             Description = "Used rubber tires ready for recycling.",
-                            EndingTime = new DateTime(2024, 12, 13, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2838),
+                            EndingTime = new DateTime(2024, 12, 12, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4591),
                             Images = "[\"rubber1.jpg\"]",
                             Quantity = 400m,
                             ReservePrice = 500.00m,
                             SellerId = "4",
                             StartingBid = 300.00m,
-                            StartingTime = new DateTime(2024, 12, 3, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2837),
+                            StartingTime = new DateTime(2024, 12, 2, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4591),
                             Title = "Rubber Tires"
                         },
                         new
@@ -772,16 +775,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 11,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 11, 7, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2846),
+                            CreatedAt = new DateTime(2024, 11, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4595),
                             CurrentBid = 600.00m,
                             Description = "Scrap ceramic tiles from construction sites.",
-                            EndingTime = new DateTime(2024, 11, 19, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2849),
+                            EndingTime = new DateTime(2024, 11, 18, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4597),
                             Images = "[\"ceramic1.jpg\"]",
                             Quantity = 50m,
                             ReservePrice = 700.00m,
                             SellerId = "4",
                             StartingBid = 500.00m,
-                            StartingTime = new DateTime(2024, 11, 9, 10, 28, 43, 884, DateTimeKind.Utc).AddTicks(2848),
+                            StartingTime = new DateTime(2024, 11, 8, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4596),
                             Title = "Ceramic Tiles"
                         });
                 });

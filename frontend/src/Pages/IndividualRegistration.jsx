@@ -3,28 +3,38 @@ import { Formik } from "formik";
 import { LinkContainer } from "react-router-bootstrap";
 import logoImage from "../assets/images/ScraBidderLogo.png";
 import { Container, Image, Row, Col, Form, Button } from "react-bootstrap";
-import axios from 'axios';
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const IndividualRegistration = () => {
+  const navigate = useNavigate();
 
   const handleFormSubmit = async (values, { setSubmitting, setErrors }) => {
-    
     try {
-      // Make the API request using axios
-      const response = await axios.post("http://localhost:5192/api/account/register/individual", values);
+      const response = await axios.post(
+        "http://localhost:5192/api/account/register/individual",
+        values
+      );
 
-      // Check response status or do something with the response
       if (response.status === 200) {
-        console.log(response.data)
-        localStorage.setItem["token"] = response.data.token;
-        alert("Registration successful!");
-        
-        // Optionally redirect or do something else after success
+        Swal.fire({
+          title: "Registration Successful!",
+          text: "You have been registered successfully!",
+          icon: "success",
+          confirmButtonText: "Go to Home",
+        }).then(() => {
+          navigate("/");
+        });
       }
     } catch (error) {
-      // Handle error here
       console.error("There was an error submitting the form!", error);
-      setErrors({ submit: "Something went wrong. Please try again later." });
+
+      if (error.response && error.response.data.errors) {
+        setErrors(error.response.data.errors); // Handle server-side field-specific errors
+      } else {
+        setErrors({ submit: "Something went wrong. Please try again later." });
+      }
     } finally {
       setSubmitting(false);
     }
@@ -39,24 +49,18 @@ const IndividualRegistration = () => {
         <Col xs={2} className="text-center">
           <Image style={{ maxWidth: "50px" }} src={logoImage} className="w-100" />
         </Col>
-        <Col xs={6} md={4} className="">
-          <Row className="justify-content-end ">
-            <div className="d-flex align-items-center">
-              Already a member?{" "}
-              <LinkContainer to="/login">
-                <Button variant="link" className="p-1">
-                  Login
-                </Button>
-              </LinkContainer>
-            </div>
-          </Row>
+        <Col xs={6} md={4} className="d-flex align-items-center justify-content-end">
+          Already a member?{" "}
+          <LinkContainer to="/login">
+            <Button variant="link" className="p-1">
+              Login
+            </Button>
+          </LinkContainer>
         </Col>
       </Row>
       <Row>
         <Container style={{ maxWidth: "600px" }} className="my-5 p-4">
-          <h2 className="text-center text-primary mb-4">
-            Register as individual
-          </h2>
+          <h2 className="text-center text-primary mb-4">Register as individual</h2>
 
           <Formik
             initialValues={{
@@ -87,6 +91,14 @@ const IndividualRegistration = () => {
                 errors.password = "Password is required";
               } else if (values.password.length < 6) {
                 errors.password = "Password must be at least 6 characters";
+              } else if (!/(?=.*[a-z])/.test(values.password)) {
+                errors.password = "Password must contain at least one lowercase letter";
+              } else if (!/(?=.*[A-Z])/.test(values.password)) {
+                errors.password = "Password must contain at least one uppercase letter";
+              } else if (!/(?=.*\d)/.test(values.password)) {
+                errors.password = "Password must contain at least one number";
+              } else if (!/(?=.*[!@#$%^&*])/.test(values.password)) {
+                errors.password = "Password must contain at least one special character";
               }
               if (!values.confirmPassword) {
                 errors.confirmPassword = "Please confirm your password";
@@ -95,7 +107,7 @@ const IndividualRegistration = () => {
               }
               return errors;
             }}
-            onSubmit={handleFormSubmit} // Use the defined function here
+            onSubmit={handleFormSubmit}
           >
             {({
               values,
@@ -163,9 +175,7 @@ const IndividualRegistration = () => {
 
                   <Col xs={12} md={6} className="mb-3">
                     <Form.Group controlId="phoneNumber">
-                      <Form.Label className="text-muted">
-                        Phone Number *
-                      </Form.Label>
+                      <Form.Label className="text-muted">Phone Number *</Form.Label>
                       <Form.Control
                         type="text"
                         name="phoneNumber"
@@ -201,9 +211,7 @@ const IndividualRegistration = () => {
 
                   <Col xs={12} md={6} className="mb-3">
                     <Form.Group controlId="confirmPassword">
-                      <Form.Label className="text-muted">
-                        Confirm Password *
-                      </Form.Label>
+                      <Form.Label className="text-muted">Confirm Password *</Form.Label>
                       <Form.Control
                         type="password"
                         name="confirmPassword"
@@ -218,16 +226,12 @@ const IndividualRegistration = () => {
                     </Form.Group>
                   </Col>
                 </Row>
-                <div className="d-grid gap-2 mt-4">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    disabled={isSubmitting}
-                    className="py-2"
-                  >
-                    Submit
+
+                <Row className="d-flex justify-content-center mt-4">
+                  <Button type="submit" variant="primary" disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting..." : "Register"}
                   </Button>
-                </div>
+                </Row>
               </Form>
             )}
           </Formik>

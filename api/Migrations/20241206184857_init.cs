@@ -47,7 +47,6 @@ namespace api.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -108,10 +107,10 @@ namespace api.Migrations
                 {
                     LogId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ActionId = table.Column<int>(type: "int", nullable: false),
-                    ActionTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ActionTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -123,10 +122,11 @@ namespace api.Migrations
                         principalColumn: "ActionId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ActivityLogs_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_ActivityLogs_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -223,7 +223,7 @@ namespace api.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     BusinessName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     BusinessServices = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    BusinessType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BusinessType = table.Column<int>(type: "int", nullable: false),
                     BusinessEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BusinessPhoneNumber = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Images = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -278,39 +278,18 @@ namespace api.Migrations
                 {
                     NotificationsId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    NotificationsInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    NotificationsInfo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notifications", x => x.NotificationsId);
                     table.ForeignKey(
-                        name: "FK_Notifications_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Notifications_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TrafficLog",
-                columns: table => new
-                {
-                    LogId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    VisitorIp = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true),
-                    VisitTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TrafficLog", x => x.LogId);
-                    table.ForeignKey(
-                        name: "FK_TrafficLog_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -381,28 +360,59 @@ namespace api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Shipments",
+                columns: table => new
+                {
+                    ShipmentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AuctionId = table.Column<int>(type: "int", nullable: false),
+                    SellerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DeliveryStatus = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Shipments", x => x.ShipmentId);
+                    table.ForeignKey(
+                        name: "FK_Shipments_AspNetUsers_SellerId",
+                        column: x => x.SellerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Shipments_Auctions_AuctionId",
+                        column: x => x.AuctionId,
+                        principalTable: "Auctions",
+                        principalColumn: "AuctionId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TransactionHistory",
                 columns: table => new
                 {
-                    TransactionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    TransactionId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AuctionId = table.Column<int>(type: "int", nullable: false),
+                    RelatedId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PayerEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PayerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PaymentStatus = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PaymentMethodId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TransactionType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    TransactionPurpose = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CurrencyCode = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TransactionHistory", x => x.TransactionId);
                     table.ForeignKey(
-                        name: "FK_TransactionHistory_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_TransactionHistory_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TransactionHistory_Auctions_AuctionId",
                         column: x => x.AuctionId,
@@ -417,16 +427,15 @@ namespace api.Migrations
                 {
                     WatchId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    AuctionId = table.Column<int>(type: "int", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    AuctionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WatchList", x => x.WatchId);
                     table.ForeignKey(
-                        name: "FK_WatchList_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_WatchList_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -443,31 +452,66 @@ namespace api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "062d9c4b-1645-41e4-a260-1d6ada1de783", null, "Business", "BUSINESS" },
-                    { "3ec3f6ee-a80e-40a0-b756-ef304d863d47", null, "Individual", "INDIVIDUAL" },
-                    { "6e51ab76-5c2f-4f01-b23e-1d4c782f1287", null, "Admin", "ADMIN" }
+                    { "432645a4-83a7-4efc-b4e3-f40525335424", null, "Individual", "INDIVIDUAL" },
+                    { "5381a63b-8c4f-4b19-b632-cd1cfee004df", null, "Admin", "ADMIN" },
+                    { "b6808b7c-44e6-4b41-ac9d-1a8f663ba71d", null, "Business", "BUSINESS" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Status", "TwoFactorEnabled", "UserName", "UserType" },
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Status", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1", 0, "f73434b1-bc1b-468e-8ab4-7f9976743390", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "admin1@example.com", false, false, null, null, null, null, null, false, "4c35c675-560a-4a53-885a-cda004e573c0", "Active", false, "admin1", "Admin" },
-                    { "10", 0, "ac7adb9a-c1ac-49c9-8223-3cf9683d48c0", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "business5@example.com", false, false, null, null, null, null, null, false, "fd99d23b-562d-4ca7-a842-59bea54d3ca9", "Pending", false, "business5", "Business" },
-                    { "11", 0, "08c842fd-2526-40e9-aa4e-e9baffc43d42", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "individual1@example.com", false, false, null, null, null, null, null, false, "0c58da47-0fb1-419b-82ee-d5c8f4c48332", "Active", false, "individual1", "Individual" },
-                    { "12", 0, "a5e3980a-e9d8-46cb-8ee8-3d5fac5df424", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "individual2@example.com", false, false, null, null, null, null, null, false, "5b89daf0-4f7a-460d-b865-36126b613ca1", "Blocked", false, "individual2", "Individual" },
-                    { "13", 0, "c280fbed-9db1-4141-890e-4c233200ab8b", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "individual3@example.com", false, false, null, null, null, null, null, false, "ac2f7bbb-e6db-456e-aacd-b28ad028945f", "Active", false, "individual3", "Individual" },
-                    { "14", 0, "f9e53110-4d01-4224-858f-fb6c05c5f828", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "individual4@example.com", false, false, null, null, null, null, null, false, "88a0b0a9-02b7-4040-b23b-1afbf82156ab", "Pending", false, "individual4", "Individual" },
-                    { "15", 0, "31a05bb3-9b39-4aa8-92a4-21969e93c6db", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "individual5@example.com", false, false, null, null, null, null, null, false, "1dc902bf-3b98-4df9-a614-d363789a4f8b", "Active", false, "individual5", "Individual" },
-                    { "2", 0, "8483d468-05e8-4766-9a6a-4af1139c7249", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "admin2@example.com", false, false, null, null, null, null, null, false, "ac451d8f-93e0-4248-8545-5f1517317501", "Active", false, "admin2", "Admin" },
-                    { "3", 0, "d5653421-3324-4cc5-8d07-3c8b1b1cb9c3", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "admin3@example.com", false, false, null, null, null, null, null, false, "775fa549-6e89-4ca7-9246-58c2e9146a4e", "Blocked", false, "admin3", "Admin" },
-                    { "4", 0, "70e647f9-c3de-4a86-b438-6748a2183617", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "admin4@example.com", false, false, null, null, null, null, null, false, "3b0f8012-0a0a-4c28-9060-3a314641aa02", "Active", false, "admin4", "Admin" },
-                    { "5", 0, "cb7e39d0-ae6b-4273-818b-0471730cb0d0", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "admin5@example.com", false, false, null, null, null, null, null, false, "52768d85-7d32-4c2d-b0ea-6446c842658d", "Pending", false, "admin5", "Admin" },
-                    { "6", 0, "774a2f39-0729-4fec-ab28-cadcc727b02a", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "business1@example.com", false, false, null, null, null, null, null, false, "27d4687f-5819-440b-af21-b991357e0b95", "Active", false, "business1", "Business" },
-                    { "7", 0, "cba8385d-2fb1-4099-8a42-e2a662b79451", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "business2@example.com", false, false, null, null, null, null, null, false, "545228a9-cadd-4e25-8dca-33ac69951d87", "Pending", false, "business2", "Business" },
-                    { "8", 0, "720de90c-0438-4788-b2fe-b0c04e0cfadc", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "business3@example.com", false, false, null, null, null, null, null, false, "7a7d7b16-4081-4cd7-a94a-3e763b24e08c", "Active", false, "business3", "Business" },
-                    { "9", 0, "713128cb-48d6-4412-929e-3051c222eb17", new DateTime(2024, 11, 29, 15, 43, 44, 161, DateTimeKind.Utc).AddTicks(3871), "business4@example.com", false, false, null, null, null, null, null, false, "acf56ca9-8f6d-4e7f-8f57-7afa20297f2c", "Active", false, "business4", "Business" }
+                    { "1", 0, "fc0d6d7a-65de-49f3-95b7-0d03f40ddcd1", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "admin1@example.com", false, false, null, null, null, null, null, false, "23a17022-c623-42f8-95d2-7aeaf3857fb5", "Active", false, "admin1" },
+                    { "10", 0, "38ae3c24-cfbc-4eb5-8818-15e780f91dee", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "business5@example.com", false, false, null, null, null, null, null, false, "521f685d-0a06-44c7-877f-d72cebcf264d", "Pending", false, "business5" },
+                    { "11", 0, "ece84f36-cf56-49bc-b567-b6457cb4f53e", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "individual1@example.com", false, false, null, null, null, null, null, false, "f014bafc-7858-40a3-972a-a24ff80d6968", "Active", false, "individual1" },
+                    { "12", 0, "521fb37c-bf61-4893-aecc-4cc068becac6", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "individual2@example.com", false, false, null, null, null, null, null, false, "1920b8c7-e4cc-41ee-a43a-0e2202856fe1", "Blocked", false, "individual2" },
+                    { "13", 0, "726e647e-fce4-4391-8155-a7f4034b4d61", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "individual3@example.com", false, false, null, null, null, null, null, false, "bd9af5c8-a48a-4ec5-904e-234719fc5e20", "Active", false, "individual3" },
+                    { "14", 0, "a5d068bd-690b-4fe1-aeb4-e7c641538dfa", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "individual4@example.com", false, false, null, null, null, null, null, false, "0ee6d9e1-7f7b-44cd-90ee-47a595dd059d", "Pending", false, "individual4" },
+                    { "15", 0, "c8bd8e35-1217-46a4-9510-7b819510c9b0", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "individual5@example.com", false, false, null, null, null, null, null, false, "784e6f7b-e597-44c2-a20e-67bf67d57a31", "Active", false, "individual5" },
+                    { "2", 0, "58415efc-1473-484e-ac66-6e5d2c5651dc", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "admin2@example.com", false, false, null, null, null, null, null, false, "0c3df2a2-8c69-4cc3-85b4-a47902b2ac53", "Active", false, "admin2" },
+                    { "3", 0, "47208e3d-50da-4a40-be29-ff36ca75d2f7", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "admin3@example.com", false, false, null, null, null, null, null, false, "0cc8837b-a1d3-43cc-afc3-25ebcfd98bec", "Blocked", false, "admin3" },
+                    { "4", 0, "d817e7f7-466c-4764-9eb7-554f1faaf9a0", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "admin4@example.com", false, false, null, null, null, null, null, false, "aecb71a7-62ec-484c-95e9-a8c1c3689bb5", "Active", false, "admin4" },
+                    { "5", 0, "a32d4c5d-0d28-4066-af77-35c2ee4420f8", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "admin5@example.com", false, false, null, null, null, null, null, false, "6d7d9191-3e00-4c1e-8568-b69989c5d592", "Pending", false, "admin5" },
+                    { "6", 0, "b12d5cf0-7f8e-4d3b-9ad7-475d7e391940", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "business1@example.com", false, false, null, null, null, null, null, false, "12627563-0bf4-4fa2-8bc8-dea297f39f45", "Active", false, "business1" },
+                    { "7", 0, "94cd9bdf-ef9d-4987-aa1c-9cb415451519", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "business2@example.com", false, false, null, null, null, null, null, false, "083f7597-7109-48de-8703-7e6c7d765be6", "Pending", false, "business2" },
+                    { "8", 0, "2dbf1a9d-c3f9-465a-864d-816a1b508bbf", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "business3@example.com", false, false, null, null, null, null, null, false, "6e324ea5-c1fd-46e2-9b3c-b953b88bc8d0", "Active", false, "business3" },
+                    { "9", 0, "4d139191-9471-438a-9eed-096d0a204952", new DateTime(2024, 12, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(3898), "business4@example.com", false, false, null, null, null, null, null, false, "0cfa33d9-33fa-46b0-9aaf-8702c60e4b44", "Active", false, "business4" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "CategoryName" },
+                values: new object[,]
+                {
+                    { 1, "Aluminum" },
+                    { 2, "Copper" },
+                    { 3, "Plastic" },
+                    { 4, "Iron" },
+                    { 5, "Stainless Steel" },
+                    { 6, "Wood" },
+                    { 7, "Glass" },
+                    { 8, "Paper" },
+                    { 9, "Rubber" },
+                    { 10, "Textile" },
+                    { 11, "Ceramic" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Auctions",
+                columns: new[] { "AuctionId", "Address", "AuctionStatus", "CategoryId", "Condition", "CreatedAt", "CurrentBid", "Description", "EndingTime", "Images", "Quantity", "ReservePrice", "SellerId", "StartingBid", "StartingTime", "Title" },
+                values: new object[,]
+                {
+                    { 1, "{\"city\": \"New York\", \"state\": \"NY\"}", "Started", 1, "Mixed", new DateTime(2024, 11, 26, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4526), 650.00m, "A collection of high-grade aluminum scraps.", new DateTime(2024, 12, 11, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4537), "[\"aluminum1.jpg\", \"aluminum2.jpg\"]", 100m, 800.00m, "4", 500.00m, new DateTime(2024, 12, 1, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4534), "Aluminum Scrap Bundle" },
+                    { 2, "{\"city\": \"Los Angeles\", \"state\": \"CA\"}", "Ended", 2, "Used", new DateTime(2024, 11, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4550), 1200.00m, "Various grades of copper wiring ready for recycling.", new DateTime(2024, 11, 21, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4552), "[\"copper1.jpg\", \"copper2.jpg\"]", 200m, 1500.00m, "4", 1000.00m, new DateTime(2024, 11, 11, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4551), "Copper Wiring Scrap" },
+                    { 3, "{\"city\": \"Houston\", \"state\": \"TX\"}", "Started", 3, "New", new DateTime(2024, 12, 1, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4556), 450.00m, "Recyclable plastic waste from industrial sources.", new DateTime(2024, 12, 13, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4557), "[\"plastic1.jpg\"]", 50m, 600.00m, "4", 300.00m, new DateTime(2024, 12, 3, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4557), "Plastic Waste" },
+                    { 4, "{\"city\": \"Chicago\", \"state\": \"IL\"}", "Ended", 4, "Used", new DateTime(2024, 11, 16, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4562), 800.00m, "Scrap iron sheets from old construction projects.", new DateTime(2024, 11, 26, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4563), "[\"iron1.jpg\", \"iron2.jpg\"]", 300m, 1000.00m, "4", 700.00m, new DateTime(2024, 11, 18, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4562), "Iron Sheets" },
+                    { 5, "{\"city\": \"Dallas\", \"state\": \"TX\"}", "Started", 5, "New", new DateTime(2024, 11, 28, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4568), 1600.00m, "Premium-grade stainless steel scrap materials.", new DateTime(2024, 12, 9, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4569), "[\"steel1.jpg\", \"steel2.jpg\"]", 150m, 2000.00m, "4", 1500.00m, new DateTime(2024, 11, 29, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4569), "Stainless Steel Scraps" },
+                    { 6, "{\"city\": \"Atlanta\", \"state\": \"GA\"}", "Ended", 6, "Mixed", new DateTime(2024, 10, 17, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4574), 250.00m, "Recyclable wooden pallets from warehouses.", new DateTime(2024, 10, 27, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4575), "[\"wood1.jpg\", \"wood2.jpg\"]", 500m, 300.00m, "4", 200.00m, new DateTime(2024, 10, 19, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4574), "Wooden Pallets" },
+                    { 7, "{\"city\": \"Phoenix\", \"state\": \"AZ\"}", "Started", 7, "Used", new DateTime(2024, 11, 26, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4579), 550.00m, "Glass shards from old construction materials.", new DateTime(2024, 12, 8, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4580), "[\"glass1.jpg\"]", 250m, 700.00m, "4", 400.00m, new DateTime(2024, 11, 29, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4579), "Glass Shards" },
+                    { 8, "{\"city\": \"Seattle\", \"state\": \"WA\"}", "Ended", 8, "Mixed", new DateTime(2024, 11, 11, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4584), 150.00m, "Paper waste from old documents and magazines.", new DateTime(2024, 11, 21, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4585), "[\"paper1.jpg\"]", 1000m, 200.00m, "4", 100.00m, new DateTime(2024, 11, 16, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4585), "Paper Waste" },
+                    { 9, "{\"city\": \"San Francisco\", \"state\": \"CA\"}", "Started", 9, "Used", new DateTime(2024, 12, 1, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4590), 350.00m, "Used rubber tires ready for recycling.", new DateTime(2024, 12, 12, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4591), "[\"rubber1.jpg\"]", 400m, 500.00m, "4", 300.00m, new DateTime(2024, 12, 2, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4591), "Rubber Tires" },
+                    { 10, "{\"city\": \"Denver\", \"state\": \"CO\"}", "Ended", 11, "Used", new DateTime(2024, 11, 6, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4595), 600.00m, "Scrap ceramic tiles from construction sites.", new DateTime(2024, 11, 18, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4597), "[\"ceramic1.jpg\"]", 50m, 700.00m, "4", 500.00m, new DateTime(2024, 11, 8, 18, 48, 56, 711, DateTimeKind.Utc).AddTicks(4596), "Ceramic Tiles" }
                 });
 
             migrationBuilder.InsertData(
@@ -475,11 +519,11 @@ namespace api.Migrations
                 columns: new[] { "BusinessId", "Address", "BusinessEmail", "BusinessName", "BusinessPhoneNumber", "BusinessServices", "BusinessType", "CompanyVision", "Images", "LinkedIn", "PrimaryContactEmail", "PrimaryContactFirstName", "PrimaryContactLastName", "PrimaryJobTitle", "PrimaryPhoneNumber", "RegistrationNumber", "UserId" },
                 values: new object[,]
                 {
-                    { 1, "123 Main St, Amman, Jordan", "business1@example.com", "Business 1", "123-456-7890", "", "seller", "", "", "", "contact@business1.com", "John", "Doe", "CEO", "123-456-7890", "REG12345", "6" },
-                    { 2, "123 Main St, Amman, Jordan", "business2@example.com", "Business 2", "223-456-7890", "", "seller", "", "", "", "contact@business2.com", "Alice", "Smith", "Manager", "223-456-7890", "REG22345", "7" },
-                    { 3, "123 Main St, Amman, Jordan", "business3@example.com", "Business 3", "323-456-7890", "", "buyer", "", "", "", "contact@business3.com", "Mark", "Brown", "Owner", "323-456-7890", "REG32345", "8" },
-                    { 4, "123 Main St, Amman, Jordan", "business4@example.com", "Business 4", "423-456-7890", "", "seller", "", "", "", "contact@business4.com", "Linda", "Johnson", "CEO", "423-456-7890", "REG42345", "9" },
-                    { 5, "123 Main St, Amman, Jordan", "business5@example.com", "Business 5", "523-456-7890", "", "buyer", "", "", "", "contact@business5.com", "Sarah", "Williams", "Manager", "523-456-7890", "REG52345", "10" }
+                    { 1, "123 Main St, Amman, Jordan", "business1@example.com", "Business 1", "123-456-7890", "", 1, "", "", "", "contact@business1.com", "John", "Doe", "CEO", "123-456-7890", "REG12345", "6" },
+                    { 2, "123 Main St, Amman, Jordan", "business2@example.com", "Business 2", "223-456-7890", "", 1, "", "", "", "contact@business2.com", "Alice", "Smith", "Manager", "223-456-7890", "REG22345", "7" },
+                    { 3, "123 Main St, Amman, Jordan", "business3@example.com", "Business 3", "323-456-7890", "", 2, "", "", "", "contact@business3.com", "Mark", "Brown", "Owner", "323-456-7890", "REG32345", "8" },
+                    { 4, "123 Main St, Amman, Jordan", "business4@example.com", "Business 4", "423-456-7890", "", 1, "", "", "", "contact@business4.com", "Linda", "Johnson", "CEO", "423-456-7890", "REG42345", "9" },
+                    { 5, "123 Main St, Amman, Jordan", "business5@example.com", "Business 5", "523-456-7890", "", 1, "", "", "", "contact@business5.com", "Sarah", "Williams", "Manager", "523-456-7890", "REG52345", "10" }
                 });
 
             migrationBuilder.InsertData(
@@ -500,9 +544,9 @@ namespace api.Migrations
                 column: "ActionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ActivityLogs_UserId1",
+                name: "IX_ActivityLogs_UserId",
                 table: "ActivityLogs",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -576,14 +620,19 @@ namespace api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_UserId1",
+                name: "IX_Notifications_UserId",
                 table: "Notifications",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrafficLog_UserId1",
-                table: "TrafficLog",
-                column: "UserId1");
+                name: "IX_Shipments_AuctionId",
+                table: "Shipments",
+                column: "AuctionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_SellerId",
+                table: "Shipments",
+                column: "SellerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TransactionHistory_AuctionId",
@@ -591,9 +640,9 @@ namespace api.Migrations
                 column: "AuctionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TransactionHistory_UserId1",
+                name: "IX_TransactionHistory_UserId",
                 table: "TransactionHistory",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WatchList_AuctionId",
@@ -601,9 +650,9 @@ namespace api.Migrations
                 column: "AuctionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WatchList_UserId1",
+                name: "IX_WatchList_UserId",
                 table: "WatchList",
-                column: "UserId1");
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -640,7 +689,7 @@ namespace api.Migrations
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "TrafficLog");
+                name: "Shipments");
 
             migrationBuilder.DropTable(
                 name: "TransactionHistory");

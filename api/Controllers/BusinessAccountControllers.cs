@@ -9,6 +9,7 @@ using System.IO;
 using System;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using api.Models;
 
 namespace api.Controllers
 {
@@ -85,49 +86,91 @@ public async Task<IActionResult> UploadImages(string userId, IFormFile[] images)
         return BadRequest("No images uploaded.");
     }
 
-    // Convert images to base64 strings
-    List<string> imageBase64List = new List<string>();
-
-    foreach (var image in images)
-    {
-        using (var memoryStream = new MemoryStream())
-        {
-            await image.CopyToAsync(memoryStream);
-            string base64String = Convert.ToBase64String(memoryStream.ToArray());
-            imageBase64List.Add(base64String);
-        }
-    }
-
-    // Find the business using UserId
     var business = await _context.Businesses.FirstOrDefaultAsync(b => b.UserId == userId);
     if (business == null)
     {
         return NotFound("Business not found for the given user ID.");
     }
 
-    // Store the base64 images as a JSON string in the Images property
-    business.Images = JsonConvert.SerializeObject(imageBase64List);
+    // Deserialize existing images or initialize a new list
+    var imageList = string.IsNullOrEmpty(business.Images)
+        ? new List<ImageData>()
+        : JsonConvert.DeserializeObject<List<ImageData>>(business.Images);
+
+    foreach (var image in images)
+    {
+        using (var memoryStream = new MemoryStream())
+        {
+            await image.CopyToAsync(memoryStream);
+            var base64String = Convert.ToBase64String(memoryStream.ToArray());
+
+            // Create a new ImageData object
+            var imageData = new ImageData
+            {
+                Id = Guid.NewGuid().ToString(),
+                Base64 = base64String,
+                UploadedAt = DateTime.UtcNow
+            };
+
+            imageList.Add(imageData);
+        }
+    }
+
+    // Serialize the updated list and save it back to the Business entity
+    business.Images = JsonConvert.SerializeObject(imageList);
     await _context.SaveChangesAsync();
 
     return Ok(new { Message = "Images uploaded successfully." });
 }
 
+
         // Endpoint to get images
-        [HttpGet("get-images/{userId}")]
+       [HttpGet("get-images/{userId}")]
 public async Task<IActionResult> GetImages(string userId)
 {
-    // Find the business using UserId
     var business = await _context.Businesses.FirstOrDefaultAsync(b => b.UserId == userId);
-
     if (business == null || string.IsNullOrEmpty(business.Images))
     {
         return NotFound("No images found for the given user ID.");
     }
 
-    // Deserialize the base64 strings from JSON
-    var imageDataList = JsonConvert.DeserializeObject<List<string>>(business.Images);
-    return Ok(new { Images = imageDataList });
+    // Deserialize the JSON string into a list of ImageData objects
+    var imageList = JsonConvert.DeserializeObject<List<ImageData>>(business.Images);
+
+    return Ok(new { Images = imageList });
 }
+
+
+
+
+[HttpDelete("delete-image/{userId}/{imageId}")]
+public async Task<IActionResult> DeleteImage(string userId, string imageId)
+{
+    var business = await _context.Businesses.FirstOrDefaultAsync(b => b.UserId == userId);
+    if (business == null || string.IsNullOrEmpty(business.Images))
+    {
+        return NotFound("No images found for the given user ID.");
+    }
+
+    // Deserialize the JSON string into a list of ImageData objects
+    var imageList = JsonConvert.DeserializeObject<List<ImageData>>(business.Images);
+
+    // Find and remove the image with the given Id
+    var imageToDelete = imageList.FirstOrDefault(img => img.Id == imageId);
+    if (imageToDelete == null)
+    {
+        return NotFound("Image not found.");
+    }
+
+    imageList.Remove(imageToDelete);
+
+    // Serialize the updated list and save it back to the Business entity
+    business.Images = JsonConvert.SerializeObject(imageList);
+    await _context.SaveChangesAsync();
+
+    return Ok(new { Message = "Image deleted successfully." });
+}
+
 
 
 
@@ -180,6 +223,27 @@ public async Task<IActionResult> GetLocation(string userId)
     var locationData = JsonConvert.DeserializeObject<object>(business.Address);
     return Ok(new { Location = locationData });
 }
+
+
+[HttpGet("company-name")]
+public async Task<IActionResult> GetBusinessName([FromQuery] string userId)
+{
+    if (string.IsNullOrEmpty(userId))
+    {
+        return BadRequest(new { message = "UserId is required" });
+    }
+
+    var business = await _context.Businesses
+        .FirstOrDefaultAsync(b => b.UserId == userId);
+
+    if (business == null)
+    {
+        return NotFound(new { message = "Business not found for the given UserId" });
+    }
+
+    return Ok(new { business.BusinessName });
+}
+
 
 
 

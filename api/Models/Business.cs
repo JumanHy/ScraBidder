@@ -11,6 +11,8 @@ namespace api.Models
 
         [Required]
         public string UserId { get; set; }
+    
+    
 
         [Required, MaxLength(100)]
         public string BusinessName { get; set; }

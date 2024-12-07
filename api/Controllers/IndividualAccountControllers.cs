@@ -25,15 +25,23 @@ namespace api.Controllers
 
         // Get Individual User Info by User ID
         [HttpGet("userdetails")]
-        public async Task<IActionResult> GetUserInfo(string userId)
-        {
-            var userInfo = await _userSettingService.GetUserInfoAsync(userId);
+public async Task<IActionResult> GetUserInfo([FromQuery] string userId)
+{
+    if (string.IsNullOrEmpty(userId))
+    {
+        return BadRequest("User ID is required.");
+    }
 
-            if (userInfo == null)
-                return NotFound("User not found.");
+    var userInfo = await _userSettingService.GetUserInfoAsync(userId);
 
-            return Ok(userInfo);
-        }
+    if (userInfo == null)
+    {
+        return NotFound("User not found.");
+    }
+
+    return Ok(userInfo);
+}
+
 
         // Update Individual User Info
         [HttpPut("update-user-details")]

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
   Routes,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import "slick-carousel/slick/slick.css";
@@ -29,10 +30,21 @@ import "./styles/css/main.min.css";
 import Table from "./Pages/Table";
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
   return (
     <>
       <Router>
-        <ConditionalNavBar />
+        <ConditionalNavBar isAuthenticated={isAuthenticated} />
         <Container style={{ marginTop: "76px" }} fluid className="p-0">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -50,14 +62,14 @@ export default function App() {
             />
             <Route path="/reset-Password" element={<ResetPasswordRequest />} />
             <Route path="/resetPassword" element={<ResetPassword />} />
-            {/* <Route path="/profile" element={<UserProfile />} /> */}
-            {/* //<Route path="/bprofile" element={<BusinessProfile />} /> */}
             <Route path="/cprofile" element={<Companyprofile />} />
             <Route path="/user-account" element={<UserAccount />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/business-account" element={<BusinessAccount />} />
             <Route path="/auction-form" element={<AuctionForm />} />
-          </Routes>{" "}
+            {/* Logout route */}
+            <Route path="/logout" element={<Logout />} />
+          </Routes>
         </Container>
         <ConditionalFooter />
       </Router>
@@ -65,6 +77,7 @@ export default function App() {
   );
 }
 
+// Footer visibility based on route
 const ConditionalFooter = () => {
   const location = useLocation();
   const hideFooterRoutes = [
@@ -80,9 +93,30 @@ const ConditionalFooter = () => {
 
   return !hideFooterRoutes.includes(location.pathname) ? <Footer /> : null;
 };
-const ConditionalNavBar = () => {
+
+// NavBar visibility based on route and authentication
+const ConditionalNavBar = ({ isAuthenticated }) => {
   const location = useLocation();
   const hideNavBarRoutes = ["/dashboard"];
 
-  return !hideNavBarRoutes.includes(location.pathname) ? <NavBar /> : null;
+  // Only show the NavBar on routes that don't include "/dashboard" and show it according to authentication state
+  return !hideNavBarRoutes.includes(location.pathname) &&
+    isAuthenticated !== null ? (
+    <NavBar isAuthenticated={isAuthenticated} />
+  ) : null;
+};
+
+const Logout = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+
+    // Redirect to login page
+    navigate("/login");
+  }, [navigate]);
+
+  return null; // Or a loading spinner while processing the logout
 };
