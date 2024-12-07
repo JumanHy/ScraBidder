@@ -6,6 +6,7 @@ import { Modal, Button ,Container,Row,Col,Form,Image,Dropdown} from 'react-boots
 import DataTable from 'react-data-table-component';
 import scrap from "../../assets/images/scrap.png"
 import axios from "axios";
+import { Trash3 } from "react-bootstrap-icons";
 
 function UsersData({auctions ,BiddingHistory}){
 
@@ -13,8 +14,9 @@ function UsersData({auctions ,BiddingHistory}){
     const [bidRecords,setBidRecords]=useState(BiddingHistory);
     const [showModal, setShowModal] = useState(false);
     const [selectedAuction, setSelectedAuction] = useState(null);
+    
     const [selectedBid, setSelectedBid] = useState(null);
-
+    
     const handleModalClose = () => {
       setShowModal(false);
       setSelectedAuction(null);
@@ -33,10 +35,52 @@ function UsersData({auctions ,BiddingHistory}){
     }
 }, [BiddingHistory]);
 
+useEffect(() => {
+  const checkAuctionsStatus = () => {
+    const currentTime = new Date();
+
+    auctions.forEach((auction) => {
+      const auctionStartTime = new Date(auction.startingTime); // Ensure startingTime is properly parsed
+      if (
+        auction.auctionStatus.toLowerCase() === "Pending" &&
+        auctionStartTime <= currentTime
+      ) {
+        // Update auction status to "Started"
+        axios
+          .put(`http://localhost:5192/api/auction/${auction.auctionId}`, {
+            ...auction,
+            auctionStatus: "Started",
+          })
+          .then((response) => {
+            console.log(`Auction ${auction.id} started successfully`);
+            // Update the local state
+            setAuctions((prevAuctions) =>
+              prevAuctions.map((a) =>
+                a.id === auction.id ? { ...a, auctionStatus: "Started" } : a
+              )
+            );
+          })
+          .catch((error) => {
+            console.error(`Error starting auction ${auction.id}:`, error);
+          });
+      }
+    });
+  };
+
+  // Set an interval to check every minute (60000 ms)
+  const intervalId = setInterval(() => {
+    checkAuctionsStatus();
+  }, 60000);
+
+  // Clear the interval on component unmount
+  return () => clearInterval(intervalId);
+}, [auctions]); // Dependency array includes auctions
+
+
 const handleAuctionRowClick =async (auction) => {
   try {
     const auctionId = auction.auctionId; // Use the correct property for the auction ID
-    const response =await axios.get(`http://localhost:5125/api/auction/${auctionId}`);
+    const response =await axios.get(`http://localhost:5192/api/auction/${auctionId}`);
     console.log(response);
     // Set the selected auction and open the modal
     setSelectedAuction(response.data);
@@ -49,7 +93,7 @@ const handleAuctionRowClick =async (auction) => {
 const handleBidRowClick =async (bid) => {
   try {
     const bidId = bid.bidId; // Use the correct property for the auction ID
-    const response =await axios.get(`http://localhost:5125/api/biddinghistory/${bidId}`);
+    const response =await axios.get(`http://localhost:5192/api/biddinghistory/${bidId}`);
     console.log(response);
     // Set the selected auction and open the modal
     setSelectedBid(response.data);
@@ -76,25 +120,64 @@ const handleBidRowClick =async (bid) => {
         {name:'Start Date' , selector:row=>row.startingTime,sortable:true },
         {name:'End Date' , selector:row=>row.endingTime,sortable:true },
         {name:'Category' ,width:'150px', selector:row=>row.category.categoryName,sortable:true },
-        {name:'Status' , width:'150px',selector:row=>row.auctionStatus,sortable:true,
+        {name:'Status' , width:'250px',selector:row=>row.auctionStatus,sortable:true,
             cell: row => {
                 const colorMap = {
-                    Active: 'green',
+                    Started: 'green',
                     Pending: 'orange',
-                    Sold: 'grey',
-                    'Not Sold': 'red',
-                    Listed: 'blue',
+                    Ended: 'grey',
+                    Approved: 'blue',
+                    Denied: 'red'
                 };
             
                 return (
-                    <span
-                        style={{
-                            color: colorMap[row.status] || 'black',  // Default to black if status is not found
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        {row.auctionStatus}
-                    </span>
+                  <div className="d-flex justify-content-between align-items-center">
+  {/* Status text aligned to the start */}
+  <span
+    className="flex-grow-1"
+    style={{
+      color: colorMap[row.auctionStatus] || 'black',
+      fontWeight: 'bold',
+    }}
+  >
+    {row.auctionStatus}
+  </span>
+
+  {/* Accept/Deny buttons for 'Pending' status */}
+  {row.auctionStatus.toLowerCase() === 'pending' ? (
+    <div className="d-flex">
+      <Button
+        variant="success"
+        size="sm"
+        className="ms-2"
+        onClick={() => handleAcceptDenyAuction(row.auctionId, "Approved")}
+      >
+        Accept
+      </Button>
+      <Button
+        variant="danger"
+        size="sm"
+        className="ms-2"
+        onClick={() => handleAcceptDenyAuction(row.auctionId, "Denied")}
+      >
+        Deny
+      </Button>
+    </div>
+  ) : (
+    /* Trash icon for non-pending and non-deleted statuses */
+    row.auctionStatus.toLowerCase() !== 'deleted' && (
+      <Trash3
+        size={16}
+        color="red"
+        className="ms-2 cursor-pointer"
+        onClick={() => handleAcceptDenyAuction(row.auctionId, "Deleted")}
+      />
+    )
+  )}
+</div>
+
+
+
                 );
             }
 
@@ -105,33 +188,71 @@ const handleBidRowClick =async (bid) => {
     
     const bidColumns=[
         {name:'ID' ,  width:'100px',selector:row=>row.bidId,sortable:true },
-        {name:'Bidder Name' , selector:row=>row.bidder.email,sortable:true,
+        {name:'Bidder Name' , selector:row=>row.bidder.userName,sortable:true,
             cell: row => (
                 <a
                 href="#"
                 className="user-name-link" 
                 onClick={() => handleBidRowClick(row)}
             >
-                {row.bidder.email}
+                {row.bidder.userName}
             </a>
             ) },
         {name:'Bid Amount(JOD)' , selector:row=>row.bidAmount,sortable:true },
         {name:'Bid Time' , selector:row=>row.bidTime,sortable:true },
-        {name:'Auction ID' , selector:row=>row.auctionId.auctionId,sortable:true,
+        {name:'Auction ID' , selector:row=>row.auction.auctionId,sortable:true,
           cell: row => (
               <a
               href="#"
               className="user-name-link" 
               onClick={() => handleUserClick(row)}
           >
-              {row.auctionId}
+              {row.auction.auctionId}
           </a>
           ) },
 
     ]
   
 
+    const handleAcceptDenyAuction = async (auctionId,status) => {
+      try {
+        // Step 1: Fetch the auction details
+    const response = await axios.get(`http://localhost:5192/api/auction/${auctionId}`);
+    const auction = response.data;
+    const updatedData = {
+      AuctionStatus: status,
+      title: auction.title,
+      description: auction.description,
+      images: auction.images,
+      StartingBid: auction.startingBid,
+      ReservePrice: auction.reservePrice,
+      StartingTime: auction.startingTime,
+      EndingTime: auction.endingTime,
+      Address: auction.address,
+      condition: auction.condition,
+      quantity: auction.quantity,
+      CategoryId: auction.category.categoryId,
+    };
+    const formData = new FormData();
+      Object.entries(updatedData).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+    // Step 2: Update the auctionStatus and make a PUT request
+    await axios.put(
+      `http://localhost:5192/api/auction/${auctionId}`,
+      formData, // Spread the existing data and update auctionStatus
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Ensure proper headers
+        },
+      }
+    );
     
+      } catch (error) {
+        console.error("Error accepting the auction:", error);
+        alert("Failed to accept the auction.");
+      }
+    };
     
     
      function handleBidFilter(event){
@@ -180,11 +301,12 @@ const handleBidRowClick =async (bid) => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item href="#" onClick={() => setRecords(auctions)}>All</Dropdown.Item>
-            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Active')}>Active</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Started')}>Started</Dropdown.Item>
             <Dropdown.Item href="#" onClick={() => handleStatusFilter('Pending')}>Pending</Dropdown.Item>
-            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Sold')}>Sold</Dropdown.Item>
-            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Not Sold')}>Not Sold</Dropdown.Item>
-            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Listed')}>Listed</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Ended')}>Ended</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Approved')}>Approved</Dropdown.Item>
+            <Dropdown.Item href="#" onClick={() => handleStatusFilter('Denied')}>Denied</Dropdown.Item>
+
           </Dropdown.Menu>
         </Dropdown>
       </Col>
@@ -212,25 +334,7 @@ const handleBidRowClick =async (bid) => {
 
     <div className="m-5">
       <Row className="justify-content-between mb-4">
-        <Col xs={12} sm={6} md={4} lg={3} className="mb-3">
-          <div className="d-flex align-items-center">
-            <span className="me-3">Action</span>
-            <Dropdown className="d-inline">
-              <Dropdown.Toggle
-                variant="light"
-                className="px-2"
-                style={{ backgroundColor: '#E6E6E6', fontSize: '15px' }}
-              >
-                select
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item href="#">Block</Dropdown.Item>
-                <Dropdown.Item href="#">Accept</Dropdown.Item>
-                <Dropdown.Item href="#">Action</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
-        </Col>
+        
 
         <Col xs={12} sm={6} md={4} lg={3} className="mb-3">
           <div
@@ -328,7 +432,7 @@ const handleBidRowClick =async (bid) => {
                         <Col>
                         <Row className="fw-bold mb-4">
                             <div style={{color:'#003A70'}}>Company Name</div>
-                            {selectedAuction && <div>{selectedAuction.seller.email}</div>}
+                            {selectedAuction && <div>{selectedAuction.seller.businessName}</div>}
                         </Row>
                         <Row className="fw-bold">
                             <div style={{color:'#003A70'}}>Phone Number</div>
@@ -338,7 +442,7 @@ const handleBidRowClick =async (bid) => {
                         <Col>
                         <Row className="fw-bold mb-4">
                             <div style={{color:'#003A70'}}>Email</div>
-                            {selectedAuction && <div>{selectedAuction.seller.email}</div>}
+                            {selectedAuction && <div>{selectedAuction.seller.businessEmail}</div>}
                         </Row>
                         <Row className="fw-bold">
                             <div style={{color:'#003A70'}}>Registration Date</div>
@@ -352,24 +456,21 @@ const handleBidRowClick =async (bid) => {
                     style={{
                         fontWeight: 'bold',
                         color: 
-                        selectedAuction.auctionStatus === 'Active' ? 'green' : 
+                        selectedAuction.auctionStatus === 'Started' ? 'green' : 
                         selectedAuction.auctionStatus === 'Pending' ? 'orange' : 
-                        selectedAuction.auctionStatus === 'Sold' ? 'grey' : 
-                        selectedAuction.auctionStatus === 'Not Sold' ? 'red' :
-                        selectedAuction.auctionStatus === 'Listed' ? 'blue' :
+                        selectedAuction.auctionStatus === 'Ended' ? 'grey' : 
+                        selectedAuction.auctionStatus === 'Denied' ? 'red' :
+                        selectedAuction.auctionStatus === 'Approved' ? 'blue' :
                             '#000000', 
                     }}>{selectedAuction.auctionStatus}
                 </span></div>
                     }
-                        <div>
-                        <Button variant="success" className="me-2"> Approve</Button>
-                        <Button variant="danger">Reject</Button>
-                        
-                        </div>
                         
                     
                     </div>
-                    <div className="fw-bold" style={{color:'#003A70'}}>Highest Bid :</div>
+                    {selectedAuction&&selectedAuction.currentBid && <div className="fw-bold" style={{color:'#003A70'}}>Highest Bid :  $ {selectedAuction.currentBid}</div>}
+
+                    {selectedAuction&&!selectedAuction.currentBid &&<div className="fw-bold" style={{color:'#003A70'}}>Highest Bid :  $ 0</div>}
                     
                     </div>
                 </Modal.Body>

@@ -19,6 +19,7 @@ namespace api.Mappers
         {
             return new AuctionDto
             {
+<<<<<<< Updated upstream
                 AuctionId=auctionModel.AuctionId,
                 Title=auctionModel.Title,
                 bidDtos = auctionModel.Biddings != null?
@@ -27,6 +28,46 @@ namespace api.Mappers
                 seller=auctionModel.Seller.Email,
                 category=auctionModel.Category.CategoryName,
                 CurrentBid=auctionModel.CurrentBid
+=======
+                AuctionId = auctionModel.AuctionId,
+                Title = auctionModel.Title,
+                Description = auctionModel.Description,
+                Images = auctionModel.Images,
+                AuctionStatus = auctionModel.AuctionStatus,
+                StartingBid = auctionModel.StartingBid,
+                CurrentBid = auctionModel.CurrentBid,
+                ReservePrice = auctionModel.ReservePrice,
+                CreatedAt = DateTime.UtcNow,
+                StartingTime = auctionModel.StartingTime,
+                EndingTime = auctionModel.EndingTime,
+                Address = auctionModel.Address,
+                Condition = auctionModel.Condition,
+                Quantity = auctionModel.Quantity,
+                Seller = new SellerDto
+                {
+                    SellerId = auctionModel.SellerId,
+                    BusinessId = auctionModel.Seller.Business.BusinessId,
+                    BusinessName = auctionModel.Seller.Business?.BusinessName
+                },
+                Category = new CategoryDto
+                {
+                    CategoryId = auctionModel.CategoryId,
+                    CategoryName = auctionModel.Category.CategoryName
+                },
+                Biddings = auctionModel.Biddings != null
+                    ? auctionModel.Biddings.Select(b => new AuctionBiddingDto
+                    {
+                        Username = b.Bidder != null
+                                    ? (b.Bidder.Individual != null && b.Bidder.Id == b.Bidder.Individual.UserId
+                                        ? $"{b.Bidder.Individual.FirstName} {b.Bidder.Individual.LastName}"
+                                        : b.Bidder.Business?.BusinessName ?? "Unknown Bidder")
+                                        : "Unknown Bidder",
+                        BidId = b.BidId,
+                        BidAmount = b.BidAmount,
+                        BidTime = b.BidTime
+                    }).ToList()
+                    : [],
+>>>>>>> Stashed changes
             };
         }
         public static Auction? ToAuctionFromCreateDto(this CreateAuctionRequestDto auctionDto)
@@ -79,6 +120,7 @@ namespace api.Mappers
             }
             return new Auction
             {
+<<<<<<< Updated upstream
                 Images=json,
                 SellerId=auctionDto.SellerId,
                 Title=auctionDto.Title,
@@ -92,6 +134,22 @@ namespace api.Mappers
                 Address=auctionDto.Address,
                 Condition=auctionDto.Condition,
                 Quantity=auctionDto.Quantity,
+=======
+                Images = json,
+                SellerId = auctionDto.SellerId,
+                Title = auctionDto.Title,
+                Description = auctionDto.Description,
+                CategoryId = auctionDto.CategoryId,
+                AuctionStatus = AuctionStatus.Pending,
+                StartingBid = auctionDto.StartingBid,
+                ReservePrice = auctionDto.ReservePrice,
+                StartingTime = auctionDto.StartingTime,
+                EndingTime = auctionDto.EndingTime,
+                Address = auctionDto.Address,
+                Condition = auctionDto.Condition,
+                Quantity = auctionDto.Quantity,
+                CreatedAt = DateTime.UtcNow
+>>>>>>> Stashed changes
             };
         }
 

@@ -16,6 +16,10 @@ import PaymentModal from "@/components/PaymentModal/PaymentModal";
 import Swal from "sweetalert2";
 import WatchButton from "./WatchButton";
 import axios from "axios";
+import * as signalR from "@microsoft/signalr";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+
+
 
 export default function BiddingInfo({currentItem}) {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -26,10 +30,18 @@ export default function BiddingInfo({currentItem}) {
   const [highestBid, setHighestBid] = useState(currentItem.currentBid);
   const [bidAmount, setBidAmount] = useState("");
   const [error, setError] = useState("");
+<<<<<<< Updated upstream
   
   const depositAmount = 50; // amount to hold for bidding authorization
 
   const handleBidNowClick = async() => {
+=======
+  const [connection, setConnection] = useState(null);
+  const [biddings, setBiddings] = useState(currentItem.biddings);
+  const depositAmount = 50; // amount to hold for bidding authorization
+
+  const handleBidNowClick =  () => {
+>>>>>>> Stashed changes
     if (!isLoggedIn) {
       setShowLoginModal(true);
       return;
@@ -49,14 +61,10 @@ export default function BiddingInfo({currentItem}) {
       setHighestBid(numericBid);
       setBidAmount("");
       setError("");
-      Swal.fire({
-        icon: "success",
-        title: "Bid Placed!",
-        text: `Your bid of ${numericBid} JD has been placed.`,
-      });
+      
     }
-    setError("");
 
+<<<<<<< Updated upstream
   try {
     const response = await axios.post('http://localhost:5125/api/biddinghistory', {
       auctionId: currentItem.auctionId,
@@ -84,6 +92,26 @@ export default function BiddingInfo({currentItem}) {
       title: "Failed to Place Bid",
       text: "An error occurred while placing your bid. Please try again.",
     });
+=======
+    try {
+      const response =  axios.post(
+        "http://localhost:5192/api/biddinghistory",
+        {
+          auctionId: currentItem.auctionId,
+          bidderId: "6",
+          bidAmount: numericBid,
+        },
+        
+      );
+      
+    } catch (error) {
+      console.error("Error placing bid:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Failed to Place Bid",
+        text: "An error occurred while placing your bid. Please try again.",
+      });
+>>>>>>> Stashed changes
     }
   };
 
@@ -111,8 +139,44 @@ export default function BiddingInfo({currentItem}) {
         icon: "success",
       });
     }
+<<<<<<< Updated upstream
     console.log(currentItem)
+=======
+>>>>>>> Stashed changes
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    
+    // Initialize the SignalR connection
+    const newConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5192/biddingHub") // Adjust the URL as needed
+      .withAutomaticReconnect()
+      .build();
+
+    newConnection.start()
+      .then(() => {
+        console.log("Connected to SignalR");
+
+        // Listen for updates from the hub
+        newConnection.on("ReceiveBidUpdate", (auctionId, currentBid, biddings) => {
+          console.log("received : ",auctionId);
+          console.log("current : ",currentItem.auctionId);
+
+          if (auctionId === currentItem.auctionId) {
+            setHighestBid(currentBid);
+            setBiddings(biddings);
+          }
+        });
+      })
+      .catch((error) => console.error("SignalR Connection Error: ", error));
+
+    setConnection(newConnection);
+
+    // Cleanup on component unmount
+    return () => {
+      newConnection.stop();
+    };
+  }, [currentItem.auctionId]);
 
   return (
     <Card className="h-100 p-2 shadow border-0" style={{ maxHeight: "400px" }}>
@@ -131,9 +195,15 @@ export default function BiddingInfo({currentItem}) {
 
         <Card.Text>
           <Card.Subtitle className="mb-2 text-muted">
+<<<<<<< Updated upstream
           {currentItem.auctionStatus=="Closed"
                     ? "Ended At"
                     : "Ends After"}
+=======
+            {currentItem.auctionStatus == "Approved" && "Starts After"}
+            {currentItem.auctionStatus == "Started" && "Ends After"}
+            {currentItem.auctionStatus == "Ended" && "Ended At"}
+>>>>>>> Stashed changes
           </Card.Subtitle>
           <Timer auction={currentItem}/>
         </Card.Text>
@@ -143,6 +213,7 @@ export default function BiddingInfo({currentItem}) {
             <Row>
               <Stack className="p-0">
                 <p className="m-0">
+<<<<<<< Updated upstream
                   {currentItem.currentBid
                     ? "Highest Bid  "
                     : "Starting price "}
@@ -150,12 +221,23 @@ export default function BiddingInfo({currentItem}) {
                 </p>
                 {currentItem.currentBid && <h4>{currentItem.currentBid} JD</h4>}
                 {!currentItem.currentBid && <h4>{currentItem.startingBid} JD</h4>}
+=======
+                  Highest Bid
+                  .{" "}
+                  <BidHistoryModal
+                    biddingsList={biddings}
+                    startingPrice={currentItem.startingBid}
+                  />
+                </p>
+                {currentItem.currentBid && <h4>{highestBid} JD</h4>}
+>>>>>>> Stashed changes
                 
               </Stack>
             </Row>
           </Container>
         </Card.Text>
 
+<<<<<<< Updated upstream
         {currentItem.auctionStatus!="Closed" &&<Card.Text className="d-flex justify-content-center">
           <Col xs={12} md={7}>
             {isLoggedIn && (
@@ -171,6 +253,31 @@ export default function BiddingInfo({currentItem}) {
                     if (/^\d*$/.test(inputValue)) {
                       setBidAmount(inputValue);
                       setError("");
+=======
+        {currentItem.auctionStatus == "Started" && (
+          <Card.Text className="d-flex justify-content-center">
+            <Col xs={12} md={7}>
+              {isLoggedIn && (
+                <Form.Group>
+                  <Form.Control
+                    type="number"
+                    placeholder={`Bid Amount (min ${
+                      highestBid + 1
+                    })`}
+                    min={highestBid + 1} // Set the minimum bid value
+                    value={bidAmount}
+                    step={1} // Whole numbers only
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (/^\d*$/.test(inputValue)) {
+                        setBidAmount(inputValue);
+                        setError("");
+                      }
+                    }}
+                    isInvalid={!!error}
+                    className={
+                      !isLoggedIn || !isDepositAuthorized ? "d-none" : ""
+>>>>>>> Stashed changes
                     }
                   }}
                   isInvalid={!!error}

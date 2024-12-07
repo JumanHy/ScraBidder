@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    partial class ApplicationDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241203065413_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,10 +210,6 @@ namespace api.Migrations
                     b.Property<DateTime>("ActionTime")
                         .HasColumnType("datetime2");
 
-<<<<<<< Updated upstream
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-=======
                     b.Property<string>("IpAddress")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -219,7 +218,6 @@ namespace api.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
->>>>>>> Stashed changes
 
                     b.HasKey("LogId");
 
@@ -556,7 +554,7 @@ namespace api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal?>("CurrentBid")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -573,14 +571,14 @@ namespace api.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("ReservePrice")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("SellerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("StartingBid")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime>("StartingTime")
                         .HasColumnType("datetime2");
@@ -597,8 +595,6 @@ namespace api.Migrations
                     b.HasIndex("SellerId");
 
                     b.ToTable("Auctions");
-<<<<<<< Updated upstream
-=======
 
                     b.HasData(
                         new
@@ -791,7 +787,6 @@ namespace api.Migrations
                             StartingTime = new DateTime(2024, 11, 5, 6, 54, 12, 847, DateTimeKind.Utc).AddTicks(1531),
                             Title = "Ceramic Tiles"
                         });
->>>>>>> Stashed changes
                 });
 
             modelBuilder.Entity("api.Models.BiddingHistory", b =>
@@ -806,7 +801,7 @@ namespace api.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("BidAmount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime>("BidTime")
                         .HasColumnType("datetime2");
@@ -853,9 +848,8 @@ namespace api.Migrations
                     b.Property<string>("BusinessServices")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BusinessType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("BusinessType")
+                        .HasColumnType("int");
 
                     b.Property<string>("CompanyVision")
                         .HasColumnType("nvarchar(max)");
@@ -1026,6 +1020,63 @@ namespace api.Migrations
                     b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Aluminum"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Copper"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Plastic"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Iron"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryName = "Stainless Steel"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryName = "Wood"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryName = "Glass"
+                        },
+                        new
+                        {
+                            CategoryId = 8,
+                            CategoryName = "Paper"
+                        },
+                        new
+                        {
+                            CategoryId = 9,
+                            CategoryName = "Rubber"
+                        },
+                        new
+                        {
+                            CategoryId = 10,
+                            CategoryName = "Textile"
+                        },
+                        new
+                        {
+                            CategoryId = 11,
+                            CategoryName = "Ceramic"
+                        });
                 });
 
             modelBuilder.Entity("api.Models.Individual", b =>
@@ -1140,81 +1191,70 @@ namespace api.Migrations
                     b.ToTable("Notifications");
                 });
 
-<<<<<<< Updated upstream
-            modelBuilder.Entity("api.Models.Role", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("Roles");
-                });
-
-            modelBuilder.Entity("api.Models.TrafficLog", b =>
-=======
             modelBuilder.Entity("api.Models.Shipment", b =>
->>>>>>> Stashed changes
                 {
-                    b.Property<int>("LogId")
+                    b.Property<int>("ShipmentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LogId"));
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("VisitTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("VisitorIp")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-<<<<<<< Updated upstream
-                    b.HasKey("LogId");
-=======
-                    b.Property<string>("SellerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
->>>>>>> Stashed changes
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TrafficLog");
-                });
-
-            modelBuilder.Entity("api.Models.TransactionHistory", b =>
-                {
-                    b.Property<int>("TransactionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TransactionId"));
-
-                    b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShipmentId"));
 
                     b.Property<int>("AuctionId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PaymentDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PaymentMethodId")
+                    b.Property<int>("DeliveryStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("PaymentStatus")
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ShipmentId");
+
+                    b.HasIndex("AuctionId");
+
+                    b.HasIndex("SellerId");
+
+                    b.ToTable("Shipments");
+                });
+
+            modelBuilder.Entity("api.Models.TransactionHistory", b =>
+                {
+                    b.Property<string>("TransactionId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<int>("AuctionId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayerEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RelatedId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TransactionPurpose")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1235,39 +1275,6 @@ namespace api.Migrations
                     b.ToTable("TransactionHistory");
                 });
 
-<<<<<<< Updated upstream
-            modelBuilder.Entity("api.Models.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
-                    b.Property<string>("AccountStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Users");
-                });
-
-=======
->>>>>>> Stashed changes
             modelBuilder.Entity("api.Models.WatchList", b =>
                 {
                     b.Property<int>("WatchId")
@@ -1433,11 +1440,8 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("api.Models.TrafficLog", b =>
+            modelBuilder.Entity("api.Models.Shipment", b =>
                 {
-<<<<<<< Updated upstream
-                    b.HasOne("api.Models.User", "User")
-=======
                     b.HasOne("api.Models.Auction", "Auction")
                         .WithMany("Shipments")
                         .HasForeignKey("AuctionId")
@@ -1445,17 +1449,20 @@ namespace api.Migrations
                         .IsRequired();
 
                     b.HasOne("api.Models.ApplicationUser", "Seller")
->>>>>>> Stashed changes
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("SellerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Auction");
+
+                    b.Navigation("Seller");
                 });
 
             modelBuilder.Entity("api.Models.TransactionHistory", b =>
                 {
                     b.HasOne("api.Models.Auction", "Auction")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("AuctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1507,6 +1514,10 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.Auction", b =>
                 {
                     b.Navigation("Biddings");
+
+                    b.Navigation("Shipments");
+
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("api.Models.Category", b =>

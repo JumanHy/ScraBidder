@@ -6,8 +6,13 @@ import Swal from "sweetalert2";
 function Timer({auction}) {
 
   const updatedData = {
+<<<<<<< Updated upstream
     AuctionStatus:"Closed",
     title:auction.title ,
+=======
+    AuctionStatus: "Ended",
+    title: auction.title,
+>>>>>>> Stashed changes
     description: auction.description,
     images: auction.images,
     StartingBid: auction.startingBid,
@@ -17,12 +22,13 @@ function Timer({auction}) {
     Address:  auction.address,
     condition: auction.condition,
     quantity: auction.quantity,
-    CategoryId: auction.categoryId,
+    CategoryId: auction.category.categoryId,
   };
 
  console.log(auction.data);
   const handleTimeUp = async () => {
     const formData = new FormData();
+<<<<<<< Updated upstream
 Object.entries(updatedData).forEach(([key, value]) => {
   formData.append(key, value);
 });
@@ -33,6 +39,23 @@ Object.entries(updatedData).forEach(([key, value]) => {
         {headers: {
           "Content-Type": "multipart/form-data",
         },}
+=======
+    Object.entries(updatedData).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    console.log(updatedData);
+    console.log(auction.CategoryId);
+    try {
+      // Example PUT request to update auction status
+      const response = await axios.put(
+        `http://localhost:5192/api/auction/${auction.auctionId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+>>>>>>> Stashed changes
       );
 
       Swal.fire({
@@ -51,7 +74,9 @@ Object.entries(updatedData).forEach(([key, value]) => {
       });
     }
   };
-
+  var time;
+  if(auction.AuctionStatus=="Approved") time=auction.startingTime;
+  if(auction.AuctionStatus=="Started") time=auction.endingTime;
   return (
     
     <Container fluid>

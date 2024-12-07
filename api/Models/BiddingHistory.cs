@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace api.Models
@@ -22,7 +23,7 @@ namespace api.Models
 
         [Required]
         public DateTime BidTime { get; set; }
-
+        [JsonIgnore]
         public Auction Auction { get; set; }
         public User Bidder { get; set; }
     }

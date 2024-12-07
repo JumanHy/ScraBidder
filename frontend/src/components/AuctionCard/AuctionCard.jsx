@@ -1,8 +1,26 @@
 import { Card, Button } from "react-bootstrap";
 import FlipCountdown from "@rumess/react-flip-countdown";
 import { LinkContainer } from "react-router-bootstrap";
+<<<<<<< Updated upstream
 function AuctionCard({currentAuction}) {
   console.log("helllo",currentAuction);
+=======
+
+function AuctionCard({ currentAuction }) {
+  const endTime = new Date(currentAuction.endingTime);
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(endTime);
+  if (!currentAuction) {
+    return null; // Handle case when currentAuction is not passed or is empty
+  }
+
+
+>>>>>>> Stashed changes
   return (
     <Card className="shadow border-0 h-100 rounded-4 text-primary">
       {/* Scrap Image */}
@@ -23,7 +41,7 @@ function AuctionCard({currentAuction}) {
         </Card.Title>
 
         {/* Auction Ending Text */}
-        <div className="text-center">
+        {currentAuction.auctionStatus=="Started" &&<div className="text-center">
           <Card.Subtitle className="text-secondary fw-bold text-uppercase">
             Ends After
           </Card.Subtitle>
@@ -43,10 +61,57 @@ function AuctionCard({currentAuction}) {
             />
           </div>
         </div>
+<<<<<<< Updated upstream
         {/* Starting Bid Text */}
         <Card.Text className="text-secondary fw-bold text-uppercase">
           Starting Bid: {currentAuction.startingBid}
         </Card.Text>
+=======
+        
+        }
+
+        {currentAuction.auctionStatus=="Approved" &&<div className="text-center">
+          <Card.Subtitle className="text-secondary fw-bold text-uppercase">
+            Starts After
+          </Card.Subtitle>
+
+          {/* Countdown Timer */}
+          <div>
+            <FlipCountdown
+              endAt={currentAuction.startingTime}
+              size="small"
+              titlePosition="top"
+              hideYear
+              hideMonth
+              dayTitle="Days"
+              hourTitle="Hours"
+              minuteTitle="Mins"
+              secondTitle="Secs"
+            />
+          </div>
+        </div>
+        
+        }
+
+        {currentAuction.auctionStatus=="Ended" &&<div className="text-center">
+          <Card.Subtitle className="text-secondary fw-bold text-uppercase">
+            Ended At
+          </Card.Subtitle>
+
+          <div className="text-danger">
+          {formattedDate}
+          </div>
+        </div>}
+
+        {/* Starting Bid */}
+        {currentAuction.auctionStatus=="Started" &&<Card.Text className="text-secondary fw-bold text-uppercase">
+          Current Bid: ${currentAuction.currentBid}
+        </Card.Text>}
+
+        {currentAuction.auctionStatus=="Ended" &&<Card.Text className="text-secondary fw-bold text-uppercase">
+          Final Price: ${currentAuction.currentBid}
+        </Card.Text>}
+>>>>>>> Stashed changes
 
         {/* Bid Button */}
         <LinkContainer 

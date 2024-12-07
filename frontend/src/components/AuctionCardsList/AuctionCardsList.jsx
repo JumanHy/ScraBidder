@@ -28,10 +28,17 @@ function AuctionCardsList({ currentItems }) {
   }, []);
   return (
     <Row className="g-3">
+<<<<<<< Updated upstream
       {auctions.length > 0 ? (
         auctions.map((currentAuction, index) => (
           <Col key={index} xs={12} sm={6} lg={4}>
             <AuctionCard currentAuction={currentAuction} />
+=======
+      {currentItems && currentItems.length > 0 ? (
+        currentItems.map((currentAuction, index) => (
+          <Col key={currentAuction.auctionId || index} xs={12} sm={6} lg={4}>
+            {currentAuction.auctionStatus!="Denied" &&currentAuction.auctionStatus!="Pending"&&currentAuction.auctionStatus!="Deleted"&&<AuctionCard currentAuction={currentAuction} />}
+>>>>>>> Stashed changes
           </Col>
         ))
       ) : (

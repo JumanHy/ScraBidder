@@ -37,16 +37,31 @@ namespace api.Controllers
             {
                 return NotFound();
             }
+<<<<<<< Updated upstream
+=======
+            //var bidDto = bid.ToBidDto();
+>>>>>>> Stashed changes
             return Ok(bid);
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateBid([FromForm] CreateBidDto createBidDto)
+        public async Task<IActionResult> CreateBid([FromBody] CreateBidDto createBidDto)
         {
+<<<<<<< Updated upstream
             var bid=createBidDto.ToBidFromCreateDto();
             if(bid==null)return BadRequest();
             var result = await _bidRepo.CreateBidAsync(bid);
             if(result==null) return BadRequest();
+=======
+            var bid = createBidDto.ToBidFromCreateDto();
+            
+            if (bid == null) return BadRequest();
+            var result = await _bidRepo.CreateBidAsync(bid);
+
+            if (result == null) return BadRequest();
+
+            //var bidDto = result.ToBidDto();
+>>>>>>> Stashed changes
             return Ok(result);
         }
         

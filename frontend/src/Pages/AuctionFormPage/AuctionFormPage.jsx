@@ -59,8 +59,8 @@ function AuctionFormPage() {
     }
   };
   const [formData, setFormData] = useState({
-    SellerId:"1",
-    AuctionStatus:"Accepted",
+    SellerId:"6",
+    AuctionStatus:"Pending",
     title: "",
     description: "",
     images: [],
@@ -115,7 +115,7 @@ function AuctionFormPage() {
       console.log(key, value); // This will log each key-value pair in the FormData object
     }
     try {
-      const response = await axios.post("http://localhost:5125/api/auction", data, {
+      const response = await axios.post("http://localhost:5192/api/auction", data, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

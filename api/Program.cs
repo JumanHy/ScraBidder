@@ -41,11 +41,54 @@ builder.Services.AddSignalR();
 
 var app = builder.Build();
 
+<<<<<<< Updated upstream
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+=======
+
+        builder.Services.AddAuthorization();
+
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowReactApp", policy =>
+                policy.WithOrigins("http://localhost:5173")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .AllowCredentials());
+        });
+
+
+
+        // Build the application
+        var app = builder.Build();
+
+        // Configure middleware and HTTP pipeline
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseCors("AllowReactApp");
+
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllers();
+        app.MapHub<NotificationHub>("/notificationHub");
+        app.MapHub<BiddingHub>("/biddingHub");
+        app.Run();
+    }
+>>>>>>> Stashed changes
 }
 
 app.UseCors("AllowReactApp");
