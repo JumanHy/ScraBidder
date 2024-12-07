@@ -17,7 +17,6 @@ namespace api.Dtos
         public string PrimaryContactFirstName { get; set; }
         public string PrimaryContactLastName { get; set; }
          public string PrimaryContactEmail { get; set; }
-           public string Address { get; set; } // JSO
-        public string Images { get; internal set; }
+          
     }
 }

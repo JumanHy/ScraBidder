@@ -20,7 +20,7 @@ namespace api.Interfaces
 
        
 
-        // Method to upload images (exactly three images)
+   
        
         
     }

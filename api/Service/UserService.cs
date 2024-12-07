@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 namespace api.Service
 {
     public class UserService : IUserService
@@ -23,7 +22,6 @@ namespace api.Service
             _context = context;
             _eventDispatcher = eventDispatcher;
         }
-
         // Fetch dashboard statistics
         public async Task<DashboardStatsDTO> GetDashboardStatsAsync()
         {
@@ -31,7 +29,6 @@ namespace api.Service
             var activeUsers = await _context.Users.CountAsync(u => u.Status == AccountStatus.Active);
             var pendingUsers = await _context.Users.CountAsync(u => u.Status == AccountStatus.Pending);
             var blockedUsers = await _context.Users.CountAsync(u => u.Status == AccountStatus.Blocked);
-
             return new DashboardStatsDTO
             {
                 TotalUsers = totalUsers,
@@ -40,7 +37,6 @@ namespace api.Service
                 BlockedUsers = blockedUsers
             };
         }
-
         // Fetch all users as UserDTO
         public async Task<List<UserDto>> GetAllUsersAsync()
         {
@@ -55,16 +51,13 @@ namespace api.Service
                 })
                 .ToListAsync();
         }
-
         // Fetch a user by username or email as UserDTO
         public async Task<UserDto> GetUserByUsernameOrEmailAsync(string usernameOrEmail)
         {
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.UserName == usernameOrEmail || u.Email == usernameOrEmail);
-
             if (user == null)
                 return null;
-
             return new UserDto
             {
                 UserId = user.Id,
@@ -74,7 +67,6 @@ namespace api.Service
                 Status = user.Status.ToString()
             };
         }
-
         // Update all users and handle logic for user type and status update
         public async Task<bool> UpdateAllUsersAsync(List<UserUpdateDto> userUpdateDtos)
         {

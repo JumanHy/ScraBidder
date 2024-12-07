@@ -27,5 +27,7 @@ namespace api.Dtos
 
         [Required]
         public string ?ConfirmPassword { get; set; }
+
+        
     }
 }

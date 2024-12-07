@@ -22,6 +22,159 @@ namespace api.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "a985bf9a-81eb-411a-86b4-c3039a517c5f",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "41655db1-579f-457d-a298-b0383f4d4b59",
+                            Name = "Individual",
+                            NormalizedName = "INDIVIDUAL"
+                        },
+                        new
+                        {
+                            Id = "a1e98f4b-5232-4897-8f66-02574fc41d85",
+                            Name = "Business",
+                            NormalizedName = "BUSINESS"
+                        });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
+
             modelBuilder.Entity("api.Models.Action", b =>
                 {
                     b.Property<int>("ActionId")
@@ -59,9 +212,9 @@ namespace api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("LogId");
 
@@ -70,6 +223,305 @@ namespace api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ActivityLogs");
+                });
+
+            modelBuilder.Entity("api.Models.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "acfae306-7164-4149-b31e-d5bfc65432d4",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "admin1@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "1d17fc68-ae0f-4f29-9c78-c06c263c09cd",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "admin1"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a9b6e8cb-e773-4133-81f1-54553b781d3e",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "admin2@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f7e7200b-35c8-4e49-a903-c18631162000",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "admin2"
+                        },
+                        new
+                        {
+                            Id = "3",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "e850788c-962d-4427-8585-9cd443a93cf3",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "admin3@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b9c093e1-61c8-4e23-8a5f-00da9d353163",
+                            Status = "Blocked",
+                            TwoFactorEnabled = false,
+                            UserName = "admin3"
+                        },
+                        new
+                        {
+                            Id = "4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c9700bf1-d6be-4f4e-8e94-6d413ec4e4ce",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "admin4@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "84396d06-7236-423c-bbcb-f8d863e27083",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "admin4"
+                        },
+                        new
+                        {
+                            Id = "5",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "5b695fe7-333d-46d2-b86e-7115c304423b",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "admin5@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "682b1154-0ad7-4ca5-8ef6-33e65019dcad",
+                            Status = "Pending",
+                            TwoFactorEnabled = false,
+                            UserName = "admin5"
+                        },
+                        new
+                        {
+                            Id = "6",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "cdeefe9b-6abb-4f57-b6c9-1925ba23740b",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "business1@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ebe6c5f7-393d-4715-8319-8fab05455426",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "business1"
+                        },
+                        new
+                        {
+                            Id = "7",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c38474f2-8138-43c3-ba09-9da63d525668",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "business2@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "ecca230d-abba-493f-bd05-0f40cab755c7",
+                            Status = "Pending",
+                            TwoFactorEnabled = false,
+                            UserName = "business2"
+                        },
+                        new
+                        {
+                            Id = "8",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "a48707cd-e7a0-43dc-80ca-782c9e48dbf5",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "business3@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f6e172ea-0971-4951-b8cd-64cc53df6e97",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "business3"
+                        },
+                        new
+                        {
+                            Id = "9",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "30949a02-7ba8-4b25-9ef3-c37f76455753",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "business4@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "477fdd74-728d-450a-9cc0-ade46f7e6fab",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "business4"
+                        },
+                        new
+                        {
+                            Id = "10",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "07147d18-4ed2-4e67-b1bc-8e6aff2dacad",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "business5@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "3e83c243-0306-450f-9df5-ff8491bdd49f",
+                            Status = "Pending",
+                            TwoFactorEnabled = false,
+                            UserName = "business5"
+                        },
+                        new
+                        {
+                            Id = "11",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "88454579-7eb5-499f-87fb-164be66cc318",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "individual1@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "19c36a91-8666-43b6-98aa-2f21cb198649",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "individual1"
+                        },
+                        new
+                        {
+                            Id = "12",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2d9a4863-c38b-492b-a3fc-710957290e5b",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "individual2@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "25aee866-15a3-44af-911e-723cded7f73d",
+                            Status = "Blocked",
+                            TwoFactorEnabled = false,
+                            UserName = "individual2"
+                        },
+                        new
+                        {
+                            Id = "13",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "13a82b8b-48b9-491d-9434-62c65603cec0",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "individual3@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "7f680be6-8bef-4b1d-a5bd-e6e55c469da1",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "individual3"
+                        },
+                        new
+                        {
+                            Id = "14",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "97ef3855-1f08-4499-8f41-8bd5a8a20513",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "individual4@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "83299943-a931-41c8-bf76-d3911e9da8c1",
+                            Status = "Pending",
+                            TwoFactorEnabled = false,
+                            UserName = "individual4"
+                        },
+                        new
+                        {
+                            Id = "15",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "3a606425-6486-4b82-9ae8-df1be4ee14b0",
+                            CreatedAt = new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689),
+                            Email = "individual5@example.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b198f64f-2564-4b88-a59e-88c889bb2060",
+                            Status = "Active",
+                            TwoFactorEnabled = false,
+                            UserName = "individual5"
+                        });
                 });
 
             modelBuilder.Entity("api.Models.Auction", b =>
@@ -118,8 +570,9 @@ namespace api.Migrations
                     b.Property<decimal?>("ReservePrice")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int>("SellerId")
-                        .HasColumnType("int");
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("StartingBid")
                         .HasColumnType("decimal(18, 2)");
@@ -148,16 +601,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 1,
                             Condition = "Mixed",
-                            CreatedAt = new DateTime(2024, 11, 17, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8400),
+                            CreatedAt = new DateTime(2024, 11, 27, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(212),
                             CurrentBid = 650.00m,
                             Description = "A collection of high-grade aluminum scraps.",
-                            EndingTime = new DateTime(2024, 12, 2, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8407),
+                            EndingTime = new DateTime(2024, 12, 12, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(221),
                             Images = "[\"aluminum1.jpg\", \"aluminum2.jpg\"]",
                             Quantity = 100m,
                             ReservePrice = 800.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 500.00m,
-                            StartingTime = new DateTime(2024, 11, 22, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8407),
+                            StartingTime = new DateTime(2024, 12, 2, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(220),
                             Title = "Aluminum Scrap Bundle"
                         },
                         new
@@ -167,16 +620,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 2,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 10, 28, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8417),
+                            CreatedAt = new DateTime(2024, 11, 7, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(229),
                             CurrentBid = 1200.00m,
                             Description = "Various grades of copper wiring ready for recycling.",
-                            EndingTime = new DateTime(2024, 11, 12, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8418),
+                            EndingTime = new DateTime(2024, 11, 22, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(230),
                             Images = "[\"copper1.jpg\", \"copper2.jpg\"]",
                             Quantity = 200m,
                             ReservePrice = 1500.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 1000.00m,
-                            StartingTime = new DateTime(2024, 11, 2, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8418),
+                            StartingTime = new DateTime(2024, 11, 12, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(230),
                             Title = "Copper Wiring Scrap"
                         },
                         new
@@ -186,16 +639,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 3,
                             Condition = "New",
-                            CreatedAt = new DateTime(2024, 11, 22, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8422),
+                            CreatedAt = new DateTime(2024, 12, 2, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(236),
                             CurrentBid = 450.00m,
                             Description = "Recyclable plastic waste from industrial sources.",
-                            EndingTime = new DateTime(2024, 12, 4, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8423),
+                            EndingTime = new DateTime(2024, 12, 14, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(237),
                             Images = "[\"plastic1.jpg\"]",
                             Quantity = 50m,
                             ReservePrice = 600.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 300.00m,
-                            StartingTime = new DateTime(2024, 11, 24, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8422),
+                            StartingTime = new DateTime(2024, 12, 4, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(236),
                             Title = "Plastic Waste"
                         },
                         new
@@ -205,16 +658,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 4,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 11, 7, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8426),
+                            CreatedAt = new DateTime(2024, 11, 17, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(242),
                             CurrentBid = 800.00m,
                             Description = "Scrap iron sheets from old construction projects.",
-                            EndingTime = new DateTime(2024, 11, 17, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8427),
+                            EndingTime = new DateTime(2024, 11, 27, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(243),
                             Images = "[\"iron1.jpg\", \"iron2.jpg\"]",
                             Quantity = 300m,
                             ReservePrice = 1000.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 700.00m,
-                            StartingTime = new DateTime(2024, 11, 9, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8427),
+                            StartingTime = new DateTime(2024, 11, 19, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(242),
                             Title = "Iron Sheets"
                         },
                         new
@@ -224,16 +677,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 5,
                             Condition = "New",
-                            CreatedAt = new DateTime(2024, 11, 19, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8430),
+                            CreatedAt = new DateTime(2024, 11, 29, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(248),
                             CurrentBid = 1600.00m,
                             Description = "Premium-grade stainless steel scrap materials.",
-                            EndingTime = new DateTime(2024, 11, 30, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8433),
+                            EndingTime = new DateTime(2024, 12, 10, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(250),
                             Images = "[\"steel1.jpg\", \"steel2.jpg\"]",
                             Quantity = 150m,
                             ReservePrice = 2000.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 1500.00m,
-                            StartingTime = new DateTime(2024, 11, 20, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8433),
+                            StartingTime = new DateTime(2024, 11, 30, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(249),
                             Title = "Stainless Steel Scraps"
                         },
                         new
@@ -243,16 +696,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 6,
                             Condition = "Mixed",
-                            CreatedAt = new DateTime(2024, 10, 8, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8437),
+                            CreatedAt = new DateTime(2024, 10, 18, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(254),
                             CurrentBid = 250.00m,
                             Description = "Recyclable wooden pallets from warehouses.",
-                            EndingTime = new DateTime(2024, 10, 18, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8438),
+                            EndingTime = new DateTime(2024, 10, 28, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(256),
                             Images = "[\"wood1.jpg\", \"wood2.jpg\"]",
                             Quantity = 500m,
                             ReservePrice = 300.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 200.00m,
-                            StartingTime = new DateTime(2024, 10, 10, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8437),
+                            StartingTime = new DateTime(2024, 10, 20, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(255),
                             Title = "Wooden Pallets"
                         },
                         new
@@ -262,16 +715,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 7,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 11, 17, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8441),
+                            CreatedAt = new DateTime(2024, 11, 27, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(262),
                             CurrentBid = 550.00m,
                             Description = "Glass shards from old construction materials.",
-                            EndingTime = new DateTime(2024, 11, 29, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8442),
+                            EndingTime = new DateTime(2024, 12, 9, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(263),
                             Images = "[\"glass1.jpg\"]",
                             Quantity = 250m,
                             ReservePrice = 700.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 400.00m,
-                            StartingTime = new DateTime(2024, 11, 20, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8441),
+                            StartingTime = new DateTime(2024, 11, 30, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(263),
                             Title = "Glass Shards"
                         },
                         new
@@ -281,16 +734,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 8,
                             Condition = "Mixed",
-                            CreatedAt = new DateTime(2024, 11, 2, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8445),
+                            CreatedAt = new DateTime(2024, 11, 12, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(269),
                             CurrentBid = 150.00m,
                             Description = "Paper waste from old documents and magazines.",
-                            EndingTime = new DateTime(2024, 11, 12, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8447),
+                            EndingTime = new DateTime(2024, 11, 22, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(270),
                             Images = "[\"paper1.jpg\"]",
                             Quantity = 1000m,
                             ReservePrice = 200.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 100.00m,
-                            StartingTime = new DateTime(2024, 11, 7, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8446),
+                            StartingTime = new DateTime(2024, 11, 17, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(269),
                             Title = "Paper Waste"
                         },
                         new
@@ -300,16 +753,16 @@ namespace api.Migrations
                             AuctionStatus = "Started",
                             CategoryId = 9,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 11, 22, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8453),
+                            CreatedAt = new DateTime(2024, 12, 2, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(274),
                             CurrentBid = 350.00m,
                             Description = "Used rubber tires ready for recycling.",
-                            EndingTime = new DateTime(2024, 12, 3, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8454),
+                            EndingTime = new DateTime(2024, 12, 13, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(276),
                             Images = "[\"rubber1.jpg\"]",
                             Quantity = 400m,
                             ReservePrice = 500.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 300.00m,
-                            StartingTime = new DateTime(2024, 11, 23, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8454),
+                            StartingTime = new DateTime(2024, 12, 3, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(275),
                             Title = "Rubber Tires"
                         },
                         new
@@ -319,16 +772,16 @@ namespace api.Migrations
                             AuctionStatus = "Ended",
                             CategoryId = 11,
                             Condition = "Used",
-                            CreatedAt = new DateTime(2024, 10, 28, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8458),
+                            CreatedAt = new DateTime(2024, 11, 7, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(281),
                             CurrentBid = 600.00m,
                             Description = "Scrap ceramic tiles from construction sites.",
-                            EndingTime = new DateTime(2024, 11, 9, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8459),
+                            EndingTime = new DateTime(2024, 11, 19, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(282),
                             Images = "[\"ceramic1.jpg\"]",
                             Quantity = 50m,
                             ReservePrice = 700.00m,
-                            SellerId = 4,
+                            SellerId = "4",
                             StartingBid = 500.00m,
-                            StartingTime = new DateTime(2024, 10, 30, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8458),
+                            StartingTime = new DateTime(2024, 11, 9, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(281),
                             Title = "Ceramic Tiles"
                         });
                 });
@@ -350,8 +803,9 @@ namespace api.Migrations
                     b.Property<DateTime>("BidTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("BidderId")
-                        .HasColumnType("int");
+                    b.Property<string>("BidderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("BidId");
 
@@ -389,22 +843,18 @@ namespace api.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("BusinessServices")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("BusinessType")
                         .HasColumnType("int");
 
                     b.Property<string>("CompanyVision")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Images")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LinkedIn")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -437,14 +887,118 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("BusinessId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Businesses");
+
+                    b.HasData(
+                        new
+                        {
+                            BusinessId = 1,
+                            Address = "123 Main St, Amman, Jordan",
+                            BusinessEmail = "business1@example.com",
+                            BusinessName = "Business 1",
+                            BusinessPhoneNumber = "123-456-7890",
+                            BusinessServices = "",
+                            BusinessType = 1,
+                            CompanyVision = "",
+                            Images = "",
+                            LinkedIn = "",
+                            PrimaryContactEmail = "contact@business1.com",
+                            PrimaryContactFirstName = "John",
+                            PrimaryContactLastName = "Doe",
+                            PrimaryJobTitle = "CEO",
+                            PrimaryPhoneNumber = "123-456-7890",
+                            RegistrationNumber = "REG12345",
+                            UserId = "6"
+                        },
+                        new
+                        {
+                            BusinessId = 2,
+                            Address = "123 Main St, Amman, Jordan",
+                            BusinessEmail = "business2@example.com",
+                            BusinessName = "Business 2",
+                            BusinessPhoneNumber = "223-456-7890",
+                            BusinessServices = "",
+                            BusinessType = 1,
+                            CompanyVision = "",
+                            Images = "",
+                            LinkedIn = "",
+                            PrimaryContactEmail = "contact@business2.com",
+                            PrimaryContactFirstName = "Alice",
+                            PrimaryContactLastName = "Smith",
+                            PrimaryJobTitle = "Manager",
+                            PrimaryPhoneNumber = "223-456-7890",
+                            RegistrationNumber = "REG22345",
+                            UserId = "7"
+                        },
+                        new
+                        {
+                            BusinessId = 3,
+                            Address = "123 Main St, Amman, Jordan",
+                            BusinessEmail = "business3@example.com",
+                            BusinessName = "Business 3",
+                            BusinessPhoneNumber = "323-456-7890",
+                            BusinessServices = "",
+                            BusinessType = 2,
+                            CompanyVision = "",
+                            Images = "",
+                            LinkedIn = "",
+                            PrimaryContactEmail = "contact@business3.com",
+                            PrimaryContactFirstName = "Mark",
+                            PrimaryContactLastName = "Brown",
+                            PrimaryJobTitle = "Owner",
+                            PrimaryPhoneNumber = "323-456-7890",
+                            RegistrationNumber = "REG32345",
+                            UserId = "8"
+                        },
+                        new
+                        {
+                            BusinessId = 4,
+                            Address = "123 Main St, Amman, Jordan",
+                            BusinessEmail = "business4@example.com",
+                            BusinessName = "Business 4",
+                            BusinessPhoneNumber = "423-456-7890",
+                            BusinessServices = "",
+                            BusinessType = 1,
+                            CompanyVision = "",
+                            Images = "",
+                            LinkedIn = "",
+                            PrimaryContactEmail = "contact@business4.com",
+                            PrimaryContactFirstName = "Linda",
+                            PrimaryContactLastName = "Johnson",
+                            PrimaryJobTitle = "CEO",
+                            PrimaryPhoneNumber = "423-456-7890",
+                            RegistrationNumber = "REG42345",
+                            UserId = "9"
+                        },
+                        new
+                        {
+                            BusinessId = 5,
+                            Address = "123 Main St, Amman, Jordan",
+                            BusinessEmail = "business5@example.com",
+                            BusinessName = "Business 5",
+                            BusinessPhoneNumber = "523-456-7890",
+                            BusinessServices = "",
+                            BusinessType = 1,
+                            CompanyVision = "",
+                            Images = "",
+                            LinkedIn = "",
+                            PrimaryContactEmail = "contact@business5.com",
+                            PrimaryContactFirstName = "Sarah",
+                            PrimaryContactLastName = "Williams",
+                            PrimaryJobTitle = "Manager",
+                            PrimaryPhoneNumber = "523-456-7890",
+                            RegistrationNumber = "REG52345",
+                            UserId = "10"
+                        });
                 });
 
             modelBuilder.Entity("api.Models.Category", b =>
@@ -531,10 +1085,16 @@ namespace api.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IndividualId"));
 
                     b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -542,14 +1102,67 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("IndividualId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Individuals");
+
+                    b.HasData(
+                        new
+                        {
+                            IndividualId = 1,
+                            Address = "{\"street\":\"123 Main St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                            FirstName = "Alice",
+                            LastName = "Williams",
+                            PhoneNumber = "987-654-3210",
+                            UserId = "11"
+                        },
+                        new
+                        {
+                            IndividualId = 2,
+                            Address = "{\"street\":\"456 Oak St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                            FirstName = "Bob",
+                            Image = "profilepic2.jpg",
+                            LastName = "Johnson",
+                            PhoneNumber = "987-654-3220",
+                            UserId = "12"
+                        },
+                        new
+                        {
+                            IndividualId = 3,
+                            Address = "{\"street\":\"789 Pine St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                            FirstName = "Charlie",
+                            Image = "profilepic3.jpg",
+                            LastName = "Smith",
+                            PhoneNumber = "987-654-3230",
+                            UserId = "13"
+                        },
+                        new
+                        {
+                            IndividualId = 4,
+                            Address = "{\"street\":\"123 Birch St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                            FirstName = "David",
+                            Image = "profilepic4.jpg",
+                            LastName = "Davis",
+                            PhoneNumber = "987-654-3240",
+                            UserId = "14"
+                        },
+                        new
+                        {
+                            IndividualId = 5,
+                            Address = "{\"street\":\"456 Maple St\",\"city\":\"Amman\",\"country\":\"Jordan\"}",
+                            FirstName = "Eva",
+                            Image = "profilepic5.jpg",
+                            LastName = "Martin",
+                            PhoneNumber = "987-654-3250",
+                            UserId = "15"
+                        });
                 });
 
             modelBuilder.Entity("api.Models.Notification", b =>
@@ -564,49 +1177,15 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("NotificationsId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Notifications");
-                });
-
-            modelBuilder.Entity("api.Models.Role", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("RoleId");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            RoleName = "Admin"
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            RoleName = "Individual"
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            RoleName = "Business"
-                        });
                 });
 
             modelBuilder.Entity("api.Models.Shipment", b =>
@@ -626,8 +1205,9 @@ namespace api.Migrations
                     b.Property<int>("DeliveryStatus")
                         .HasColumnType("int");
 
-                    b.Property<int>("SellerId")
-                        .HasColumnType("int");
+                    b.Property<string>("SellerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ShipmentId");
 
@@ -679,8 +1259,9 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("TransactionId");
 
@@ -689,70 +1270,6 @@ namespace api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("TransactionHistory");
-                });
-
-            modelBuilder.Entity("api.Models.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
-
-                    b.Property<string>("AccountStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            AccountStatus = "Approved",
-                            CreatedAt = new DateTime(2024, 11, 27, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8364),
-                            Email = "admin@example.com",
-                            RoleId = 1
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            AccountStatus = "Approved",
-                            CreatedAt = new DateTime(2024, 11, 27, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8368),
-                            Email = "individual@example.com",
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            AccountStatus = "Approved",
-                            CreatedAt = new DateTime(2024, 11, 27, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8369),
-                            Email = "individual2@example.com",
-                            RoleId = 2
-                        },
-                        new
-                        {
-                            UserId = 4,
-                            AccountStatus = "Approved",
-                            CreatedAt = new DateTime(2024, 11, 27, 18, 18, 23, 812, DateTimeKind.Utc).AddTicks(8370),
-                            Email = "business@example.com",
-                            RoleId = 3
-                        });
                 });
 
             modelBuilder.Entity("api.Models.WatchList", b =>
@@ -766,8 +1283,9 @@ namespace api.Migrations
                     b.Property<int>("AuctionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("WatchId");
 
@@ -778,6 +1296,57 @@ namespace api.Migrations
                     b.ToTable("WatchList");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("api.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("api.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("api.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("api.Models.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("api.Models.ActivityLog", b =>
                 {
                     b.HasOne("api.Models.Action", "Action")
@@ -786,7 +1355,7 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Models.User", "User")
+                    b.HasOne("api.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -805,7 +1374,7 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Models.User", "Seller")
+                    b.HasOne("api.Models.ApplicationUser", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -824,7 +1393,7 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Models.User", "Bidder")
+                    b.HasOne("api.Models.ApplicationUser", "Bidder")
                         .WithMany()
                         .HasForeignKey("BidderId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -837,9 +1406,9 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Business", b =>
                 {
-                    b.HasOne("api.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("api.Models.ApplicationUser", "User")
+                        .WithOne("Business")
+                        .HasForeignKey("api.Models.Business", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -848,9 +1417,9 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Individual", b =>
                 {
-                    b.HasOne("api.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                    b.HasOne("api.Models.ApplicationUser", "User")
+                        .WithOne("Individual")
+                        .HasForeignKey("api.Models.Individual", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -859,7 +1428,7 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Notification", b =>
                 {
-                    b.HasOne("api.Models.User", "User")
+                    b.HasOne("api.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -876,7 +1445,7 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Models.User", "Seller")
+                    b.HasOne("api.Models.ApplicationUser", "Seller")
                         .WithMany()
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -895,7 +1464,7 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Models.User", "User")
+                    b.HasOne("api.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -906,17 +1475,6 @@ namespace api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("api.Models.User", b =>
-                {
-                    b.HasOne("api.Models.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("api.Models.WatchList", b =>
                 {
                     b.HasOne("api.Models.Auction", "Auction")
@@ -925,7 +1483,7 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Models.User", "User")
+                    b.HasOne("api.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -941,6 +1499,15 @@ namespace api.Migrations
                     b.Navigation("ActivityLogs");
                 });
 
+            modelBuilder.Entity("api.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Business")
+                        .IsRequired();
+
+                    b.Navigation("Individual")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("api.Models.Auction", b =>
                 {
                     b.Navigation("Biddings");
@@ -953,11 +1520,6 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.Category", b =>
                 {
                     b.Navigation("Auctions");
-                });
-
-            modelBuilder.Entity("api.Models.Role", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

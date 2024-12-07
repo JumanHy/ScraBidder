@@ -31,6 +31,8 @@ namespace api.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Category> Categories { get; set; }
         public object CompanyServices { get; internal set; }
+        public IEnumerable<object> ApplicationUsers { get; internal set; }
+        public object BusinessContacts { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -73,6 +75,9 @@ namespace api.Data
                     NormalizedName = "BUSINESS"
                 }
             };
+
+
+            
 
             builder.Entity<IdentityRole>().HasData(roles);
 

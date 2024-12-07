@@ -15,9 +15,6 @@ namespace api.Models
         [Required]
         public string UserId { get; set; }
 
-
-
-
         public string? Address { get; set; } // JSON
 
         public ApplicationUser User { get; set; } // Relationship with ApplicationUser

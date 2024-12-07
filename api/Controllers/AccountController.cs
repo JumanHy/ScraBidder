@@ -6,6 +6,8 @@ using api.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using api.Repositories.Implementations;
 using api.Repositories.Interfaces;
+using api.Data;
+using api.Enums;
 
 namespace api.Controllers
 {
@@ -18,19 +20,24 @@ namespace api.Controllers
         private readonly SignInManager<ApplicationUser> _signinManager;
         private readonly IIndividualRepository _individualRepo;
         private readonly IBusinessRepository _businessRepo;
+        private readonly ApplicationDBContext _context;
 
         public UsersController(
             UserManager<ApplicationUser> userManager,
             ITokenService tokenService,
             SignInManager<ApplicationUser> signInManager,
             IIndividualRepository individualRepo,
-            IBusinessRepository businessRepo)
+            IBusinessRepository businessRepo,
+             ApplicationDBContext context)
+
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _signinManager = signInManager;
             _individualRepo = individualRepo;
             _businessRepo = businessRepo;
+
+            _context = context;
         }
 
         // Login endpoint
@@ -55,6 +62,7 @@ namespace api.Controllers
             return Ok(new NewUserDto
             {
                 UserId = user.Id,
+                AccountStatus = user.Status,
                 Role = role,
                 Email = user.Email,
                 Token = await _tokenService.CreateToken(user)
@@ -73,6 +81,8 @@ namespace api.Controllers
             {
                 UserName = individualRegisterDto.Email,
                 Email = individualRegisterDto.Email,
+                Status = AccountStatus.Active
+
             };
 
             var createResult = await _userManager.CreateAsync(user, individualRegisterDto.Password);
@@ -119,6 +129,7 @@ namespace api.Controllers
         [HttpPost("register/business")]
         public async Task<IActionResult> RegisterBusiness([FromBody] BusinessRegisterDto businessRegisterDto)
         {
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -126,7 +137,8 @@ namespace api.Controllers
             {
                 UserName = businessRegisterDto.Email,
                 Email = businessRegisterDto.Email,
-                PhoneNumber = businessRegisterDto.PrimaryPhoneNumber
+                PhoneNumber = businessRegisterDto.PrimaryPhoneNumber,
+                 Status = AccountStatus.Active
             };
 
             var createResult = await _userManager.CreateAsync(user, businessRegisterDto.Password);
@@ -175,5 +187,60 @@ namespace api.Controllers
                 Token = await _tokenService.CreateToken(user)
             });
         }
+
+
+
+        [HttpPost("check-email-exists")]
+        public async Task<IActionResult> CheckEmailExists([FromBody] UserCheckRequestDto request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Invalid request.");
+            }
+
+            // Check if email exists in the ApplicationUser table (for both individuals and businesses)
+            var existingEmail = await _context.Users
+                                               .Where(u => u.Email == request.Email)
+                                               .FirstOrDefaultAsync();
+
+            if (existingEmail != null)
+            {
+                return Conflict(new { message = "Email already exists." });
+            }
+
+            // If email is available
+            return Ok(new { message = "Email is available." });
+        }
+
+
+
+        [HttpPost("check-phone-exists")]
+        public async Task<IActionResult> CheckPhoneExists([FromBody] UserCheckRequestDto request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Invalid request.");
+            }
+
+            // Check if phone number exists in the Individual table
+            var existingPhone = await _context.Individuals
+                                               .Where(i => i.PhoneNumber == request.PhoneNumber)
+                                               .FirstOrDefaultAsync();
+
+            // Check if phone number exists in the ApplicationUser table (if it's stored there as well)
+            var existingPhoneInUser = await _context.Users
+                                                     .Where(u => u.PhoneNumber == request.PhoneNumber)
+                                                     .FirstOrDefaultAsync();
+
+            if (existingPhone != null || existingPhoneInUser != null)
+            {
+                return Conflict(new { message = "Phone number already exists." });
+            }
+
+            // If phone number is available
+            return Ok(new { message = "Phone number is available." });
+        }
+
     }
 }
+

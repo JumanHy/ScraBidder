@@ -48,7 +48,7 @@ namespace api.Service
                 PrimaryContactFirstName = business.PrimaryContactFirstName,
                 PrimaryContactLastName = business.PrimaryContactLastName,
                 PrimaryContactEmail = business.PrimaryContactEmail,
-                Address = business.Address
+               
             };
         }
 
@@ -67,7 +67,7 @@ namespace api.Service
             business.PrimaryContactFirstName = businessDto.PrimaryContactFirstName;
             business.PrimaryContactLastName = businessDto.PrimaryContactLastName;
             business.PrimaryContactEmail = businessDto.PrimaryContactEmail;
-            business.Address = businessDto.Address;
+           
 
             // Mark the entity as modified and save changes
             _context.Businesses.Update(business);
@@ -128,7 +128,7 @@ namespace api.Service
                     LastName = i.LastName,
                     Email = i.User.Email,
                     PhoneNumber = i.PhoneNumber,
-                    Address = i.Address
+                   
                 })
                 .FirstOrDefaultAsync();
 
@@ -148,7 +148,7 @@ namespace api.Service
             // Update Individual properties
             individual.FirstName = userUpdateDto.FirstName;
             individual.LastName = userUpdateDto.LastName;
-            individual.Address = userUpdateDto.Address;
+           
 
             // Update ApplicationUser properties
             individual.User.Email = userUpdateDto.Email;

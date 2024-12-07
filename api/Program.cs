@@ -21,7 +21,7 @@ using Microsoft.OpenApi.Models;
 
 internal partial class Program
 {
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -64,6 +64,7 @@ internal partial class Program
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
         });
 
+        // Add HttpClient for external API calls
         builder.Services.AddHttpClient<PayPalService>();
 
         // Configure logging
@@ -78,6 +79,7 @@ internal partial class Program
             });
 
         // Configure Identity
+        // Configure Identity
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
         {
             options.Password.RequireDigit = true;
@@ -91,6 +93,23 @@ internal partial class Program
 
         // Authentication and JWT Bearer setup
         builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(options =>
+        {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigninKey"])
+            )
+        };
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -176,15 +195,31 @@ internal partial class Program
         // Build the application
         var app = builder.Build();
 
-        // Configure middleware and HTTP pipeline
+
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+            try
+            {
+                await AdminSeeder.SeedAdminUser(services);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error seeding admin user: {ex.Message}");
+            }
+        }
+
+
         if (app.Environment.IsDevelopment())
         {
+            app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
         app.UseCors("AllowReactApp");
 
         app.UseRouting();

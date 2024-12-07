@@ -10,7 +10,7 @@ namespace api.Interfaces
         Task<DashboardStatsDTO> GetDashboardStatsAsync();
 
 
-        Task<List<UserDto>> GetAllUsersAsync(); // Return List<UserDTO>
+        Task<List<UserDto>> GetAllUsersAsync(); 
         Task<UserDto> GetUserByUsernameOrEmailAsync(string usernameOrEmail);
 
         Task<bool> UpdateAllUsersAsync(List<UserUpdateDto> userUpdateDto);
