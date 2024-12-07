@@ -16,6 +16,7 @@ import PaymentModal from "@/components/PaymentModal/PaymentModal";
 import Swal from "sweetalert2";
 import WatchButton from "./WatchButton";
 import axios from "axios";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 
 export default function BiddingInfo({ currentItem }) {
   const [isLoggedIn, setIsLoggedIn] = useState(true);
@@ -28,11 +29,12 @@ export default function BiddingInfo({ currentItem }) {
   const [bidAmount, setBidAmount] = useState("");
   const [error, setError] = useState("");
   const [paymentPurpose, setPaymentPurpose] = useState("deposit");
+  const [biddings, setBiddings] = useState(currentItem.biddings);
   const userId = localStorage.getItem("userId");
   const depositAmount = 50; // amount to hold for bidding authorization
 
   const winnerId =
-    currentItem.auctionStatus == "Ended" &&
+    currentItem.auctionStatus === "Ended" &&
     currentItem.biddings &&
     currentItem.biddings.length > 0 &&
     currentItem.biddings.reduce(
@@ -43,6 +45,7 @@ export default function BiddingInfo({ currentItem }) {
   const isWinner =
     userId === winnerId && highestBid >= currentItem.reservePrice;
 
+  // Handle Bid Placement
   const handleBidNowClick = async () => {
     if (!isLoggedIn) {
       setShowLoginModal(true);
@@ -136,6 +139,37 @@ export default function BiddingInfo({ currentItem }) {
     console.log(currentItem);
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    // Initialize the SignalR connection
+    const newConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5192/biddingHub") // Adjust the URL as needed
+      .withAutomaticReconnect()
+      .build();
+
+    newConnection
+      .start()
+      .then(() => {
+        console.log("Connected to SignalR");
+
+        // Listen for updates from the hub
+        newConnection.on(
+          "ReceiveBidUpdate",
+          (auctionId, currentBid, biddings) => {
+            if (auctionId === currentItem.auctionId) {
+              setHighestBid(currentBid);
+              setBiddings(biddings);
+            }
+          }
+        );
+      })
+      .catch((error) => console.error("SignalR Connection Error: ", error));
+
+    // Cleanup on component unmount
+    return () => {
+      newConnection.stop();
+    };
+  }, [currentItem.auctionId]);
+
   return (
     <Card className="h-100 p-2 shadow border-0" style={{ maxHeight: "400px" }}>
       <Card.Body className="d-flex flex-column text-primary justify-content-center gap-2">
@@ -154,7 +188,9 @@ export default function BiddingInfo({ currentItem }) {
 
         <Card.Text>
           <Card.Subtitle className="mb-2 text-muted">
-            {currentItem.auctionStatus === "Ended" ? "Ended At" : "Ends After"}
+            {currentItem.auctionStatus === "Approved" && "Starts After"}
+            {currentItem.auctionStatus === "Started" && "Ends After"}
+            {currentItem.auctionStatus === "Ended" && "Ended At"}
           </Card.Subtitle>
           <Timer auction={currentItem} />
         </Card.Text>
@@ -165,7 +201,6 @@ export default function BiddingInfo({ currentItem }) {
               <Stack className="p-0">
                 <p className="m-0">
                   {currentItem.currentBid ? "Highest Bid  " : "Starting price "}
-                  .{" "}
                   <BidHistoryModal
                     biddingsList={currentItem.biddings}
                     startingPrice={currentItem.startingBid}
@@ -180,7 +215,7 @@ export default function BiddingInfo({ currentItem }) {
           </Container>
         </Card.Text>
 
-        {currentItem.auctionStatus !== "Ended" && (
+        {currentItem.auctionStatus === "Started" && (
           <Card.Text className="d-flex justify-content-center">
             <Col xs={12} md={7}>
               {isLoggedIn && (
@@ -188,9 +223,9 @@ export default function BiddingInfo({ currentItem }) {
                   <Form.Control
                     type="number"
                     placeholder={`Bid Amount (min ${highestBid + 1})`}
-                    min={highestBid + 1}
+                    min={highestBid + 1} // Set the minimum bid value
                     value={bidAmount}
-                    step={1}
+                    step={1} // Whole numbers only
                     onChange={(e) => {
                       const inputValue = e.target.value;
                       if (/^\d*$/.test(inputValue)) {
@@ -217,16 +252,6 @@ export default function BiddingInfo({ currentItem }) {
               </Button>
             </Col>
           </Card.Text>
-        )}
-
-        {currentItem.auctionStatus === "Ended" && isWinner && (
-          <Button
-            onClick={handlePurchaseClick}
-            className="text-white w-100 rounded-5 mt-2"
-            variant="success"
-          >
-            Purchase for {highestBid} JD
-          </Button>
         )}
       </Card.Body>
 

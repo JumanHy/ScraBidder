@@ -12,6 +12,7 @@ function SideBar() {
   const [auctions, setAuctions] = useState([]);
   const [biddings, setBiddings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isStarted, setisStarted] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -34,7 +35,8 @@ function SideBar() {
   }, []);
 
   const soldAuctionsCount = auctions.filter(
-    (auction) => auction.status && auction.status.toLowerCase() === "sold"
+    (auction) =>
+      auction.auctionStatus && auction.auctionStatus.toLowerCase() === "ended"
   ).length;
 
   const [activeComponent, setActiveComponent] = useState(

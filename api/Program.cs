@@ -19,7 +19,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-internal class Program
+internal partial class Program
 {
     private static void Main(string[] args)
     {
@@ -167,6 +167,12 @@ internal class Program
                       .AllowCredentials());
         });
 
+
+
+
+
+
+
         // Build the application
         var app = builder.Build();
 
@@ -187,8 +193,8 @@ internal class Program
 
         app.MapControllers();
         app.MapHub<NotificationHub>("/notificationHub");
-
-        // Run the application
+        app.MapHub<BiddingHub>("/biddingHub");
         app.Run();
     }
+
 }

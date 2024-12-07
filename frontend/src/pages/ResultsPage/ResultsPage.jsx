@@ -8,6 +8,7 @@ import axios from "axios";
 
 function ResultsPage() {
   const [auctions, setAuctions] = useState([]);
+  const [filteredAuctions, setFilteredAuctions] = useState([]); // For filtered data
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,11 +17,14 @@ function ResultsPage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5192/api/auction") // Replace with your endpoint
+      .get("http://localhost:5192/api/auction", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
-        const data = response.data;
-
-        setAuctions(data);
+        setAuctions(response.data);
+        setFilteredAuctions(response.data); // Initialize filtered auctions
         setLoading(false);
       })
       .catch((err) => {
@@ -30,16 +34,25 @@ function ResultsPage() {
       });
   }, []);
 
-  const totalItems = auctions.length; // Total number of items
+  const totalItems = filteredAuctions.length; // Total number of items after filtering
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   // Calculate the current items based on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = auctions.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredAuctions.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   // Handle page change
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Handle filtering from Filters component
+  const handleFilterChange = (filteredData) => {
+    setFilteredAuctions(filteredData);
+    setCurrentPage(1); // Reset to first page on new filter
+  };
 
   if (loading) {
     return (
@@ -70,7 +83,7 @@ function ResultsPage() {
         </Row>
         <Row className="gap-3 gap-md-0">
           <Col xs={12} md={4} lg={3}>
-            <Filters />
+            <Filters auctions={auctions} onFilterChange={handleFilterChange} />
           </Col>
           <Col xs={12} md={8} lg={9}>
             <AuctionCardsList currentItems={currentItems} />

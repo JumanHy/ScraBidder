@@ -60,7 +60,7 @@ function AuctionFormPage() {
   };
   const [formData, setFormData] = useState({
     SellerId: localStorage.getItem("userId"),
-    AuctionStatus: "Approved",
+    AuctionStatus: "Pending",
     title: "",
     description: "",
     images: [],

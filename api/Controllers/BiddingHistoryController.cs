@@ -43,7 +43,7 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBid([FromForm] CreateBidDto createBidDto)
+        public async Task<IActionResult> CreateBid([FromBody] CreateBidDto createBidDto)
         {
             var bid = createBidDto.ToBidFromCreateDto();
             if (bid == null) return BadRequest();

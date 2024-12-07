@@ -8,11 +8,12 @@ function PaymentModal({
   handleClose,
   amount,
   userId,
+  purpose,
   auctionId,
   onPaymentSuccess,
 }) {
   const [errorMessage, setErrorMessage] = useState("");
-  const purpose = "Deposit";
+
   // API endpoint for deposit
   const apiUrl = "http://localhost:5192/api/payments"; // Replace with your API endpoint
 
@@ -65,14 +66,19 @@ function PaymentModal({
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Bidding Deposit</Modal.Title>
+        <Modal.Title>
+          {purpose == "deposit" && "Bidding Deposit"}
+          {purpose == "purchase" && `Buy Item for ${amount} JD`}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Alert variant="primary">
-          Please note: A deposit of {amount} JD will be authorized and held by
-          your bank. No money will be taken from your account at this moment.
-          The deposit will be refunded.
-        </Alert>
+        {purpose == "deposit" && (
+          <Alert variant="primary">
+            Please note: A deposit of {amount} JD will be authorized and held by
+            your bank. No money will be taken from your account at this moment.
+            The deposit will be refunded.
+          </Alert>
+        )}
 
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 

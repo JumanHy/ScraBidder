@@ -16,7 +16,7 @@ function Timer({ auction }) {
     Address: auction.address,
     condition: auction.condition,
     quantity: auction.quantity,
-    CategoryId: auction.categoryId,
+    CategoryId: auction.category.categoryId,
   };
 
   //console.log(auction.data);
@@ -48,7 +48,9 @@ function Timer({ auction }) {
       console.error("Error closing auction:", error);
     }
   };
-
+  var time;
+  if (auction.AuctionStatus == "Approved") time = auction.startingTime;
+  if (auction.AuctionStatus == "Started") time = auction.endingTime;
   return (
     <Container fluid>
       <Row className="justify-content-between p-2  align-items-center bg-secondary bg-opacity-50 text-center text-primary-emphasis rounded-3">

@@ -7,7 +7,11 @@ function AuctionCardsList({ currentItems }) {
       {currentItems && currentItems.length > 0 ? (
         currentItems.map((currentAuction, index) => (
           <Col key={currentAuction.auctionId || index} xs={12} sm={6} lg={4}>
-            <AuctionCard currentAuction={currentAuction} />
+            {currentAuction.auctionStatus != "Denied" &&
+              currentAuction.auctionStatus != "Pending" &&
+              currentAuction.auctionStatus != "Deleted" && (
+                <AuctionCard currentAuction={currentAuction} />
+              )}
           </Col>
         ))
       ) : (
