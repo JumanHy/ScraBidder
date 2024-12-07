@@ -245,9 +245,35 @@ public async Task<IActionResult> GetBusinessName([FromQuery] string userId)
 }
 
 
+ [HttpGet("vision/{userId}")]
+        public async Task<ActionResult<string>> GetCompanyVisionByUserId(string userId)
+        {
+            // Fetch the business by UserId
+            var business = await _context.Businesses
+                .FirstOrDefaultAsync(b => b.UserId == userId);
+
+            if (business == null)
+            {
+                return NotFound("Business not found for the given UserId");
+            }
+
+          
+            return Ok(business.CompanyVision);
+        }
+
+
+        
+
+
+         
+
+    }
+}
 
 
 
 
-}}
+
+
+
 

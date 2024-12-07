@@ -11,7 +11,7 @@ import axios from "axios";
 function SideBar() {
   const [auctions, setAuctions] = useState([]);
   const [biddings, setBiddings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
   useEffect(() => {

@@ -32,6 +32,7 @@ namespace api.Data
         public DbSet<Category> Categories { get; set; }
         public object CompanyServices { get; internal set; }
         public IEnumerable<object> ApplicationUsers { get; internal set; }
+        public object BusinessContacts { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

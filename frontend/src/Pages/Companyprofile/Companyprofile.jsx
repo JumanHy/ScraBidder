@@ -8,7 +8,8 @@ function CompanyProfile() {
   const [showModal, setShowModal] = useState(false);
   const [fetchedImages, setFetchedImages] = useState([]);
   const [businessName, setBusinessName] = useState("");
-
+  const [companyServiceInfo, setCompanyServiceInfo] = useState("");
+  const [CompanyVision, setCompanyVision] = useState("");
 
   // Toggle the modal
   const handleShowModal = () => setShowModal(true);
@@ -30,35 +31,42 @@ function CompanyProfile() {
     }
   };
 
-  useEffect(() => {
-    fetchUserImages();
-  }, []);
-
-
-  const fetchCompanyName = async () => {
+  const fetchCompanyInfo = async () => {
     try {
       const userId = localStorage.getItem("userId");
-      console.log("Fetching company name for userId:", userId);
       if (!userId) {
         console.error("User ID not found in localStorage.");
         return;
       }
-  
-      const response = await axios.get(
-        `http://localhost:5192/api/UserSetting/company-name/${userId}`
+
+      const companyNameResponse = await axios.get(
+        `http://localhost:5192/api/UserSetting/company-name?userId=${userId}`
       );
-      console.log("API response:", response.data);
-      setBusinessName(response.data.businessName || "Company Name Not Found");
+      setBusinessName(
+        companyNameResponse.data.businessName || "Company Name Not Found"
+      );
+
+      const servicesResponse = await axios.get(
+        `http://localhost:5192/api/UserSetting/company-service/${userId}`
+      );
+      setCompanyServiceInfo(
+        servicesResponse.data.businessServices || "No services available"
+      );
+
+      const visionResponse = await axios.get(
+        `http://localhost:5192/api/UserSetting/vision/${userId}`
+      );
+
+      setCompanyVision(visionResponse.data || "Vision not available");
     } catch (error) {
-      console.error("Error fetching company name:", error);
-      alert("Failed to fetch company name. Please try again later.");
+      console.error("Error fetching company information:", error);
+      alert("Failed to fetch company info.");
     }
   };
-  
-  
-   useEffect(() => {
+
+  useEffect(() => {
     fetchUserImages();
-    fetchCompanyName();
+    fetchCompanyInfo();
   }, []);
 
   return (
@@ -83,17 +91,17 @@ function CompanyProfile() {
         }}
       >
         <h2 style={{ fontSize: "2em", fontWeight: "lighter" }}>
-        {businessName || "Loading Company Name..."}
+          {businessName || "Loading Company Name..."}
         </h2>
         <Button
           style={{
-            backgroundColor: "#B87333", 
-            color: "white", 
-            letterSpacing: "2px", 
-            padding: "10px 20px", 
-            borderRadius: "20px", 
+            backgroundColor: "#B87333",
+            color: "white",
+            letterSpacing: "2px",
+            padding: "10px 20px",
+            borderRadius: "20px",
             border: "none",
-            fontWeight: "lighter", 
+            fontWeight: "lighter",
             textTransform: "uppercase",
             marginRight: "30px",
             transition: "background-color 0.3s ease",
@@ -122,9 +130,7 @@ function CompanyProfile() {
                   borderRadius: "8px",
                 }}
               />
-              <Carousel.Caption>
-                
-              </Carousel.Caption>
+              <Carousel.Caption></Carousel.Caption>
             </Carousel.Item>
           ))
         ) : (
@@ -180,14 +186,7 @@ function CompanyProfile() {
           >
             Company Overview
           </h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras id
-            augue eget enim fermentum luctus. Donec quis nulla id sapien
-            fringilla efficitur. Nulla facilisi. Sed nec venenatis odio, sit
-            amet placerat urna. Integer in dolor non metus egestas scelerisque
-            non sed nisi. Aliquam erat volutpat. Aenean gravida lacinia ante et
-            vestibulum.
-          </p>
+          <p>{CompanyVision}</p>
         </div>
 
         {/* Services Section */}
@@ -212,13 +211,7 @@ function CompanyProfile() {
           >
             Our Services
           </h3>
-          <ul>
-            <li>Service 1: High-quality products</li>
-            <li>Service 2: Fast and efficient delivery</li>
-            <li>Service 3: Excellent customer support</li>
-            <li>Service 4: Affordable pricing</li>
-            <li>Service 5: Custom solutions</li>
-          </ul>
+          <p>{companyServiceInfo}</p>
         </div>
       </div>
 
@@ -269,7 +262,6 @@ function CompanyProfile() {
                 Company LinkedIn
               </a>
             </p>
-           
           </div>
 
           {/* Google Maps Embed */}

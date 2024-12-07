@@ -56,5 +56,6 @@ namespace api.Models
         public string PrimaryContactEmail { get; set; }
 
         public ApplicationUser User { get; set; }
+        public object BusinessContacts { get; internal set; }
     }
 }

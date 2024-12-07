@@ -6,6 +6,7 @@ import axios from "axios";
 
 const UserDetails = () => {
   const [isEditingUserInfo, setIsEditingUserInfo] = useState(false);
+
   const [userInfo, setUserInfo] = useState({
     primaryContactFirstName: "",
     primaryContactLastName: "",
@@ -13,8 +14,43 @@ const UserDetails = () => {
     primaryPhoneNumber: "",
   });
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [companyServiceInfo, setCompanyServiceInfo] = useState({
+    businessName: "",
+    businessServices: "",
+  });
   const [isEditingServiceInfo, setIsEditingServiceInfo] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchCompanyServiceInfo = async () => {
+    try {
+      const userId = localStorage.getItem("userId"); // Retrieve userId from localStorage
+      if (!userId) throw new Error("User ID not found in localStorage.");
+
+      const response = await axios.get(
+        `http://localhost:5192/api/UserSetting/company-service/${userId}`
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        setCompanyServiceInfo({
+          businessName:
+            response.data.businessName || "No business name provided",
+          businessServices:
+            response.data.businessServices || "No services available",
+        });
+      } else {
+        alert(
+          `Failed to fetch company service details. Status: ${response.status}`
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching company service details:", error);
+      alert(
+        `An error occurred while fetching company service details: ${error.message}`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchUserDetails = async () => {
     try {
@@ -42,12 +78,45 @@ const UserDetails = () => {
 
   useEffect(() => {
     fetchUserDetails();
+    fetchCompanyServiceInfo();
   }, []);
 
-  const [companyServiceInfo, setCompanyServiceInfo] = useState({
-    companyName: "Company ABC",
-    serviceDetails: "Basic service details here...",
-  });
+  const handleSaveServiceChanges = async () => {
+    try {
+      setIsLoading(true);
+      const userId = localStorage.getItem("userId");
+      if (!userId) throw new Error("User ID not found in localStorage.");
+
+      const updatedServiceInfo = { ...companyServiceInfo, userId };
+
+      const response = await axios.put(
+        "http://localhost:5192/api/UserSetting/update-company-service",
+        updatedServiceInfo
+      );
+
+      if (response.status >= 200 && response.status < 300) {
+        alert("Company service details updated successfully!");
+        toggleEditServiceInfo();
+        fetchCompanyServiceInfo();
+      } else {
+        alert(
+          `Failed to update company service details. Status: ${response.status}`
+        );
+      }
+    } catch (error) {
+      console.error("Error updating company service details:", error);
+      alert(
+        `An error occurred while updating company service details: ${error.message}`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const toggleEditServiceInfo = () => {
+    setIsEditingServiceInfo((prev) => !prev);
+  };
+
   const [formData, setFormData] = useState({
     images: [],
   });
@@ -93,13 +162,11 @@ const UserDetails = () => {
     setIsEditingUserInfo((prev) => !prev);
   };
 
-  const toggleEditServiceInfo = () =>
-    setIsEditingServiceInfo(!isEditingServiceInfo);
   const handleServiceInputChange = (event) => {
     const { value } = event.target;
     setCompanyServiceInfo((prevInfo) => ({
       ...prevInfo,
-      serviceDetails: value,
+      businessServices: value,
     }));
   };
 
@@ -185,8 +252,6 @@ const UserDetails = () => {
         `http://localhost:5192/api/UserSetting/delete-image/${userId}/${imageId}`
       );
       fetchUserImages();
-
-
 
       if (response.status >= 200 && response.status < 300) {
         setFetchedImages((prevImages) =>
@@ -337,13 +402,13 @@ const UserDetails = () => {
           <p style={{ color: "black", fontSize: "16px" }}>
             <strong>Company Name:</strong>{" "}
             <span style={{ color: "black", fontSize: "14px" }}>
-              {companyServiceInfo.companyName}
+              {companyServiceInfo.businessName}
             </span>
           </p>
           <p style={{ color: "black", fontSize: "16px" }}>
             <strong>Service Details:</strong>{" "}
             <span style={{ color: "black", fontSize: "14px" }}>
-              {companyServiceInfo.serviceDetails}
+              {companyServiceInfo.businessServices}
             </span>
           </p>
           <button
@@ -369,18 +434,19 @@ const UserDetails = () => {
                   <Form.Label>Company Name</Form.Label>
                   <Form.Control
                     type="text"
-                    name="companyName"
-                    value={companyServiceInfo.companyName}
-                    onChange={handleServiceInputChange}
+                    name="businessName"
+                    value={companyServiceInfo.businessName}
+                    //   onChange={handleServiceInputChange}
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
+                  {console.log(companyServiceInfo)}
                   <Form.Label>Service Details</Form.Label>
                   <Form.Control
                     as="textarea"
                     rows={4}
-                    name="serviceDetails"
-                    value={companyServiceInfo.serviceDetails}
+                    name="businessServices"
+                    value={companyServiceInfo.businessServices}
                     onChange={handleServiceInputChange}
                   />
                 </Form.Group>
@@ -393,7 +459,7 @@ const UserDetails = () => {
               <Button
                 variant="primary"
                 onClick={() => {
-                  setIsEditingServiceInfo(false);
+                  handleSaveServiceChanges();
                 }}
               >
                 Save changes
@@ -591,7 +657,3 @@ const UserDetails = () => {
 };
 
 export default UserDetails;
-
-
-
-

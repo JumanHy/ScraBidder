@@ -22,7 +22,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add SignalR for real-time communication
+      
         builder.Services.AddSignalR();
         builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
 
@@ -102,14 +102,14 @@ internal class Program
             };
         });
 
-        // Add Authorization
+      
         builder.Services.AddAuthorization();
 
-        // Enable Swagger for API documentation
+  
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        // Configure CORS
+     
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowReactApp", policy =>
@@ -121,7 +121,7 @@ internal class Program
 
         var app = builder.Build();
 
-        // Seed Admin User
+       
         using (var scope = app.Services.CreateScope())
         {
             var services = scope.ServiceProvider;
@@ -135,7 +135,7 @@ internal class Program
             }
         }
 
-        // Configure middleware and HTTP pipeline
+    
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

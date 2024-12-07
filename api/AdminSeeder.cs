@@ -16,13 +16,12 @@ public static class AdminSeeder
         const string adminPassword = "Admin@123";
         const string adminRole = "Admin";
 
-        // Ensure the Admin role exists
+      
         if (!await roleManager.RoleExistsAsync(adminRole))
         {
             await roleManager.CreateAsync(new IdentityRole(adminRole));
         }
 
-        // Ensure the admin user exists
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
         if (adminUser == null)
         {
