@@ -10,7 +10,7 @@ const TransactionHistory = () => {
   useEffect(() => {
     // Get userId and token from localStorage
     const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken");
 
     if (!userId || !token) {
       setError("User not authenticated");

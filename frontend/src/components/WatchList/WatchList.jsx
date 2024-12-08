@@ -11,7 +11,7 @@ const WatchList = () => {
   const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const userId = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("authToken");
 
   const fetchWatchList = async () => {
     if (!token) {

@@ -17,10 +17,10 @@ import Swal from "sweetalert2";
 import WatchButton from "./WatchButton";
 import axios from "axios";
 import { HubConnectionBuilder } from "@microsoft/signalr";
+import { useNavigate } from "react-router-dom";
 
 export default function BiddingInfo({ currentItem }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const isLoggedIn = localStorage.getItem("authToken");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isDepositAuthorized, setIsDepositAuthorized] = useState(false);
   const [highestBid, setHighestBid] = useState(
@@ -32,7 +32,7 @@ export default function BiddingInfo({ currentItem }) {
   const [biddings, setBiddings] = useState(currentItem.biddings);
   const userId = localStorage.getItem("userId");
   const depositAmount = 50; // amount to hold for bidding authorization
-
+  const navigate = useNavigate();
   const winnerId =
     currentItem.auctionStatus === "Ended" &&
     currentItem.biddings &&
@@ -48,8 +48,8 @@ export default function BiddingInfo({ currentItem }) {
   // Handle Bid Placement
   const handleBidNowClick = async () => {
     if (!isLoggedIn) {
-      setShowLoginModal(true);
-      return;
+      navigate("/login"); // Navigate to login page if not logged in
+      return null; // Prevent further rendering
     }
 
     if (!isDepositAuthorized) {
@@ -71,11 +71,6 @@ export default function BiddingInfo({ currentItem }) {
             auctionId: currentItem.auctionId,
             bidderId: userId,
             bidAmount: numericBid,
-          },
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
           }
         );
 
@@ -103,12 +98,6 @@ export default function BiddingInfo({ currentItem }) {
     setShowPaymentModal(true);
   };
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-    setShowLoginModal(false);
-    setShowPaymentModal(true); // Show payment modal after login
-  };
-
   const handlePaymentSuccess = () => {
     if (paymentPurpose === "deposit") {
       setIsDepositAuthorized(true);
@@ -127,17 +116,6 @@ export default function BiddingInfo({ currentItem }) {
       });
     }
   };
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      Swal.fire({
-        title: "Hooray!",
-        text: "You're now logged in. Let's get started!",
-        icon: "success",
-      });
-    }
-    console.log(currentItem);
-  }, [isLoggedIn]);
 
   useEffect(() => {
     // Initialize the SignalR connection
@@ -254,12 +232,6 @@ export default function BiddingInfo({ currentItem }) {
           </Card.Text>
         )}
       </Card.Body>
-
-      <LoginModal
-        show={showLoginModal}
-        onHide={() => setShowLoginModal(false)}
-        onLoginSuccess={handleLoginSuccess}
-      />
 
       <PaymentModal
         show={showPaymentModal}

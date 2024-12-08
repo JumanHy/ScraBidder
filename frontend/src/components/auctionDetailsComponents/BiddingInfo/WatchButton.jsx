@@ -5,7 +5,7 @@ import axios from "axios";
 
 function WatchButton({ auctionId }) {
   const [isInWatchList, setIsInWatchList] = useState(false);
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("authToken");
   const userId = localStorage.getItem("userId");
   // Function to check if auction is in the user's watchlist
   const checkIfInWatchList = async () => {

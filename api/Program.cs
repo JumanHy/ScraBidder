@@ -99,23 +99,6 @@ internal partial class Program
         })
         .AddJwtBearer(options =>
         {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["JWT:Issuer"],
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["JWT:Audience"],
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigninKey"])
-            )
-        };
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
@@ -124,10 +107,9 @@ internal partial class Program
                 ValidAudience = builder.Configuration["JWT:Audience"],
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigninKey"])
-                )
+                Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigninKey"])
+            )
             };
-
             options.Events = new JwtBearerEvents
             {
                 OnMessageReceived = context =>
@@ -143,6 +125,11 @@ internal partial class Program
                 }
             };
         });
+
+
+
+
+
 
         builder.Services.AddAuthorization();
 

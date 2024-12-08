@@ -11,8 +11,8 @@ namespace api.Models
 
         [Required]
         public string UserId { get; set; }
-    
-    
+
+
 
         [Required, MaxLength(100)]
         public string BusinessName { get; set; }
@@ -56,6 +56,6 @@ namespace api.Models
         public string PrimaryContactEmail { get; set; }
 
         public ApplicationUser User { get; set; }
-        public object BusinessContacts { get; internal set; }
+
     }
 }

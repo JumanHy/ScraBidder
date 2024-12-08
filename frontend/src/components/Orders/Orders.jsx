@@ -5,14 +5,14 @@ import { Form, Button } from "react-bootstrap";
 import Swal from "sweetalert2";
 
 export default function Orders() {
-  const [activeTable, setActiveTable] = useState("seller"); // Default to seller
+  const [activeTable, setActiveTable] = useState("buyer"); // Default to seller
   const [sellerOrders, setSellerOrders] = useState([]);
   const [buyerOrders, setBuyerOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedAuctionId, setSelectedAuctionId] = useState(""); // Auction ID for selection
   const [selectedShipmentId, setSelectedShipmentId] = useState(""); // Shipment ID for status update
   const [newStatus, setNewStatus] = useState(""); // New status for update
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("authToken");
   const role = localStorage.getItem("role");
 
   // Fetch seller orders
@@ -270,7 +270,7 @@ export default function Orders() {
           </Button>
         </div>
       )}
-      {activeTable === "seller" && (
+      {activeTable === "seller" && role == "Business" && (
         <div className="d-flex justify-content-center mb-4">
           {/* Auction Dropdown */}
           <Form.Select
@@ -302,9 +302,11 @@ export default function Orders() {
 
       <DataTable
         title={
-          activeTable === "seller"
-            ? "My Auctions (Seller Orders)"
-            : "Auctions I Won (Buyer Orders)"
+          role == "Business"
+            ? activeTable === "seller"
+              ? "My Auctions (Seller Orders)"
+              : "Auctions I Won (Buyer Orders)"
+            : "My Shipments"
         }
         columns={activeTable === "seller" ? sellerColumns : buyerColumns}
         data={activeTable === "seller" ? sellerOrders : buyerOrders}

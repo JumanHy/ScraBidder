@@ -18,11 +18,12 @@ import axios from "axios";
 
 import logo from "@/assets/images/ScraBidderLogo.png";
 import userImage from "@/assets/images/UserImage.png";
-import "./style.css";
+
 import formatTimeAgo from "../../helpers/formatTimeAgo";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 
 function NavBar() {
-  //const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]);
 
   const token = localStorage.getItem("authToken");
   const roleData = localStorage.getItem("role");
@@ -39,70 +40,69 @@ function NavBar() {
     setIsLoggedIn(val);
   }, [val]);
 
-  //const [connection, setConnection] = useState(null);
+  const [connection, setConnection] = useState(null);
 
-  // Placeholder for role. Fetch this dynamically.
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (!isLoggedIn) {
+        return;
+      }
+      try {
+        const response = await axios.get(
+          "http://localhost:5192/api/notifications",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setNotifications(response.data);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
+    fetchNotifications();
 
-  //   const fetchNotifications = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "http://localhost:5192/api/notifications",
-  //         {
-  //           headers: { Authorization: `Bearer ${token}` },
-  //         }
-  //       );
-  //       setNotifications(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching notifications:", error);
-  //     }
-  //   };
+    // Establish SignalR connection
+    const newConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5192/notificationHub", {
+        accessTokenFactory: () => token,
+      })
+      .withAutomaticReconnect()
+      .build();
 
-  //   fetchNotifications();
+    newConnection
+      .start()
+      .then(() => {
+        console.log("SignalR connected");
+        newConnection.on("ReceiveNotification", (message) => {
+          setNotifications((prev) => [message, ...prev]);
+        });
+        setConnection(newConnection);
+      })
+      .catch((err) => console.error("SignalR connection error:", err));
 
-  //   // Establish SignalR connection
-  //   const newConnection = new HubConnectionBuilder()
-  //     .withUrl("http://localhost:5192/notificationHub", {
-  //       accessTokenFactory: () => token,
-  //     })
-  //     .withAutomaticReconnect()
-  //     .build();
+    return () => {
+      newConnection.stop();
+    };
+  }, [isLoggedIn]);
 
-  //   newConnection
-  //     .start()
-  //     .then(() => {
-  //       console.log("SignalR connected");
-  //       newConnection.on("ReceiveNotification", (message) => {
-  //         setNotifications((prev) => [message, ...prev]);
-  //       });
-  //       setConnection(newConnection);
-  //     })
-  //     .catch((err) => console.error("SignalR connection error:", err));
+  const handleNotificationClick = async (index) => {
+    if (!connection) {
+      console.error("SignalR connection not established");
+      return;
+    }
 
-  //   return () => {
-  //     newConnection.stop();
-  //   };
-  // }, []);
-
-  // const handleNotificationClick = async (index) => {
-  //   if (!connection) {
-  //     console.error("SignalR connection not established");
-  //     return;
-  //   }
-
-  //   try {
-  //     await connection.invoke("MarkNotificationAsRead", index);
-  //     setNotifications((prev) => {
-  //       const updated = [...prev];
-  //       updated[index].isRead = true;
-  //       return updated;
-  //     });
-  //   } catch (err) {
-  //     console.error("Error marking notification as read:", err);
-  //   }
-  // };
+    try {
+      await connection.invoke("MarkNotificationAsRead", index);
+      setNotifications((prev) => {
+        const updated = [...prev];
+        updated[index].isRead = true;
+        return updated;
+      });
+    } catch (err) {
+      console.error("Error marking notification as read:", err);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -140,7 +140,7 @@ function NavBar() {
                 <Dropdown>
                   <Dropdown.Toggle variant="link" id="notifications-dropdown">
                     <Bell size={24} color="black" />
-                    {/* {notifications &&
+                    {notifications &&
                       notifications?.filter((n) => !n.isRead).length > 0 && (
                         <Badge
                           pill
@@ -149,17 +149,22 @@ function NavBar() {
                         >
                           {notifications.filter((n) => !n.isRead).length}
                         </Badge>
-                      )} */}
+                      )}
                   </Dropdown.Toggle>
                   <Dropdown.Menu
-                    style={{ maxHeight: "400px", overflowY: "auto" }}
+                    align={"end"}
+                    style={{
+                      maxHeight: "400px",
+                      overflowY: "auto",
+                      width: "50px",
+                    }}
                   >
                     <Dropdown.Header>Notifications</Dropdown.Header>
-                    {/* {notifications && notifications?.length > 0 ? (
+                    {notifications && notifications?.length > 0 ? (
                       notifications.map((notification, index) => (
                         <Dropdown.Item
                           key={index}
-                          className={`py-3 px-3 ${
+                          className={`d-flex justify-content-between text-wrap py-3 px-3 ${
                             !notification.isRead ? "bg-primary-subtle" : ""
                           }`}
                           onClick={() => handleNotificationClick(index)}
@@ -180,7 +185,7 @@ function NavBar() {
                       <Dropdown.Item disabled>
                         No new notifications
                       </Dropdown.Item>
-                    )} */}
+                    )}
                   </Dropdown.Menu>
                 </Dropdown>
                 <span
@@ -229,7 +234,7 @@ function NavBar() {
               </LinkContainer>
             </Col>
           )}
-          <Col xs={12} md={isLoggedIn ? 5 : 8}>
+          <Col xs={12} md={5}>
             <Navbar.Collapse>
               <Nav className="gap-md-3">
                 <LinkContainer to="/">
