@@ -48,7 +48,11 @@ export default function App() {
         <Container style={{ marginTop: "76px" }} fluid className="p-0">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/auction" element={<AuctionDetailsPage />} />
+            <Route
+              path="/auction/:auctionId"
+              element={<AuctionDetailsPage />}
+            />
+
             <Route path="/results" element={<ResultsPage />} />
             <Route path="/login" element={<Login />} />
 

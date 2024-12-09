@@ -6,6 +6,7 @@ using api.Data;
 using api.Enums;
 using api.Events;
 using api.Interfaces;
+using api.Mappers;
 using api.Models;
 using api.Services;
 using Microsoft.AspNetCore.SignalR;
@@ -17,26 +18,24 @@ namespace api.Repository
     {
         private readonly ApplicationDBContext _context;
         private readonly EventDispatcher _eventDispatcher;
-
-
+        private readonly IAuctionRepository _auctionRepository;
         private readonly IHubContext<BiddingHub> _hubContext;
-        public BiddingHistoryRepository(ApplicationDBContext context, EventDispatcher eventDispatcher, IHubContext<BiddingHub> hubContext)
+        public BiddingHistoryRepository(ApplicationDBContext context, EventDispatcher eventDispatcher, IHubContext<BiddingHub> hubContext, IAuctionRepository auctionRepository)
         {
             _context = context;
             _eventDispatcher = eventDispatcher;
             _hubContext = hubContext;
+            _auctionRepository = auctionRepository;
         }
 
         public async Task<BiddingHistory> CreateBidAsync(BiddingHistory bid)
         {
-            var auction = await _context.Auctions
-                .Include(a => a.Biddings)
-                .Include(A => A.watches)
-                .FirstOrDefaultAsync(a => a.AuctionId == bid.AuctionId);
+            var auction = await _auctionRepository.GetAuctionByIdAsync(bid.AuctionId);
 
 
             if (bid.BidAmount < auction.StartingBid || bid.BidAmount < auction.CurrentBid)
             {
+
                 return null;
             }
             var bidder = await _context.Users.FirstOrDefaultAsync(u => u.Id == bid.BidderId);
@@ -59,13 +58,17 @@ namespace api.Repository
             var NewBidding = new NewBiddingEvent(auction.Title, bid.BidAmount, auction.SellerId, watchersIds);
             await _eventDispatcher.Dispatch(NewBidding);
 
-            await _hubContext.Clients.All.SendAsync("ReceiveBidUpdate", bid.AuctionId, bid.BidAmount, auction.Biddings);
+            var auctionDto = auction.ToAuctionDto();
+            var biddings = auctionDto.Biddings;
+            await _hubContext.Clients.All.SendAsync("ReceiveBidUpdate", bid.AuctionId, bid.BidAmount, biddings);
             return bid;
         }
 
         public async Task<List<BiddingHistory>> GetAllAsync()
         {
-            return await _context.BiddingHistory.Include(b => b.Bidder).Include(b => b.Auction).ToListAsync();
+            return await _context.BiddingHistory.Include(b => b.Bidder).ThenInclude(B => B.Business)
+                                                .Include(b => b.Bidder).ThenInclude(B => B.Individual)
+                                                .Include(b => b.Auction).ToListAsync();
         }
 
         public async Task<BiddingHistory?> GetByIdAsync(int id)

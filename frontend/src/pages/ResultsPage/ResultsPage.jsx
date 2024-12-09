@@ -17,11 +17,7 @@ function ResultsPage() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5192/api/auction", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .get("http://localhost:5192/api/auction")
       .then((response) => {
         setAuctions(response.data);
         setFilteredAuctions(response.data); // Initialize filtered auctions

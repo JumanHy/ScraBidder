@@ -141,13 +141,6 @@ const WatchList = () => {
       cell: (row) => (
         <div className="d-flex align-items-center">
           <Button
-            variant="primary"
-            style={{ fontSize: "12px", padding: "6px 12px" }}
-            onClick={() => handleBidNow(row)}
-          >
-            Bid Now
-          </Button>
-          <Button
             variant="link"
             onClick={() => {
               setSelectedItem(row);
@@ -162,12 +155,6 @@ const WatchList = () => {
     },
   ];
 
-  const handleBidNow = (item) => {
-    setSelectedItem(item);
-    setShowBidModal(true);
-  };
-
-  const closeBidModal = () => setShowBidModal(false);
   const closeRemoveModal = () => setShowRemoveModal(false);
 
   return (
@@ -199,28 +186,6 @@ const WatchList = () => {
           responsive
         />
       </div>
-
-      {/* Bid Modal */}
-      <Modal show={showBidModal} onHide={closeBidModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Place Bid for {selectedItem?.name}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>Current bid: ${selectedItem?.currentBid}</p>
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Enter your bid"
-            min={selectedItem?.currentBid + 1}
-          />
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={closeBidModal}>
-            Close
-          </Button>
-          <Button variant="primary">Place Bid</Button>
-        </Modal.Footer>
-      </Modal>
 
       {/* Remove Modal */}
       <Modal show={showRemoveModal} onHide={closeRemoveModal}>

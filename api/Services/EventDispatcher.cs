@@ -18,8 +18,10 @@ namespace api.Services
         public async Task Dispatch<TEvent>(TEvent @event) where TEvent : class
         {
             var handlers = _serviceProvider.GetServices<IEventHandler<TEvent>>();
+
             foreach (var handler in handlers)
             {
+                Console.WriteLine("from dispatcher");
                 await handler.Handle(@event);
             }
         }

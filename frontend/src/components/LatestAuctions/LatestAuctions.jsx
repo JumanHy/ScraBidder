@@ -1,7 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style.css";
 import React, { useEffect, useState } from "react";
-import { Col } from "react-bootstrap";
+import { Alert, Col, Container, Spinner } from "react-bootstrap";
 
 import { FaArrowRight } from "react-icons/fa";
 
@@ -15,12 +15,7 @@ function LatestAuctions() {
   const [error, setError] = useState(false);
   useEffect(() => {
     axios
-      .get("http://localhost:5192/api/auction", {
-        headers: {
-          "Content-Type": "application/json",
-          // Add any other headers if needed
-        },
-      })
+      .get("http://localhost:5192/api/auction")
       .then((response) => {
         setAuctions(response.data);
         setLoading(false);
@@ -31,7 +26,16 @@ function LatestAuctions() {
         setLoading(false);
       });
   }, []);
-
+  if (loading) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <Spinner animation="border" />
+      </div>
+    );
+  }
   return (
     <>
       <div
@@ -47,15 +51,23 @@ function LatestAuctions() {
         </h2>
 
         <div className="container">
-        <div className="row g-3 justify-content-center">
-          {/* Display only the first 3 auctions */}
-          {auctions.slice(0, 3).map((auction, index) => (
-            <Col key={index} xs={12} sm={6} lg={4}>
-              <AuctionCard currentAuction={auction} />
-            </Col>
-          ))}
+          <div className="row g-3 justify-content-center">
+            {/* Display only the first 3 auctions */}
+            {auctions.length > 0 ? (
+              auctions.slice(0, 3).map((auction, index) => (
+                <Col key={index} xs={12} sm={6} lg={4}>
+                  <AuctionCard currentAuction={auction} />
+                </Col>
+              ))
+            ) : (
+              <Container className="pt-5">
+                <Alert variant="primary">
+                  There are currently no items to display.
+                </Alert>
+              </Container>
+            )}
+          </div>
         </div>
-      </div>
         <LinkContainer to={"results"}>
           <div>
             <button

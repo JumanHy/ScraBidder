@@ -73,7 +73,7 @@ function NavBar() {
     newConnection
       .start()
       .then(() => {
-        console.log("SignalR connected");
+        console.log("SignalR connected fron notification");
         newConnection.on("ReceiveNotification", (message) => {
           setNotifications((prev) => [message, ...prev]);
         });

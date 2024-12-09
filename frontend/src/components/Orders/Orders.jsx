@@ -109,10 +109,6 @@ export default function Orders() {
       if (!selectedShipmentId || !newStatus) {
         return Swal.fire("Error", "Invalid shipment or status.", "error");
       }
-
-      console.log(selectedShipmentId);
-      console.log(newStatus);
-
       await axios.post(
         `http://localhost:5192/api/shipments/${selectedShipmentId}/update-status`,
         newStatus, // Send the status as a plain string
@@ -123,6 +119,7 @@ export default function Orders() {
           },
         }
       );
+      setSelectedAuctionId("");
       Swal.fire("Success", "Shipment status updated successfully.", "success");
       fetchSellerOrders(); // Refresh seller data
     } catch (error) {

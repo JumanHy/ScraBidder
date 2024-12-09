@@ -116,8 +116,9 @@ internal partial class Program
                 {
                     // Extract token from the query string for SignalR
                     var accessToken = context.Request.Query["access_token"];
-                    var path = context.HttpContext.Request.Path;
-                    if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notificationHub"))
+                    if (!string.IsNullOrEmpty(accessToken) &&
+       (context.HttpContext.Request.Path.StartsWithSegments("/biddingHub") ||
+        context.HttpContext.Request.Path.StartsWithSegments("/notificationHub")))
                     {
                         context.Token = accessToken;
                     }
@@ -125,11 +126,6 @@ internal partial class Program
                 }
             };
         });
-
-
-
-
-
 
         builder.Services.AddAuthorization();
 

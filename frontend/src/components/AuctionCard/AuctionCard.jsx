@@ -14,12 +14,15 @@ function AuctionCard({ currentAuction }) {
   if (!currentAuction) {
     return null; // Handle case when currentAuction is not passed or is empty
   }
-
+  const baseURL = "/src/assets/images/";
+  const images = JSON.parse(currentAuction.images || "{}");
+  const firstImage = baseURL + images.path1;
+  console.log(firstImage);
   return (
     <Card className="shadow border-0 h-100 rounded-4 text-primary">
       {/* Auction Image */}
       <Card.Img
-        src={currentAuction.imageUrl || "https://placehold.co/600x400"}
+        src={firstImage}
         fluid
         alt={currentAuction.title || "Auction Image"}
         className="rounded-top-4 w-100 object-fit-cover"
@@ -92,7 +95,11 @@ function AuctionCard({ currentAuction }) {
         {/* Starting Bid */}
         {currentAuction.auctionStatus == "Started" && (
           <Card.Text className="text-secondary fw-bold text-uppercase">
-            Current Bid: ${currentAuction.currentBid}
+            Current Bid:
+            {currentAuction.currentBid == null
+              ? " -"
+              : currentAuction.currentBid}{" "}
+            JD
           </Card.Text>
         )}
 
@@ -103,12 +110,7 @@ function AuctionCard({ currentAuction }) {
         )}
 
         {/* Bid Button */}
-        <LinkContainer
-          to={{
-            pathname: "/auction",
-          }}
-          state={{ auctionItem: currentAuction }}
-        >
+        <LinkContainer to={`/auction/${currentAuction.auctionId}`}>
           <div className="d-flex justify-content-center w-100">
             <Button
               variant="secondary"

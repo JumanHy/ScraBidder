@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using api.Interfaces;
 using api.Models;
+using Microsoft.AspNetCore.Authorization;
 namespace api.Controllers
 {
     [Route("api/Dashboard")]
@@ -50,6 +51,14 @@ namespace api.Controllers
                 return NotFound("User not found.");
             return Ok(user);
         }
+        [HttpGet("seller-dashboard/{sellerId}")]
+
+        public async Task<IActionResult> GetSellerDashboard([FromRoute] string sellerId)
+        {
+            var dashboardData = await _userService.GetSellerDashboardDataAsync(sellerId);
+            return Ok(dashboardData);
+        }
+
         [HttpPost("update-selected-users")]
         public async Task<IActionResult> UpdateAllUsers([FromBody] List<UserUpdateDto> userUpdateDtos)
         {

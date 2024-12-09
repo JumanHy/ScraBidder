@@ -48,6 +48,7 @@ namespace api.Mappers
                 Biddings = auctionModel.Biddings != null
                     ? auctionModel.Biddings.Select(b => new AuctionBiddingDto
                     {
+                        BidderId = b.BidderId,
                         Username = b.Bidder != null
                                     ? (b.Bidder.Individual != null && b.Bidder.Id == b.Bidder.Individual.UserId
                                         ? $"{b.Bidder.Individual.FirstName} {b.Bidder.Individual.LastName}"

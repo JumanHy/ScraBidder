@@ -19,11 +19,11 @@ import { Trash3 } from "react-bootstrap-icons";
 
 function AuctionData({ auctions, BiddingHistory }) {
   const [records, setRecords] = useState([]);
-  const [bidRecords, setBidRecords] = useState(BiddingHistory);
+  const [bidRecords, setBidRecords] = useState(auctions.biddings);
   const [showModal, setShowModal] = useState(false);
   const [selectedAuction, setSelectedAuction] = useState(null);
   const [selectedBid, setSelectedBid] = useState(null);
-
+  console.log(BiddingHistory);
   const handleModalClose = () => {
     setShowModal(false);
     setSelectedAuction(null);
@@ -136,7 +136,11 @@ function AuctionData({ auctions, BiddingHistory }) {
         </a>
       ),
     },
-    { name: "Seller", selector: (row) => row.seller.email, sortable: true },
+    {
+      name: "Seller",
+      selector: (row) => row.seller.businessName,
+      sortable: true,
+    },
     { name: "Start Date", selector: (row) => row.startingTime, sortable: true },
     { name: "End Date", selector: (row) => row.endingTime, sortable: true },
     {
@@ -221,18 +225,20 @@ function AuctionData({ auctions, BiddingHistory }) {
       width: "100px",
       selector: (row) => row.bidId,
       sortable: true,
+      wrap: true,
     },
     {
       name: "Bidder Name",
-      selector: (row) => row.bidder.userName,
+      selector: (row) => row.bidder.bidderName,
       sortable: true,
+      wrap: true,
       cell: (row) => (
         <a
           href="#"
           className="user-name-link"
           onClick={() => handleBidRowClick(row)}
         >
-          {row.bidder.userName}
+          {row.bidder.bidderName}
         </a>
       ),
     },
@@ -241,11 +247,17 @@ function AuctionData({ auctions, BiddingHistory }) {
       selector: (row) => row.bidAmount,
       sortable: true,
     },
-    { name: "Bid Time", selector: (row) => row.bidTime, sortable: true },
+    {
+      name: "Bid Time",
+      selector: (row) => row.bidTime,
+      sortable: true,
+      wrap: true,
+    },
     {
       name: "Auction ID",
       selector: (row) => row.auction.auctionId,
       sortable: true,
+      wrap: true,
       cell: (row) => (
         <a
           href="#"
@@ -308,10 +320,9 @@ function AuctionData({ auctions, BiddingHistory }) {
     setBidRecords(newData);
   }
   function handleAuctionFilter(event) {
+    const filterValue = event.target.value.toLowerCase(); // Ensure case-insensitivity if needed
     const newData = auctions.filter((row) => {
-      return row.title
-        .toLocaleLowerCase()
-        .includes(event.target.value.toLocaleLowerCase());
+      return String(row.auctionId).toLowerCase().includes(filterValue);
     });
     setRecords(newData);
   }

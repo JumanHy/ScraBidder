@@ -18,6 +18,10 @@ namespace api.Mappers
                 Bidder = new BidderDto
                 {
                     BidderId = bidModel.BidderId,
+                    BidderName = bidModel.Bidder.Individual != null && bidModel.BidderId == bidModel.Bidder.Individual.UserId
+                                        ? $"{bidModel.Bidder.Individual.FirstName} {bidModel.Bidder.Individual.LastName}"
+                                        : bidModel.Bidder.Business?.BusinessName ?? "Unknown Bidder"
+
                 },
                 Auction = new AuctionDto
                 {

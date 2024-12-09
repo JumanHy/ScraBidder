@@ -146,7 +146,10 @@ public class AuctionPaymentHandlerService : BackgroundService
             {
                 // Void the authorized payment
                 var result = await _payPalService.VoidAuthorizedPaymentAsync(transaction.TransactionId);
-
+                if (result == false)
+                {
+                    continue;
+                }
                 // Create a new transaction record for the refund
                 var newTransaction = new TransactionHistory
                 {

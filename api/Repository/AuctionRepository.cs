@@ -68,6 +68,8 @@ namespace api.Repository
             return await _context.Auctions.Include(a => a.Biddings).ThenInclude(b => b.Bidder).ThenInclude(b => b.Business)
                                             .Include(a => a.Biddings).ThenInclude(b => b.Bidder).ThenInclude(b => b.Individual)
                                             .Include(a => a.Seller).ThenInclude(s => s.Business).Include(a => a.Category)
+                                            .Include(a => a.watches)
+                                            .Include(a => a.Transactions)
                                             .FirstOrDefaultAsync(i => i.AuctionId == id);
         }
 

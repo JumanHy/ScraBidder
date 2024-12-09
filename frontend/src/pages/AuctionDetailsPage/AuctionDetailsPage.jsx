@@ -7,11 +7,56 @@ import Details from "@/components/auctionDetailsComponents/Details/Details";
 import Location from "@/components/auctionDetailsComponents/Location/Location";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
 function AuctionDetailsPage() {
-  const location = useLocation();
-  const auctionItem = location.state?.auctionItem;
-  console.log(auctionItem.auctionId);
+  const { auctionId } = useParams(); // Get auctionId from URL
+  const [auctionItem, setAuctionItem] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch auction details using the auctionId
+    const fetchAuctionDetails = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5192/api/auction/${auctionId}` // Replace with your API endpoint
+        );
+        console.log(response.data);
+        setAuctionItem(response.data);
+      } catch (err) {
+        setError("Failed to load auction details");
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAuctionDetails();
+  }, [auctionId]);
+
+  if (loading) {
+    return (
+      <Container
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <Spinner animation="border" variant="primary" />
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <p className="text-danger">{error}</p>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <Row>
@@ -26,7 +71,7 @@ function AuctionDetailsPage() {
           <ImagesSlider auction={auctionItem} />
         </Col>
 
-        <Col xs={12} md={5} className="mt-md-0  mt-2">
+        <Col xs={12} md={5} className="mt-md-0 mt-2">
           <BiddingInfo currentItem={auctionItem} />
         </Col>
       </Row>

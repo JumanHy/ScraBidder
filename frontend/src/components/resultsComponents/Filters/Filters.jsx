@@ -37,7 +37,7 @@ function Filters({ auctions, onFilterChange }) {
     // Filter by condition
     if (filters.condition) {
       updatedAuctions = updatedAuctions.filter(
-        (auction) => auction.condition === filters.condition
+        (auction) => auction.condition == filters.condition
       );
     }
 
@@ -102,9 +102,9 @@ function Filters({ auctions, onFilterChange }) {
               className="rounded"
             >
               <option value="">Select condition</option>
-              <option value="new">New</option>
-              <option value="used">Used</option>
-              <option value="mixed">Mixed</option>
+              <option value="New">New</option>
+              <option value="Used">Used</option>
+              <option value="Mixed">Mixed</option>
             </Form.Select>
           </Col>
         </Form.Group>
@@ -126,7 +126,7 @@ function Filters({ auctions, onFilterChange }) {
                 min="0"
                 className="rounded"
               />
-              <div className="text-primary fw-bold">Tons</div>
+              <div className="text-primary fw-bold">Kg</div>
             </Stack>
           </Col>
         </Form.Group>
@@ -136,10 +136,10 @@ function Filters({ auctions, onFilterChange }) {
             Auction Status
           </Form.Label>
           <Col xs={12} sm={8}>
-            {["All", "Closed", "Started", "Not Started"].map((status) => (
+            {["All", "Ended", "Started", "Approved"].map((status) => (
               <Form.Check
                 type="radio"
-                label={status}
+                label={status == "Approved" ? "Not Started" : status}
                 name="auctionStatus"
                 value={status}
                 checked={filters.auctionStatus === status}

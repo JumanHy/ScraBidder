@@ -14,11 +14,11 @@ namespace api.Controllers
     [ApiController]
     public class BiddingHistoryController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
+
         private readonly IBiddingHistoryRepository _bidRepo;
-        public BiddingHistoryController(ApplicationDBContext context, IBiddingHistoryRepository bidRepo)
+        public BiddingHistoryController(IBiddingHistoryRepository bidRepo)
         {
-            _context = context;
+
             _bidRepo = bidRepo;
         }
 

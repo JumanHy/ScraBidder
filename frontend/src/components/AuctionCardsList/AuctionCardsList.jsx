@@ -2,6 +2,7 @@ import { Col, Row, Alert } from "react-bootstrap";
 import AuctionCard from "@/components/AuctionCard/AuctionCard";
 
 function AuctionCardsList({ currentItems }) {
+  console.log(currentItems);
   return (
     <Row className="g-3">
       {currentItems && currentItems.length > 0 ? (

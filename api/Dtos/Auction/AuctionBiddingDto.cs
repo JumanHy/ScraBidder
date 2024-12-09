@@ -7,6 +7,7 @@ namespace api.Dtos.Auction
 {
     public class AuctionBiddingDto
     {
+        public string BidderId { get; set; }
         public string Username { get; set; }
         public int BidId { get; set; }
         public decimal BidAmount { get; set; }

@@ -3,8 +3,8 @@ import Slider from "react-slick";
 import { Container, Row, Col, Image } from "react-bootstrap";
 
 function ImagesSlider({ auction }) {
-  // Define the base URL for your image paths
-  const baseURL = "./src/assets/images/";
+  // Define the base URL for your image paths using the '@' alias
+  const baseURL = "/src/assets/images/";
 
   // Safely parse the auction.images string into an object
   let images = [];
@@ -12,12 +12,13 @@ function ImagesSlider({ auction }) {
     try {
       const imageObject = JSON.parse(auction.images); // Parse the string into an object
       images = Object.values(imageObject).map((path) => `${baseURL}${path}`);
-      console.log(Object.values(imageObject));
+      console.log("Parsed image paths:", images);
     } catch (error) {
       console.error("Failed to parse auction images:", error);
     }
   }
-  console.log(images.length);
+
+  console.log("Image URLs:", images);
   const [mainSlider, setMainSlider] = useState(null);
   const [thumbnailSlider, setThumbnailSlider] = useState(null);
 

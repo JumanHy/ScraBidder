@@ -67,6 +67,55 @@ namespace api.Service
                 Status = user.Status.ToString()
             };
         }
+
+        public async Task<SellerDashboardDTO> GetSellerDashboardDataAsync(string sellerId)
+        {
+            // Fetch auctions belonging to the seller
+            var sellerAuctions = await _context.Auctions
+                .Where(a => a.SellerId == sellerId)
+                .Select(a => a.AuctionId)
+                .ToListAsync();
+
+            if (!sellerAuctions.Any())
+                return new SellerDashboardDTO(); // Return default if no auctions exist
+
+            // Fetch transactions for these auctions where TransactionType is Capture
+            var transactions = await _context.TransactionHistory
+                .Where(t => sellerAuctions.Contains(t.AuctionId) && t.TransactionType == TransactionType.Capture)
+                .ToListAsync();
+
+            // Calculate total revenue
+            var totalRevenue = transactions.Sum(t => t.Amount);
+
+            // Group transactions by month to calculate revenue over time
+            var revenueOverTime = transactions
+                .GroupBy(t => t.CreatedAt.ToString("yyyy-MM")) // Group by year and month
+                .Select(g => new TimeSeriesData
+                {
+                    Period = g.Key,
+                    TotalAmount = g.Sum(t => t.Amount)
+                })
+                .ToList();
+
+            // Group transactions by month to calculate items sold over time
+            var itemsSoldOverTime = transactions
+    .Where(t => t.TransactionPurpose == TransactionPurpose.Purchase && t.TransactionType == TransactionType.Capture) // Filter by purpose and type
+    .GroupBy(t => t.CreatedAt.ToString("yyyy-MM")) // Group by year and month
+    .Select(g => new TimeSeriesData
+    {
+        Period = g.Key,
+        TotalCount = g.Count() // Count the filtered transactions
+    })
+    .ToList();
+
+            return new SellerDashboardDTO
+            {
+                TotalRevenue = totalRevenue,
+                RevenueOverTime = revenueOverTime,
+                ItemsSoldOverTime = itemsSoldOverTime
+            };
+        }
+
         // Update all users and handle logic for user type and status update
         public async Task<bool> UpdateAllUsersAsync(List<UserUpdateDto> userUpdateDtos)
         {

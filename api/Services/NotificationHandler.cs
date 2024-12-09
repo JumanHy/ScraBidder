@@ -96,6 +96,7 @@ namespace api.Services
 
         public async Task Handle(NewBiddingEvent e)
         {
+
             string sellerMessage = $"New Bid of {e.BidAmount} has been placed in your auction {e.AuctionTitle}";
             string watcherMessage = $"New Bid of {e.BidAmount} has been placed in your watched auction {e.AuctionTitle}";
 
@@ -118,6 +119,8 @@ namespace api.Services
 
             foreach (var watcher in e.Watchers)
             {
+                Console.WriteLine($"watcher {watcher}");
+
                 await _notificationService.AddNotification(watcher, notificationItemForWatcher);
 
             }
