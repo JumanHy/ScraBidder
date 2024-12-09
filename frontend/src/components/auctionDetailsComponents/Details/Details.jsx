@@ -1,7 +1,7 @@
 import React from "react";
 import { Accordion, ListGroup } from "react-bootstrap";
 
-function Details() {
+function Details({auction}) {
   return (
     <Accordion defaultActiveKey="0">
       <Accordion.Item eventKey="0">
@@ -9,13 +9,13 @@ function Details() {
         <Accordion.Body>
           <ListGroup variant="flush">
             <ListGroup.Item className="text-primary">
-              <strong>Condition:</strong> New
+              <strong>Condition:</strong> {auction.condition}
             </ListGroup.Item>
             <ListGroup.Item className="text-primary">
-              <strong>Category:</strong> Aluminum
+              <strong>Category:</strong> {auction.category.categoryName}
             </ListGroup.Item>
             <ListGroup.Item className="text-primary">
-              <strong>Quantity:</strong> 1 ton
+              <strong>Quantity:</strong> {auction.quantity} ton
             </ListGroup.Item>
           </ListGroup>
         </Accordion.Body>

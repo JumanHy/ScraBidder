@@ -1,54 +1,114 @@
 import { Card, Button } from "react-bootstrap";
 import FlipCountdown from "@rumess/react-flip-countdown";
 import { LinkContainer } from "react-router-bootstrap";
-function AuctionCard() {
+
+function AuctionCard({ currentAuction }) {
+  const endTime = new Date(currentAuction.endingTime);
+  const formattedDate = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(endTime);
+  if (!currentAuction) {
+    return null; // Handle case when currentAuction is not passed or is empty
+  }
+
   return (
     <Card className="shadow border-0 h-100 rounded-4 text-primary">
-      {/* Scrap Image */}
+      {/* Auction Image */}
       <Card.Img
-        src={"https://placehold.co/600x400"}
+        src={currentAuction.imageUrl || "https://placehold.co/600x400"}
         fluid
-        alt="Scrap"
+        alt={currentAuction.title || "Auction Image"}
         className="rounded-top-4 w-100 object-fit-cover"
-        style={{
-          maxHeight: "200px",
-        }}
+        style={{ maxHeight: "200px" }}
       />
 
       <Card.Body className="d-flex flex-column gap-2 justify-content-between align-items-center">
-        {/* Scrap Title */}
+        {/* Auction Title */}
         <Card.Title className="text-primary fw-bold text-center">
-          10 Tons of Stainless Steel Scrap
+          {currentAuction.title}
         </Card.Title>
 
         {/* Auction Ending Text */}
-        <div className="text-center">
-          <Card.Subtitle className="text-secondary fw-bold text-uppercase">
-            Ends After
-          </Card.Subtitle>
+        {currentAuction.auctionStatus == "Started" && (
+          <div className="text-center">
+            <Card.Subtitle className="text-secondary fw-bold text-uppercase">
+              Ends After
+            </Card.Subtitle>
 
-          {/* Countdown Timer */}
-          <div>
-            <FlipCountdown
-              endAt="2024-11-18 23:55:55"
-              size="small"
-              titlePosition="top"
-              hideYear
-              hideMonth
-              dayTitle="Days"
-              hourTitle="Hours"
-              minuteTitle="Mins"
-              secondTitle="Secs"
-            />
+            {/* Countdown Timer */}
+            <div>
+              <FlipCountdown
+                endAt={new Date(currentAuction.endingTime).toLocaleString()}
+                size="small"
+                titlePosition="top"
+                hideYear
+                hideMonth
+                dayTitle="Days"
+                hourTitle="Hours"
+                minuteTitle="Mins"
+                secondTitle="Secs"
+              />
+            </div>
           </div>
-        </div>
-        {/* Starting Bid Text */}
-        <Card.Text className="text-secondary fw-bold text-uppercase">
-          Starting Bid: $500
-        </Card.Text>
+        )}
+
+        {currentAuction.auctionStatus == "Approved" && (
+          <div className="text-center">
+            <Card.Subtitle className="text-secondary fw-bold text-uppercase">
+              Starts After
+            </Card.Subtitle>
+
+            {/* Countdown Timer */}
+            <div>
+              <FlipCountdown
+                endAt={currentAuction.startingTime}
+                size="small"
+                titlePosition="top"
+                hideYear
+                hideMonth
+                dayTitle="Days"
+                hourTitle="Hours"
+                minuteTitle="Mins"
+                secondTitle="Secs"
+              />
+            </div>
+          </div>
+        )}
+
+        {currentAuction.auctionStatus == "Ended" && (
+          <div className="text-center">
+            <Card.Subtitle className="text-secondary fw-bold text-uppercase">
+              Ended At
+            </Card.Subtitle>
+
+            <div className="text-danger">{formattedDate}</div>
+          </div>
+        )}
+
+        {/* Starting Bid */}
+        {currentAuction.auctionStatus == "Started" && (
+          <Card.Text className="text-secondary fw-bold text-uppercase">
+            Current Bid: ${currentAuction.currentBid}
+          </Card.Text>
+        )}
+
+        {currentAuction.auctionStatus == "Ended" && (
+          <Card.Text className="text-secondary fw-bold text-uppercase">
+            Final Price: ${currentAuction.currentBid}
+          </Card.Text>
+        )}
 
         {/* Bid Button */}
-        <LinkContainer to="/auction">
+        <LinkContainer
+          to={{
+            pathname: "/auction",
+          }}
+          state={{ auctionItem: currentAuction }}
+        >
           <div className="d-flex justify-content-center w-100">
             <Button
               variant="secondary"

@@ -15,26 +15,45 @@ import LoginModal from "./LoginModal";
 import PaymentModal from "@/components/PaymentModal/PaymentModal";
 import Swal from "sweetalert2";
 import WatchButton from "./WatchButton";
+import axios from "axios";
+import { HubConnectionBuilder } from "@microsoft/signalr";
+import { useNavigate } from "react-router-dom";
 
-export default function BiddingInfo() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+export default function BiddingInfo({ currentItem }) {
+  const isLoggedIn = localStorage.getItem("authToken");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isDepositAuthorized, setIsDepositAuthorized] = useState(false);
-  const startingPrice = 500;
-  const [highestBid, setHighestBid] = useState(startingPrice);
+  const [highestBid, setHighestBid] = useState(
+    currentItem.currentBid || currentItem.startingBid
+  );
   const [bidAmount, setBidAmount] = useState("");
   const [error, setError] = useState("");
-
+  const [paymentPurpose, setPaymentPurpose] = useState("deposit");
+  const [biddings, setBiddings] = useState(currentItem.biddings);
+  const userId = localStorage.getItem("userId");
   const depositAmount = 50; // amount to hold for bidding authorization
+  const navigate = useNavigate();
+  const winnerId =
+    currentItem.auctionStatus === "Ended" &&
+    currentItem.biddings &&
+    currentItem.biddings.length > 0 &&
+    currentItem.biddings.reduce(
+      (highest, bid) => (bid.bidAmount > highest.bidAmount ? bid : highest),
+      { bidAmount: 0 }
+    ).bidderId;
 
-  const handleBidNowClick = () => {
+  const isWinner =
+    userId === winnerId && highestBid >= currentItem.reservePrice;
+
+  // Handle Bid Placement
+  const handleBidNowClick = async () => {
     if (!isLoggedIn) {
-      setShowLoginModal(true);
-      return;
+      navigate("/login"); // Navigate to login page if not logged in
+      return null; // Prevent further rendering
     }
 
     if (!isDepositAuthorized) {
+      setPaymentPurpose("deposit");
       setShowPaymentModal(true);
       return;
     }
@@ -45,42 +64,89 @@ export default function BiddingInfo() {
     } else if (numericBid <= highestBid) {
       setError(`Bid amount must be at least ${highestBid + 1} JD.`);
     } else {
-      setHighestBid(numericBid);
-      setBidAmount("");
-      setError("");
-      Swal.fire({
-        icon: "success",
-        title: "Bid Placed!",
-        text: `Your bid of ${numericBid} JD has been placed.`,
-      });
+      try {
+        const response = await axios.post(
+          "http://localhost:5192/api/biddinghistory",
+          {
+            auctionId: currentItem.auctionId,
+            bidderId: userId,
+            bidAmount: numericBid,
+          }
+        );
+
+        setHighestBid(numericBid);
+        setBidAmount("");
+        setError("");
+        Swal.fire({
+          icon: "success",
+          title: "Bid Placed!",
+          text: `Your bid of ${numericBid} JD has been placed successfully.`,
+        });
+      } catch (error) {
+        console.error("Error placing bid:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Failed to Place Bid",
+          text: "An error occurred while placing your bid. Please try again.",
+        });
+      }
     }
   };
 
-  const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
-    setShowLoginModal(false);
-    setShowPaymentModal(true); // Show payment modal after login
+  const handlePurchaseClick = () => {
+    setPaymentPurpose("purchase");
+    setShowPaymentModal(true);
   };
 
   const handlePaymentSuccess = () => {
-    setIsDepositAuthorized(true); // Enable bidding after deposit authorization
-    setShowPaymentModal(false);
-    Swal.fire({
-      title: "Deposit Authorized",
-      text: `A hold of ${depositAmount} JD has been placed on your account.`,
-      icon: "success",
-    });
-  };
-
-  useEffect(() => {
-    if (isLoggedIn) {
+    if (paymentPurpose === "deposit") {
+      setIsDepositAuthorized(true);
+      setShowPaymentModal(false);
       Swal.fire({
-        title: "Hooray!",
-        text: "You're now logged in. Let's get started!",
+        title: "Deposit Authorized",
+        text: `A hold of ${depositAmount} JD has been placed on your account.`,
+        icon: "success",
+      });
+    } else if (paymentPurpose === "purchase") {
+      setShowPaymentModal(false);
+      Swal.fire({
+        title: "Purchase Complete",
+        text: `Congratulations! You have successfully purchased the item for ${highestBid} JD.`,
         icon: "success",
       });
     }
-  }, [isLoggedIn]);
+  };
+
+  useEffect(() => {
+    // Initialize the SignalR connection
+    const newConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5192/biddingHub") // Adjust the URL as needed
+      .withAutomaticReconnect()
+      .build();
+
+    newConnection
+      .start()
+      .then(() => {
+        console.log("Connected to SignalR");
+
+        // Listen for updates from the hub
+        newConnection.on(
+          "ReceiveBidUpdate",
+          (auctionId, currentBid, biddings) => {
+            if (auctionId === currentItem.auctionId) {
+              setHighestBid(currentBid);
+              setBiddings(biddings);
+            }
+          }
+        );
+      })
+      .catch((error) => console.error("SignalR Connection Error: ", error));
+
+    // Cleanup on component unmount
+    return () => {
+      newConnection.stop();
+    };
+  }, [currentItem.auctionId]);
 
   return (
     <Card className="h-100 p-2 shadow border-0" style={{ maxHeight: "400px" }}>
@@ -88,17 +154,23 @@ export default function BiddingInfo() {
         <Card.Title>
           <Row fluid className="p-0 align-items-center justify-content-between">
             <Col xs="auto" className="text-success">
-              Started
+              {currentItem.auctionStatus}
             </Col>
             <Col xs="auto">
-              <WatchButton />
+              {currentItem.auctionStatus !== "Ended" && (
+                <WatchButton auctionId={currentItem.auctionId} />
+              )}
             </Col>
           </Row>
         </Card.Title>
 
         <Card.Text>
-          <Card.Subtitle className="mb-2 text-muted">Ends After</Card.Subtitle>
-          <Timer />
+          <Card.Subtitle className="mb-2 text-muted">
+            {currentItem.auctionStatus === "Approved" && "Starts After"}
+            {currentItem.auctionStatus === "Started" && "Ends After"}
+            {currentItem.auctionStatus === "Ended" && "Ended At"}
+          </Card.Subtitle>
+          <Timer auction={currentItem} />
         </Card.Text>
 
         <Card.Text>
@@ -106,67 +178,68 @@ export default function BiddingInfo() {
             <Row>
               <Stack className="p-0">
                 <p className="m-0">
-                  {highestBid == startingPrice
-                    ? "Starting price "
-                    : "Highest Bid "}
-                  . <BidHistoryModal />
+                  {currentItem.currentBid ? "Highest Bid  " : "Starting price "}
+                  <BidHistoryModal
+                    biddingsList={currentItem.biddings}
+                    startingPrice={currentItem.startingBid}
+                  />
                 </p>
-                <h4>{highestBid} JD</h4>
+                {currentItem.currentBid && <h4>{currentItem.currentBid} JD</h4>}
+                {!currentItem.currentBid && (
+                  <h4>{currentItem.startingBid} JD</h4>
+                )}
               </Stack>
             </Row>
           </Container>
         </Card.Text>
 
-        <Card.Text className="d-flex justify-content-center">
-          <Col xs={12} md={7}>
-            {isLoggedIn && (
-              <Form.Group>
-                <Form.Control
-                  type="number"
-                  placeholder={`Bid Amount (min ${highestBid + 1})`}
-                  min={highestBid + 1} // Set the minimum bid value
-                  value={bidAmount}
-                  step={1} // Whole numbers only
-                  onChange={(e) => {
-                    const inputValue = e.target.value;
-                    if (/^\d*$/.test(inputValue)) {
-                      setBidAmount(inputValue);
-                      setError("");
+        {currentItem.auctionStatus === "Started" && (
+          <Card.Text className="d-flex justify-content-center">
+            <Col xs={12} md={7}>
+              {isLoggedIn && (
+                <Form.Group>
+                  <Form.Control
+                    type="number"
+                    placeholder={`Bid Amount (min ${highestBid + 1})`}
+                    min={highestBid + 1} // Set the minimum bid value
+                    value={bidAmount}
+                    step={1} // Whole numbers only
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (/^\d*$/.test(inputValue)) {
+                        setBidAmount(inputValue);
+                        setError("");
+                      }
+                    }}
+                    isInvalid={!!error}
+                    className={
+                      !isLoggedIn || !isDepositAuthorized ? "d-none" : ""
                     }
-                  }}
-                  isInvalid={!!error}
-                  className={
-                    !isLoggedIn || !isDepositAuthorized ? "d-none" : ""
-                  }
-                />
-                <Form.Control.Feedback type="invalid">
-                  {error}
-                </Form.Control.Feedback>
-              </Form.Group>
-            )}
-            <Button
-              onClick={handleBidNowClick}
-              className="text-white w-100 rounded-5 mt-2"
-              variant="secondary"
-            >
-              Place Bid
-            </Button>
-          </Col>
-        </Card.Text>
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {error}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
+              <Button
+                onClick={handleBidNowClick}
+                className="text-white w-100 rounded-5 mt-2"
+                variant="secondary"
+              >
+                Place Bid
+              </Button>
+            </Col>
+          </Card.Text>
+        )}
       </Card.Body>
 
-      {/* Login Modal */}
-      <LoginModal
-        show={showLoginModal}
-        onHide={() => setShowLoginModal(false)}
-        onLoginSuccess={handleLoginSuccess}
-      />
-
-      {/* Payment Modal */}
       <PaymentModal
         show={showPaymentModal}
         handleClose={() => setShowPaymentModal(false)}
-        amount={depositAmount}
+        amount={paymentPurpose === "deposit" ? depositAmount : highestBid}
+        userId={userId}
+        auctionId={currentItem.auctionId}
+        purpose={paymentPurpose}
         onPaymentSuccess={handlePaymentSuccess}
       />
     </Card>

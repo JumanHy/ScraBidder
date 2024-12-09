@@ -1,7 +1,7 @@
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Col,
-  Row,
   Button,
   Image,
   Badge,
@@ -9,146 +9,124 @@ import {
   Modal,
   Stack,
 } from "react-bootstrap";
-import {
-  Dot,
-  Gear,
-  Bell,
-  Person,
-  BoxArrowRight,
-  Hammer,
-  Trophy,
-  Upload,
-  CurrencyDollar,
-  ExclamationCircle,
-  Envelope,
-  CheckCircle,
-} from "react-bootstrap-icons";
+//import { HubConnectionBuilder } from "@microsoft/signalr";
+import { Bell, Dot, Upload } from "react-bootstrap-icons";
 import { LinkContainer } from "react-router-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import logo from "@/assets/images/ScraBidderLogo.png";
+import axios from "axios";
 
+import logo from "@/assets/images/ScraBidderLogo.png";
 import userImage from "@/assets/images/UserImage.png";
-import { useState } from "react";
-import "./style.css";
+
+import formatTimeAgo from "../../helpers/formatTimeAgo";
+import { HubConnectionBuilder } from "@microsoft/signalr";
 
 function NavBar() {
-  const notifications = [
-    {
-      id: 1,
-      message: "A new bid has been placed on your auction.",
-      isRead: false,
-      icon: <Hammer size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 2,
-      message: "Congratulations! You’ve won the auction.",
-      isRead: false,
-      icon: <Trophy size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 3,
-      message: "Your auction listing is now live.",
-      isRead: false,
-      icon: <Upload size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 4,
-      message: "Payment has been received from the buyer.",
-      isRead: false,
-      icon: <CurrencyDollar size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 5,
-      message: "Your auction has expired without a winning bid.",
-      isRead: false,
-      icon: <ExclamationCircle size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 6,
-      message: "You have a new message from a buyer.",
-      isRead: false,
-      icon: <Envelope size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 7,
-      message: "The status of your auction has been updated to Sold.",
-      isRead: false,
-      icon: <CheckCircle size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 8,
-      message: "A new bid has been placed on your auction.",
-      isRead: false,
-      icon: <Hammer size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 9,
-      message: "Congratulations! You’ve won the auction.",
-      isRead: false,
-      icon: <Trophy size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 10,
-      message: "Your auction listing is now live.",
-      isRead: false,
-      icon: <Upload size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 11,
-      message: "Payment has been received from the buyer.",
-      isRead: false,
-      icon: <CurrencyDollar size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 12,
-      message: "Your auction has expired without a winning bid.",
-      isRead: false,
-      icon: <ExclamationCircle size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 13,
-      message: "You have a new message from a buyer.",
-      isRead: false,
-      icon: <Envelope size={25} style={{ color: "#005092" }} />,
-    },
-    {
-      id: 14,
-      message: "The status of your auction has been updated to Sold.",
-      isRead: false,
-      icon: <CheckCircle size={25} style={{ color: "#005092" }} />,
-    },
-  ];
+  const [notifications, setNotifications] = useState([]);
 
-  const [isLogedin, setIsLogedin] = useState(true); // Only declare state once
-  const [showModal, setShowModal] = useState(false); // Only declare state once
-  const [uploadedImage, setUploadedImage] = useState(null); // State for storing uploaded image
+  const token = localStorage.getItem("authToken");
+  const roleData = localStorage.getItem("role");
+  console.log({ roleData });
 
-  // Function to open modal
-  const handleShowModal = () => setShowModal(true);
-  // Function to close modal
-  const handleCloseModal = () => setShowModal(false);
+  const val = !!token;
+  const [isLoggedIn, setIsLoggedIn] = useState(val);
+  // const [role, setRole] = useState(roleData);
 
-  // Handle image upload
+  const [showModal, setShowModal] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState(null);
+
+  useEffect(() => {
+    setIsLoggedIn(val);
+  }, [val]);
+
+  const [connection, setConnection] = useState(null);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      if (!isLoggedIn) {
+        return;
+      }
+      try {
+        const response = await axios.get(
+          "http://localhost:5192/api/notifications",
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setNotifications(response.data);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+
+    // Establish SignalR connection
+    const newConnection = new HubConnectionBuilder()
+      .withUrl("http://localhost:5192/notificationHub", {
+        accessTokenFactory: () => token,
+      })
+      .withAutomaticReconnect()
+      .build();
+
+    newConnection
+      .start()
+      .then(() => {
+        console.log("SignalR connected");
+        newConnection.on("ReceiveNotification", (message) => {
+          setNotifications((prev) => [message, ...prev]);
+        });
+        setConnection(newConnection);
+      })
+      .catch((err) => console.error("SignalR connection error:", err));
+
+    return () => {
+      newConnection.stop();
+    };
+  }, [isLoggedIn]);
+
+  const handleNotificationClick = async (index) => {
+    if (!connection) {
+      console.error("SignalR connection not established");
+      return;
+    }
+
+    try {
+      await connection.invoke("MarkNotificationAsRead", index);
+      setNotifications((prev) => {
+        const updated = [...prev];
+        updated[index].isRead = true;
+        return updated;
+      });
+    } catch (err) {
+      console.error("Error marking notification as read:", err);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+
+    setIsLoggedIn(false);
+    window.location.href = "/login";
+  };
+
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setUploadedImage(reader.result);
-      };
+      reader.onloadend = () => setUploadedImage(reader.result);
       reader.readAsDataURL(file);
     }
   };
-
-  // Check if the user is on "user-account" or "business-account" page
-  const role = "business"; // Or get this dynamically as needed
 
   return (
     <>
       <Navbar expand="md" className="bg-light shadow-lg fixed-top">
         <Container fluid>
-          <Col xs={2} md={2} className="">
+          <Col xs={2} md={2}>
             <LinkContainer to="/">
               <Navbar.Brand className="d-flex align-items-center gap-1">
                 <Image fluid src={logo} style={{ maxWidth: "50px" }} />
@@ -156,56 +134,51 @@ function NavBar() {
               </Navbar.Brand>
             </LinkContainer>
           </Col>
-          {isLogedin && (
+          {isLoggedIn ? (
             <Col xs={{ span: "auto" }} md={{ order: "last" }}>
               <Stack direction="horizontal" className="gap-2">
-                {/* Notification Icon */}
-                <Dropdown className="position-relative">
+                <Dropdown>
                   <Dropdown.Toggle variant="link" id="notifications-dropdown">
                     <Bell size={24} color="black" />
-                    {notifications.length > 0 && (
-                      <Badge
-                        pill
-                        bg="danger"
-                        className="position-absolute top-0 translate-middle"
-                      >
-                        {notifications.length}
-                      </Badge>
-                    )}
+                    {notifications &&
+                      notifications?.filter((n) => !n.isRead).length > 0 && (
+                        <Badge
+                          pill
+                          bg="danger"
+                          className="position-absolute top-0 translate-middle"
+                        >
+                          {notifications.filter((n) => !n.isRead).length}
+                        </Badge>
+                      )}
                   </Dropdown.Toggle>
                   <Dropdown.Menu
-                    align="end"
-                    className="rounded-4 "
+                    align={"end"}
                     style={{
                       maxHeight: "400px",
                       overflowY: "auto",
+                      width: "50px",
                     }}
                   >
                     <Dropdown.Header>Notifications</Dropdown.Header>
-                    {notifications.length > 0 ? (
-                      notifications.map((notification) => (
+                    {notifications && notifications?.length > 0 ? (
+                      notifications.map((notification, index) => (
                         <Dropdown.Item
-                          key={notification.id}
-                          className="d-flex justify-content-between text-wrap py-3 px-3"
+                          key={index}
+                          className={`d-flex justify-content-between text-wrap py-3 px-3 ${
+                            !notification.isRead ? "bg-primary-subtle" : ""
+                          }`}
+                          onClick={() => handleNotificationClick(index)}
                         >
-                          <span className="d-flex ">
-                            <span className="me-4">{notification.icon}</span>
-                            <span className="d-flex flex-column">
-                              <span>{notification.message}</span>
-                              <span
-                                className="fw-lighter fst-italic fs-6"
-                                style={{ color: "#005092" }}
-                              >
-                                <Dot />
-                                10 minutes ago
-                              </span>
+                          <span>
+                            {notification.message}
+                            <span
+                              className="fw-lighter fst-italic fs-6"
+                              style={{ color: "#005092" }}
+                            >
+                              <Dot />
+                              {formatTimeAgo(notification.createdAt)}
                             </span>
                           </span>
-                          <Dot
-                            className="text-end"
-                            size={40}
-                            style={{ color: "#005092" }}
-                          />
                         </Dropdown.Item>
                       ))
                     ) : (
@@ -215,115 +188,81 @@ function NavBar() {
                     )}
                   </Dropdown.Menu>
                 </Dropdown>
-
-                {/* Profile Image */}
-                <span onClick={handleShowModal} style={{ cursor: "pointer" }}>
+                <span
+                  onClick={() => setShowModal(true)}
+                  style={{ cursor: "pointer" }}
+                >
                   <Image
-                    src={userImage}
+                    src={uploadedImage || userImage}
                     roundedCircle
                     width={30}
                     height={30}
-                    alt="User"
                   />
                 </span>
-
-                <Dropdown align="end" drop="down-start">
+                <Dropdown align="end">
                   <Dropdown.Toggle
                     variant="secondary"
-                    id="Dropdown-basic"
                     className="border-0 bg-transparent p-0"
-                  >
-                    {/* Empty Toggle for Dropdown Arrow */}
-                  </Dropdown.Toggle>
+                  />
                   <Dropdown.Menu>
                     <Dropdown.Item
                       href={
-                        role == "business"
+                        roleData === "Business"
                           ? "/business-account"
                           : "/user-account"
                       }
                     >
                       My Account
                     </Dropdown.Item>
-                    {role === "business" ? (
+                    {roleData === "Business" && (
                       <Dropdown.Item href="/cprofile">My Profile</Dropdown.Item>
-                    ) : null}
+                    )}
                     <Dropdown.Divider />
-                    <Dropdown.Item onClick={() => setIsLogedin(false)}>
+                    <Dropdown.Item onClick={handleLogout}>
                       Log Out
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-                <Navbar.Toggle
-                  className="ms-auto"
-                  aria-controls="basic-navbar-nav"
-                />
               </Stack>
             </Col>
+          ) : (
+            <Col xs="auto" md={{ order: "last" }}>
+              <LinkContainer to="/login">
+                <Button variant="secondary" className="w-100 text-white">
+                  Login/Register
+                </Button>
+              </LinkContainer>
+            </Col>
           )}
-          {!isLogedin && (
-            <Navbar.Toggle
-              className="ms-auto"
-              aria-controls="basic-navbar-nav"
-            />
-          )}
-          <Col xs={12} md={isLogedin ? "5" : "8"}>
-            <Navbar.Collapse
-              className="justify-content-between"
-              id="basic-navbar-nav"
-            >
-              <Nav className="m-start gap-md-3 text-center">
+          <Col xs={12} md={5}>
+            <Navbar.Collapse>
+              <Nav className="gap-md-3">
                 <LinkContainer to="/">
-                  <Nav.Link className="nav-link text-primary">Home</Nav.Link>
+                  <Nav.Link className="text-primary">Home</Nav.Link>
                 </LinkContainer>
                 <LinkContainer to="/results">
-                  <Nav.Link className="nav-link text-primary">
-                    Auctions
-                  </Nav.Link>
+                  <Nav.Link className="text-primary">Auctions</Nav.Link>
                 </LinkContainer>
-                <Nav.Link className="nav-link text-primary">
-                  Help & Support
-                </Nav.Link>
-                <Nav.Link className="nav-link text-primary">About Us</Nav.Link>
+                <Nav.Link className="text-primary">Help & Support</Nav.Link>
+                <Nav.Link className="text-primary">About Us</Nav.Link>
               </Nav>
-
-              <div>
-                {!isLogedin && (
-                  <LinkContainer to="/login">
-                    <Button variant="secondary" className="w-100 text-white">
-                      Login/Register
-                    </Button>
-                  </LinkContainer>
-                )}
-              </div>
             </Navbar.Collapse>
           </Col>
         </Container>
       </Navbar>
-
-      {/* Modal for Enlarged Profile Image with Upload Option */}
-      <Modal
-        show={showModal}
-        onHide={handleCloseModal}
-        centered
-        style={{ boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)" }} // Add shadow here
-      >
-        <Modal.Header closeButton></Modal.Header>
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Body className="text-center">
           <Image
-            fluid
             src={uploadedImage || userImage}
+            roundedCircle
             style={{
               maxWidth: "150px",
-              borderRadius: "50%",
               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
             }}
           />
           <br />
-          <br />
           <label htmlFor="image-upload" className="btn btn-primary">
-            <Upload style={{ marginRight: "5px" }} />
-            Change Picture
+            <Upload className="me-2" /> Change Picture
           </label>
           <input
             id="image-upload"

@@ -4,7 +4,7 @@ import {
   FaChartBar,
   FaEye,
   FaHistory,
-  FaCreditCard,
+  FaShippingFast,
   FaCog,
   FaGavel,
 } from "react-icons/fa"; // Import FaGavel icon
@@ -93,21 +93,20 @@ const BAcountSidebar = ({ setActiveSection }) => {
                 onMouseLeave={() => setHoveredItem(null)}
                 onClick={() => setActiveSection("MyAuctions")}
               >
-                <FaGavel /> My Auction
+                <FaGavel /> My Auctions
               </div>
             </Nav.Item>
 
-            <Nav.Item style={{ marginBottom: "10px" }}>
+            <Nav.Item>
               <div
-                style={linkStyle(hoveredItem === "payment-methods")}
-                onMouseEnter={() => setHoveredItem("payment-methods")}
+                style={linkStyle(hoveredItem === "orders")}
+                onMouseEnter={() => setHoveredItem("orders")}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={() => setActiveSection("payment-methods")}
+                onClick={() => setActiveSection("orders")}
               >
-                <FaCreditCard /> Payment Methods
+                <FaShippingFast /> Orders
               </div>
             </Nav.Item>
-
             <Nav.Item style={{ marginBottom: "10px" }}>
               <div
                 style={linkStyle(hoveredItem === "settings")}
@@ -172,21 +171,20 @@ const BAcountSidebar = ({ setActiveSection }) => {
               onMouseLeave={() => setHoveredItem(null)}
               onClick={() => setActiveSection("MyAuctions")}
             >
-              <FaGavel /> My Auction
+              <FaGavel /> My Auctions
             </div>
           </Nav.Item>
 
-          <Nav.Item style={{ marginBottom: "10px" }}>
+          <Nav.Item>
             <div
-              style={linkStyle(hoveredItem === "payment-methods")}
-              onMouseEnter={() => setHoveredItem("payment-methods")}
+              style={linkStyle(hoveredItem === "orders")}
+              onMouseEnter={() => setHoveredItem("orders")}
               onMouseLeave={() => setHoveredItem(null)}
-              onClick={() => setActiveSection("payment-methods")}
+              onClick={() => setActiveSection("orders")}
             >
-              <FaCreditCard /> Payment Methods
+              <FaShippingFast /> Orders
             </div>
           </Nav.Item>
-
           <Nav.Item style={{ marginBottom: "10px" }}>
             <div
               style={linkStyle(hoveredItem === "settings")}

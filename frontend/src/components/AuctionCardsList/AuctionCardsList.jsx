@@ -4,10 +4,14 @@ import AuctionCard from "@/components/AuctionCard/AuctionCard";
 function AuctionCardsList({ currentItems }) {
   return (
     <Row className="g-3">
-      {currentItems.length > 0 ? (
-        currentItems.map((_, index) => (
-          <Col key={index} xs={12} sm={6} lg={4}>
-            <AuctionCard />
+      {currentItems && currentItems.length > 0 ? (
+        currentItems.map((currentAuction, index) => (
+          <Col key={currentAuction.auctionId || index} xs={12} sm={6} lg={4}>
+            {currentAuction.auctionStatus != "Denied" &&
+              currentAuction.auctionStatus != "Pending" &&
+              currentAuction.auctionStatus != "Deleted" && (
+                <AuctionCard currentAuction={currentAuction} />
+              )}
           </Col>
         ))
       ) : (

@@ -11,12 +11,13 @@ import {
 } from "react-bootstrap";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import axios from "axios";
 
 const materialCategories = [
-  { id: 1, label: "Aluminum" },
+  { id: 1, label: "Iron" },
   { id: 2, label: "Copper" },
   { id: 3, label: "Plastic" },
-  { id: 4, label: "Iron" },
+  { id: 4, label: "Aluminum" },
   { id: 5, label: "Stainless Steel" },
   { id: 6, label: "Wood" },
   { id: 7, label: "Glass" },
@@ -27,6 +28,7 @@ const materialCategories = [
 ];
 
 function AuctionFormPage() {
+  const [submitted, setSubmitted] = useState(false);
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyD164boEAkDOWxKojpHFaPRyRyK5sQoPpY", // Replace with your API key
   });
@@ -57,21 +59,24 @@ function AuctionFormPage() {
     }
   };
   const [formData, setFormData] = useState({
+    SellerId: localStorage.getItem("userId"),
+    AuctionStatus: "Pending",
     title: "",
     description: "",
     images: [],
-    starting_bid: "",
-    reserve_price: "",
-    starting_time: "",
-    ending_time: "",
-    location: { lat: "", lng: "" },
+    StartingBid: "",
+    ReservePrice: "",
+    StartingTime: "",
+    EndingTime: "",
+    Address: "Amman",
     condition: "",
     quantity: "",
-    category: "",
+    CategoryId: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -93,10 +98,47 @@ function AuctionFormPage() {
       images: prev.images.filter((_, i) => i !== index),
     }));
   };
+  const convertToUTC = (localDateTime) => {
+    const date = new Date(localDateTime); // Local time
+    return date.toISOString(); // Convert to ISO string in UTC
+  };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    const data = new FormData();
+    // Convert StartingTime and EndingTime to UTC
+    const formDataWithUTC = {
+      ...formData,
+      StartingTime: convertToUTC(formData.StartingTime),
+      EndingTime: convertToUTC(formData.EndingTime),
+    };
+    for (const [key, value] of Object.entries(formData)) {
+      if (key === "images") {
+        value.forEach((file) => data.append("images", file));
+      } else if (typeof value === "object" && value !== null) {
+        data.append(key, JSON.stringify(value));
+      } else {
+        data.append(key, value);
+      }
+    }
+    for (const [key, value] of data.entries()) {
+      console.log(key, value); // This will log each key-value pair in the FormData object
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:5192/api/auction",
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting auction:", error);
+      alert(error);
+    }
   };
 
   return (
@@ -122,20 +164,20 @@ function AuctionFormPage() {
               </Form.Group>
             </Col>
             <Col md={6}>
-              <Form.Group controlId="category">
+              <Form.Group controlId="CategoryId">
                 <Form.Label className="text-light-emphasis">
                   Material Type
                 </Form.Label>
                 <Form.Select
-                  name="category"
-                  value={formData.category}
+                  name="CategoryId"
+                  value={formData.CategoryId}
                   onChange={handleChange}
                   required
                 >
                   <option value="">Select Material Type</option>
-                  {materialCategories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.label}
+                  {materialCategories.map((CategoryId) => (
+                    <option key={CategoryId.id} value={CategoryId.id}>
+                      {CategoryId.label}
                     </option>
                   ))}
                 </Form.Select>
@@ -193,7 +235,7 @@ function AuctionFormPage() {
           <Row className="g-3">
             <h4 className="text-decoration-underline">Pricing</h4>
             <Col md={6}>
-              <Form.Group controlId="startingBid">
+              <Form.Group controlId="StartingBid">
                 <Form.Label className="text-light-emphasis">
                   Starting Bid
                 </Form.Label>
@@ -204,9 +246,9 @@ function AuctionFormPage() {
 
                   <Form.Control
                     type="number"
-                    name="starting_bid"
+                    name="StartingBid"
                     placeholder="Starting bid amount"
-                    value={formData.starting_bid}
+                    value={formData.StartingBid}
                     onChange={handleChange}
                     required
                   />
@@ -214,7 +256,7 @@ function AuctionFormPage() {
               </Form.Group>
             </Col>
             <Col md={6}>
-              <Form.Group controlId="reservePrice">
+              <Form.Group controlId="ReservePrice">
                 <Form.Label className="text-light-emphasis">
                   Reserve Price
                 </Form.Label>
@@ -224,9 +266,9 @@ function AuctionFormPage() {
                   </InputGroup.Text>
                   <Form.Control
                     type="number"
-                    name="reserve_price"
+                    name="ReservePrice"
                     placeholder="Reserve price amount"
-                    value={formData.reserve_price}
+                    value={formData.ReservePrice}
                     onChange={handleChange}
                   />
                 </InputGroup>
@@ -242,8 +284,8 @@ function AuctionFormPage() {
                 </Form.Label>
                 <Form.Control
                   type="datetime-local"
-                  name="starting_time"
-                  value={formData.starting_time}
+                  name="StartingTime"
+                  value={formData.StartingTime}
                   onChange={handleChange}
                   required
                 />
@@ -256,8 +298,8 @@ function AuctionFormPage() {
                 </Form.Label>
                 <Form.Control
                   type="datetime-local"
-                  name="ending_time"
-                  value={formData.ending_time}
+                  name="EndingTime"
+                  value={formData.EndingTime}
                   onChange={handleChange}
                   required
                 />
@@ -323,25 +365,21 @@ function AuctionFormPage() {
           <Row className="g-3">
             <h4 className="text-decoration-underline">Location</h4>
             <Col>
-              <Button
-                variant="secondary"
-                className="text-white"
-                onClick={handleChooseCurrentLocation}
-              >
+              <Button variant="secondary" className="text-white">
                 Current Location
               </Button>
             </Col>
-            <Col xs={12} className="">
+            {/*<Col xs={12} className="">
               {isLoaded ? (
                 <GoogleMap
                   center={
                     formData.location.lat
                       ? formData.location
-                      : { lat: 31.963158, lng: 35.930359 }
+                      : "Amman"
                   }
                   zoom={18}
                   mapContainerStyle={{ height: "400px", width: "100%" }}
-                  onClick={handleMapClick}
+                  
                 >
                   {formData.location.lat && (
                     <Marker position={formData.location} />
@@ -350,7 +388,7 @@ function AuctionFormPage() {
               ) : (
                 <Spinner animation="border"></Spinner>
               )}
-            </Col>
+            </Col>*/}
           </Row>
 
           <Col
@@ -367,6 +405,11 @@ function AuctionFormPage() {
               Submit
             </Button>
           </Col>
+          {submitted && (
+            <div className="alert alert-success mt-5" role="alert">
+              Auction Form Submitted Successfully !
+            </div>
+          )}
         </Row>
       </Form>
     </Container>

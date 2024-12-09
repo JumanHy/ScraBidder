@@ -11,8 +11,6 @@ import {
 
 function Feed() {
   const [isVisible, setIsVisible] = useState(false);
-
-  // Intersection Observer to detect when the container comes into view
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {

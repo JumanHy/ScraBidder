@@ -3,9 +3,10 @@ import AcountSidebar from "../components/AcountSidebar";
 import WatchList from "../components/WatchList/WatchList";
 import Usersetting from "../components/Usersetting";
 import TransactionHistory from "../components/TransactionHistory/TransactionHistory";
-import PaymentMethods from "../components/PaymentMethods/PaymentMethods";
+
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import "./../styles/animations.css"; 
+import "./../styles/animations.css";
+import Orders from "../components/Orders/Orders";
 function UserAccount() {
   const [activeSection, setActiveSection] = useState("watchlist"); // Default to 'watchlist' section
 
@@ -25,10 +26,11 @@ function UserAccount() {
             <TransactionHistory />
           </div>
         );
-      case "payment-methods":
+      case "orders":
         return (
           <div>
-            <PaymentMethods />
+            <h2>Orders</h2>
+            <Orders />
           </div>
         );
       case "settings":

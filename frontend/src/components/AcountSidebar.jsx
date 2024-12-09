@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
-import { Nav, Button, Offcanvas } from 'react-bootstrap';
-import { FaEye, FaHistory, FaCreditCard, FaCog } from 'react-icons/fa';
+import React, { useState } from "react";
+import { Nav, Button, Offcanvas } from "react-bootstrap";
+import {
+  FaEye,
+  FaHistory,
+  FaCreditCard,
+  FaCog,
+  FaShippingFast,
+} from "react-icons/fa";
 
 const AccountSidebar = ({ setActiveSection }) => {
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -28,13 +34,18 @@ const AccountSidebar = ({ setActiveSection }) => {
         variant="primary"
         className="d-md-none" // Hide on larger screens
         onClick={() => setShowSidebar(true)}
-        style={{ marginLeft: '10px', marginTop: '10px' }}
+        style={{ marginLeft: "10px", marginTop: "10px" }}
       >
         Menu
       </Button>
 
       {/* Offcanvas Sidebar for Mobile */}
-      <Offcanvas className="bg-primary" show={showSidebar} onHide={() => setShowSidebar(false)} placement="start">
+      <Offcanvas
+        className="bg-primary"
+        show={showSidebar}
+        onHide={() => setShowSidebar(false)}
+        placement="start"
+      >
         <Offcanvas.Header className="text-white" closeButton>
           <Offcanvas.Title>Account Menu</Offcanvas.Title>
         </Offcanvas.Header>
@@ -61,18 +72,16 @@ const AccountSidebar = ({ setActiveSection }) => {
                 <FaHistory /> Transaction History
               </div>
             </Nav.Item>
-
-            <Nav.Item style={{ marginBottom: "10px" }}>
+            <Nav.Item>
               <div
-                style={linkStyle(hoveredItem === "payment-methods")}
-                onMouseEnter={() => setHoveredItem("payment-methods")}
+                style={linkStyle(hoveredItem === "orders")}
+                onMouseEnter={() => setHoveredItem("orders")}
                 onMouseLeave={() => setHoveredItem(null)}
-                onClick={() => setActiveSection("payment-methods")}
+                onClick={() => setActiveSection("orders")}
               >
-                <FaCreditCard /> Payment Methods
+                <FaShippingFast /> Orders
               </div>
             </Nav.Item>
-
             <Nav.Item style={{ marginBottom: "10px" }}>
               <div
                 style={linkStyle(hoveredItem === "settings")}
@@ -98,7 +107,7 @@ const AccountSidebar = ({ setActiveSection }) => {
         }}
         className="d-none d-md-block "
       >
-         <Nav className="flex-column sticky-top">
+        <Nav className="flex-column sticky-top">
           <Nav.Item style={{ marginBottom: "10px" }}>
             <div
               style={linkStyle(hoveredItem === "watchlist")}
@@ -121,17 +130,16 @@ const AccountSidebar = ({ setActiveSection }) => {
             </div>
           </Nav.Item>
 
-          <Nav.Item style={{ marginBottom: "10px" }}>
+          <Nav.Item>
             <div
-              style={linkStyle(hoveredItem === "payment-methods")}
-              onMouseEnter={() => setHoveredItem("payment-methods")}
+              style={linkStyle(hoveredItem === "orders")}
+              onMouseEnter={() => setHoveredItem("orders")}
               onMouseLeave={() => setHoveredItem(null)}
-              onClick={() => setActiveSection("payment-methods")}
+              onClick={() => setActiveSection("orders")}
             >
-              <FaCreditCard /> Payment Methods
+              <FaShippingFast /> Orders
             </div>
           </Nav.Item>
-
           <Nav.Item style={{ marginBottom: "10px" }}>
             <div
               style={linkStyle(hoveredItem === "settings")}

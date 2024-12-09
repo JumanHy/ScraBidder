@@ -1,14 +1,73 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Carousel, Button, Modal } from "react-bootstrap";
+import axios from "axios";
 
 function CompanyProfile() {
   // State to check if the user has won the auction
   const [hasWonAuction, setHasWonAuction] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [fetchedImages, setFetchedImages] = useState([]);
+  const [businessName, setBusinessName] = useState("");
+  const [companyServiceInfo, setCompanyServiceInfo] = useState("");
+  const [CompanyVision, setCompanyVision] = useState("");
 
   // Toggle the modal
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+
+  // Fetch images from API
+  const fetchUserImages = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      if (!userId) throw new Error("User ID not found in localStorage.");
+
+      const response = await axios.get(
+        `http://localhost:5192/api/UserSetting/get-images/${userId}`
+      );
+      setFetchedImages(response.data.images);
+    } catch (error) {
+      console.error("Error fetching user images:", error);
+      alert("Failed to fetch images.");
+    }
+  };
+
+  const fetchCompanyInfo = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      if (!userId) {
+        console.error("User ID not found in localStorage.");
+        return;
+      }
+
+      const companyNameResponse = await axios.get(
+        `http://localhost:5192/api/UserSetting/company-name?userId=${userId}`
+      );
+      setBusinessName(
+        companyNameResponse.data.businessName || "Company Name Not Found"
+      );
+
+      const servicesResponse = await axios.get(
+        `http://localhost:5192/api/UserSetting/company-service/${userId}`
+      );
+      setCompanyServiceInfo(
+        servicesResponse.data.businessServices || "No services available"
+      );
+
+      const visionResponse = await axios.get(
+        `http://localhost:5192/api/UserSetting/vision/${userId}`
+      );
+
+      setCompanyVision(visionResponse.data || "Vision not available");
+    } catch (error) {
+      console.error("Error fetching company information:", error);
+      alert("Failed to fetch company info.");
+    }
+  };
+
+  useEffect(() => {
+    fetchUserImages();
+    fetchCompanyInfo();
+  }, []);
 
   return (
     <div
@@ -32,17 +91,17 @@ function CompanyProfile() {
         }}
       >
         <h2 style={{ fontSize: "2em", fontWeight: "lighter" }}>
-          Company Name Here
+          {businessName || "Loading Company Name..."}
         </h2>
         <Button
           style={{
-            backgroundColor: "#B87333", // Bronze color for the button
-            color: "white", // White text color
-            letterSpacing: "2px", // Adds space between letters
-            padding: "10px 20px", // Adjust padding for top/bottom and left/right
-            borderRadius: "20px", // Rounded corners
+            backgroundColor: "#B87333",
+            color: "white",
+            letterSpacing: "2px",
+            padding: "10px 20px",
+            borderRadius: "20px",
             border: "none",
-            fontWeight: "lighter", // Lighter font weight
+            fontWeight: "lighter",
             textTransform: "uppercase",
             marginRight: "30px",
             transition: "background-color 0.3s ease",
@@ -55,61 +114,44 @@ function CompanyProfile() {
         </Button>
       </div>
 
-      {/* Carousel with border */}
+      {/* Carousel with fetched images */}
       <Carousel interval={1000} style={{ borderRadius: "8px" }}>
-        <Carousel.Item>
-          <img
-            className="d-block w-100 img-fluid"
-            src="https://via.placeholder.com/1000x400?text=Company+Image+1"
-            alt="First slide"
-            style={{
-              objectFit: "cover",
-              maxHeight: "500px",
-              width: "100%",
-              borderRadius: "8px",
-            }}
-          />
-          <Carousel.Caption>
-            <h3>Company Image 1</h3>
-            <p>Description of the first image.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
-
-        <Carousel.Item>
-          <img
-            className="d-block w-100 img-fluid"
-            src="https://via.placeholder.com/1000x400?text=Company+Image+2"
-            alt="Second slide"
-            style={{
-              objectFit: "cover",
-              maxHeight: "500px",
-              width: "100%",
-              borderRadius: "8px",
-            }}
-          />
-          <Carousel.Caption>
-            <h3>Company Image 2</h3>
-            <p>Description of the second image.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
-
-        <Carousel.Item>
-          <img
-            className="d-block w-100 img-fluid"
-            src="https://via.placeholder.com/1000x400?text=Company+Image+3"
-            alt="Third slide"
-            style={{
-              objectFit: "cover",
-              maxHeight: "500px",
-              width: "100%",
-              borderRadius: "8px",
-            }}
-          />
-          <Carousel.Caption>
-            <h3>Company Image 3</h3>
-            <p>Description of the third image.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
+        {fetchedImages && fetchedImages.length > 0 ? (
+          fetchedImages.map((image, index) => (
+            <Carousel.Item key={index}>
+              <img
+                className="d-block w-100 img-fluid"
+                src={`data:image/png;base64,${image.base64}`}
+                alt={`Company Image ${index + 1}`}
+                style={{
+                  objectFit: "cover",
+                  maxHeight: "500px",
+                  width: "100%",
+                  borderRadius: "8px",
+                }}
+              />
+              <Carousel.Caption></Carousel.Caption>
+            </Carousel.Item>
+          ))
+        ) : (
+          <Carousel.Item>
+            <img
+              className="d-block w-100 img-fluid"
+              src="https://via.placeholder.com/1000x400?text=No+Images+Available"
+              alt="No images"
+              style={{
+                objectFit: "cover",
+                maxHeight: "500px",
+                width: "100%",
+                borderRadius: "8px",
+              }}
+            />
+            <Carousel.Caption>
+              <h3>No Images Available</h3>
+              <p>We currently don't have any images to display.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        )}
       </Carousel>
 
       {/* Flexbox Layout for "Services" and "Company Overview" */}
@@ -144,14 +186,7 @@ function CompanyProfile() {
           >
             Company Overview
           </h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras id
-            augue eget enim fermentum luctus. Donec quis nulla id sapien
-            fringilla efficitur. Nulla facilisi. Sed nec venenatis odio, sit
-            amet placerat urna. Integer in dolor non metus egestas scelerisque
-            non sed nisi. Aliquam erat volutpat. Aenean gravida lacinia ante et
-            vestibulum.
-          </p>
+          <p>{CompanyVision}</p>
         </div>
 
         {/* Services Section */}
@@ -176,13 +211,7 @@ function CompanyProfile() {
           >
             Our Services
           </h3>
-          <ul>
-            <li>Service 1: High-quality products</li>
-            <li>Service 2: Fast and efficient delivery</li>
-            <li>Service 3: Excellent customer support</li>
-            <li>Service 4: Affordable pricing</li>
-            <li>Service 5: Custom solutions</li>
-          </ul>
+          <p>{companyServiceInfo}</p>
         </div>
       </div>
 
@@ -233,38 +262,23 @@ function CompanyProfile() {
                 Company LinkedIn
               </a>
             </p>
-            <p>
-              <strong>Facebook:</strong>{" "}
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Company Facebook
-              </a>
-            </p>
-            <p>
-              <strong>Location:</strong> 1234 Street Name, City, Country
-            </p>
           </div>
 
           {/* Google Maps Embed */}
           <div style={{ flex: 1 }}>
             <h4>Our Location</h4>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.7946885046367!2d-122.08503648436325!3d37.42199997982573!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb75541c9ffad%3A0x13dcdc3d65e6a755!2sGoogleplex!5e0!3m2!1sen!2sus!4v1670356611934!5m2!1sen!2sus"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.7946885046367!2d-122.08503648436325!3d37.42199997982573!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb508fd23b7eb%3A0x290c23fc1b05a2ff!2sGoogleplex!5e0!3m2!1sen!2sus!4v1618903508658!5m2!1sen!2sus"
               width="100%"
               height="300"
               style={{ border: "0", borderRadius: "8px" }}
               allowFullScreen=""
               loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+            ></iframe>
           </div>
         </div>
       </div>
 
-      {/* Modal for Contact Us */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>Contact Information</Modal.Title>
