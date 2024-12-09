@@ -5,15 +5,16 @@ using api.Models;
 
 namespace api.Interfaces
 {
-    public interface IUserService
-    {
-        Task<DashboardStatsDTO> GetDashboardStatsAsync();
-        Task<SellerDashboardDTO> GetSellerDashboardDataAsync(string sellerId);
+        public interface IUserService
+        {
+                Task<DashboardStatsDTO> GetDashboardStatsAsync();
+                Task<SellerDashboardDTO> GetSellerDashboardDataAsync(string sellerId);
 
-        Task<List<UserDto>> GetAllUsersAsync();
-        Task<UserDto> GetUserByUsernameOrEmailAsync(string usernameOrEmail);
+                Task<List<UserDto>> GetAllUsersAsync();
+                Task<UserDto> GetUserByUsernameOrEmailAsync(string usernameOrEmail);
 
-        Task<bool> UpdateAllUsersAsync(List<UserUpdateDto> userUpdateDto);
+                Task<bool> UpdateUsersStatusAsync(List<UserUpdateDto> userUpdateDtos);
 
-    }
+
+        }
 }

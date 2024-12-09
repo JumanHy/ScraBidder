@@ -77,7 +77,7 @@ namespace api.Controllers
             return Ok(updatedCompanyService);
         }
 
-        // Endpoint to upload images
+
         [HttpPost("upload-images/{userId}")]
         public async Task<IActionResult> UploadImages(string userId, IFormFile[] images)
         {
@@ -124,7 +124,7 @@ namespace api.Controllers
         }
 
 
-        // Endpoint to get images
+
         [HttpGet("get-images/{userId}")]
         public async Task<IActionResult> GetImages(string userId)
         {

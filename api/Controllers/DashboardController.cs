@@ -59,19 +59,21 @@ namespace api.Controllers
             return Ok(dashboardData);
         }
 
-        [HttpPost("update-selected-users")]
-        public async Task<IActionResult> UpdateAllUsers([FromBody] List<UserUpdateDto> userUpdateDtos)
+        [HttpPatch("update-selected-users")]
+        public async Task<IActionResult> UpdateUsersStatus([FromBody] List<UserUpdateDto> userUpdateDtos)
         {
             if (userUpdateDtos == null || userUpdateDtos.Count == 0)
             {
                 return BadRequest("The list of users to update cannot be empty.");
             }
+
             try
             {
-                var result = await _userService.UpdateAllUsersAsync(userUpdateDtos);
+                // Update only the status using the original DTO
+                var result = await _userService.UpdateUsersStatusAsync(userUpdateDtos);
                 if (result)
                 {
-                    return Ok("Users updated successfully.");
+                    return Ok("Users' statuses updated successfully.");
                 }
                 else
                 {
@@ -83,5 +85,6 @@ namespace api.Controllers
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
         }
+
     }
 }

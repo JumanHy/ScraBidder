@@ -5,13 +5,15 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { Modal, Button, Container, Row, Col } from "react-bootstrap";
 import DataTable from "react-data-table-component";
 import { Dot } from "react-bootstrap-icons";
-
 import axios from "axios";
+//import { toast } from "react-toastify";
+
 function UsersData() {
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [accountStatus, setAccountStatus] = useState("");
   const [userType, setUserType] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
   const [userStats, setUserStats] = useState({
     totalUsers: 0,
     activeUsers: 0,
@@ -20,37 +22,27 @@ function UsersData() {
   });
 
   const [records, setRecords] = useState([]);
-  console.log({ records });
 
+  const [records2, setRecords2] = useState([]);
+
+  const fetchUserStats = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5192/api/Dashboard/stats"
+      );
+      setUserStats({
+        totalUsers: response.data.totalUsers,
+        activeUsers: response.data.activeUsers,
+        pendingUsers: response.data.pendingUsers,
+        blockedUsers: response.data.blockedUsers,
+      });
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
+    }
+  };
+
+  
   useEffect(() => {
-    const fetchUserStats = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5192/api/Dashboard/stats"
-        );
-        setUserStats({
-          totalUsers: response.data.totalUsers,
-          activeUsers: response.data.activeUsers,
-          pendingUsers: response.data.pendingUsers,
-          blockedUsers: response.data.blockedUsers,
-        });
-      } catch (error) {
-        console.error("Error fetching user stats:", error);
-      }
-    };
-
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5192/api/Dashboard/all-users"
-        );
-
-        setRecords(response.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
     fetchUserStats();
     fetchUsers();
   }, []);
@@ -62,10 +54,10 @@ function UsersData() {
     setShowModal(true);
   };
   const columns = [
-    { name: "ID", selector: (row) => row.id, sortable: true },
+    { name: "ID", selector: (row) => row.userId, sortable: true },
     {
       name: "UserName",
-      selector: (row) => row.name,
+      selector: (row) => row.userName,
       sortable: true,
       cell: (row) => (
         <a
@@ -73,12 +65,12 @@ function UsersData() {
           className="user-name-link"
           onClick={() => handleUserClick(row)}
         >
-          {row.name}
+          {row.userName}
         </a>
       ),
     },
     { name: "Email", selector: (row) => row.email, sortable: true },
-    { name: "User Type", selector: (row) => row.type, sortable: true },
+    { name: "User Type", selector: (row) => row.role, sortable: true },
     {
       name: "Account Status",
       selector: (row) => row.status,
@@ -86,7 +78,12 @@ function UsersData() {
       cell: (row) => (
         <span
           style={{
-            color: row.status === "Active" ? "green" : "red",
+            color:
+              row.status === "Active"
+                ? "green"
+                : row.status === "Pending"
+                ? "blue"
+                : "red",
             fontWeight: "bold",
           }}
         >
@@ -95,240 +92,96 @@ function UsersData() {
       ),
     },
   ];
-  const data = [
-    {
-      id: 1,
-      name: "Juman",
-      email: "jwalhayajneh@gmail.com",
-      type: "Super Admin",
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Sara Al-Bayati",
-      email: "sara.bayati@yahoo.com",
-      type: "Admin",
-      status: "Inactive",
-    },
-    {
-      id: 3,
-      name: "Omar Khalil",
-      email: "omar.khalil@outlook.com",
-      type: "Indivisual",
-      status: "Active",
-    },
-    {
-      id: 4,
-      name: "Layla Noor",
-      email: "layla.noor@gmail.com",
-      type: "Indivisual",
-      status: "Active",
-    },
-    {
-      id: 5,
-      name: "Noura Samir",
-      email: "n.samir@gmail.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 6,
-      name: "Hassan Jaber",
-      email: "hjaber@gmail.com",
-      type: "Super Admin",
-      status: "Active",
-    },
-    {
-      id: 7,
-      name: "Reem Al-Hadid",
-      email: "reem.hadid@outlook.com",
-      type: "Business",
-      status: "Inactive",
-    },
-    {
-      id: 8,
-      name: "Adil Karim",
-      email: "adil.karim@yahoo.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 9,
-      name: "Huda Talib",
-      email: "huda.talib@gmail.com",
-      type: "Indivisual",
-      status: "Active",
-    },
-    {
-      id: 10,
-      name: "Salim Quraishi",
-      email: "salim.q@gmail.com",
-      type: "Super Admin",
-      status: "Active",
-    },
-    {
-      id: 11,
-      name: "Rana Hasan",
-      email: "rana.hasan@outlook.com",
-      type: "Indivisual",
-      status: "Inactive",
-    },
-    {
-      id: 12,
-      name: "Basel Fathi",
-      email: "basel.fathi@gmail.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 13,
-      name: "Yasmin Aziz",
-      email: "yasmin.aziz@outlook.com",
-      type: "Indivisual",
-      status: "Active",
-    },
-    {
-      id: 14,
-      name: "Mohammed Ameen",
-      email: "moh.ameen@gmail.com",
-      type: "Super Admin",
-      status: "Inactive",
-    },
-    {
-      id: 15,
-      name: "Dina Mahdi",
-      email: "dina.mahdi@gmail.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 16,
-      name: "Khaled Zain",
-      email: "khaled.z@yahoo.com",
-      type: "Business",
-      status: "Active",
-    },
-    {
-      id: 17,
-      name: "Fadi Rami",
-      email: "fadi.rami@gmail.com",
-      type: "Super Admin",
-      status: "Inactive",
-    },
-    {
-      id: 18,
-      name: "Jalila Ahmed",
-      email: "jalila.ahmed@yahoo.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 19,
-      name: "Mona Saeed",
-      email: "mona.saeed@outlook.com",
-      type: "Indivisual",
-      status: "Inactive",
-    },
-    {
-      id: 20,
-      name: "Mustafa Kamal",
-      email: "mustafa.k@gmail.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 21,
-      name: "Naseem Haddad",
-      email: "naseem.haddad@gmail.com",
-      type: "Super Admin",
-      status: "Active",
-    },
-    {
-      id: 22,
-      name: "Rasha Qasim",
-      email: "rasha.qasim@outlook.com",
-      type: "Indivisual",
-      status: "Inactive",
-    },
-    {
-      id: 23,
-      name: "Lina Adel",
-      email: "lina.adel@gmail.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 24,
-      name: "Wael Hussein",
-      email: "wael.hussein@yahoo.com",
-      type: "Indivisual",
-      status: "Active",
-    },
-    {
-      id: 25,
-      name: "Kareem Ali",
-      email: "kareem.ali@outlook.com",
-      type: "Super Admin",
-      status: "Inactive",
-    },
-    {
-      id: 26,
-      name: "Amira Said",
-      email: "amira.said@gmail.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 27,
-      name: "Hadi Mansour",
-      email: "hadi.mansour@yahoo.com",
-      type: "Business",
-      status: "Active",
-    },
-    {
-      id: 28,
-      name: "Sami Khalil",
-      email: "sami.khalil@gmail.com",
-      type: "Super Admin",
-      status: "Inactive",
-    },
-    {
-      id: 29,
-      name: "Rida Hamdan",
-      email: "rida.hamdan@outlook.com",
-      type: "Admin",
-      status: "Active",
-    },
-    {
-      id: 30,
-      name: "Tariq Saeed",
-      email: "tariq.saeed@gmail.com",
-      type: "Business",
-      status: "Active",
-    },
-  ];
 
   function handleFilter(event) {
-    const newData = data.filter((row) => {
+    const newData = records.filter((row) => {
       return row.userName
         .toLocaleLowerCase()
         .includes(event.target.value.toLocaleLowerCase());
     });
 
-    setRecords(newData);
+    setRecords2(newData);
   }
   function handleStatusFilter(event) {
-    const newData = data.filter((row) => {
+    const newData = records?.filter((row) => {
       return row.status === event;
     });
-    setRecords(newData);
+    setRecords2(newData);
   }
   function handleTypeFilter(event) {
-    const newData = data.filter((row) => {
+    console.log({ event });
+
+    const newData = records?.filter((row) => {
       return row.role === event;
     });
-    setRecords(newData);
+    setRecords2(newData);
   }
+
+  const handleChange = ({ selectedRows }) => {
+    setSelectedRows(selectedRows);
+  };
+  const handleClickBlock = async () => {
+    try {
+      // Transform the selected rows
+      const modifiedUsers = selectedRows.map((user) => {
+        const { userName, email, role, ...rest } = user;
+        return { ...rest, status: "Blocked" };
+      });
+  
+      // Make the API request
+      await axios.patch(
+        "http://localhost:5192/api/Dashboard/update-selected-users",
+        modifiedUsers
+      );
+  
+      // Fetch updated user data
+      fetchUsers();
+  
+      // Reset selected rows
+      setSelectedRows([]);
+    } catch (error) {
+      console.error("Failed to update users:", error);
+      // Optionally, show an error message to the user
+    }
+  };
+  
+  const handleClickActive = async () => {
+    try {
+      const modifiedUsers = selectedRows.map((user) => {
+        const { userName, email, role, ...rest } = user;
+        return { ...rest, status: "Active" };
+      });
+  
+      // Make the API request
+      await axios.patch(
+        "http://localhost:5192/api/Dashboard/update-selected-users",
+        modifiedUsers
+      );
+  
+      // Fetch updated user data
+      fetchUsers();
+  
+      // Reset selected rows
+      setSelectedRows([]);
+    } catch (error) {
+      console.error("Failed to update users:", error);
+    }
+  };
+  
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5192/api/Dashboard/all-users"
+      );
+
+      setRecords(response.data);
+      setRecords2(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  
 
   return (
     <>
@@ -438,7 +291,7 @@ function UsersData() {
                 className="dropdown-item border-bottom"
                 style={{ color: "#666666", borderBottomColor: "#666666" }}
                 href="#"
-                onClick={() => setRecords(records)}
+                onClick={() => setRecords2(records)}
               >
                 All
               </a>
@@ -452,15 +305,7 @@ function UsersData() {
                 Admin
               </a>
             </li>
-            <li>
-              <a
-                className="dropdown-item"
-                href="#"
-                onClick={() => handleTypeFilter("Super Admin")}
-              >
-                Super Admin
-              </a>
-            </li>
+
             <li>
               <a
                 className="dropdown-item"
@@ -498,7 +343,7 @@ function UsersData() {
                 className="dropdown-item border-bottom"
                 style={{ color: "#666666", borderBottomColor: "#666666" }}
                 href="#"
-                onClick={() => setRecords(records)}
+                onClick={() => setRecords2(records)}
               >
                 All
               </a>
@@ -514,11 +359,20 @@ function UsersData() {
             </li>
             <li>
               <a
-                className="dropdown-item text-danger"
+                className="dropdown-item text-primary"
                 href="#"
-                onClick={() => handleStatusFilter("Inactive")}
+                onClick={() => handleStatusFilter("Pending")}
               >
-                Inactive
+                Pending
+              </a>
+            </li>
+            <li>
+              <a
+                className="dropdown-item text-danger "
+                href="#"
+                onClick={() => handleStatusFilter("Blocked")}
+              >
+                Blocked
               </a>
             </li>
           </ul>
@@ -541,19 +395,15 @@ function UsersData() {
               </button>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <div className="dropdown-item" onClick={handleClickBlock}>
                     Block
-                  </a>
+                  </div>
                 </li>
+
                 <li>
-                  <a className="dropdown-item" href="#">
-                    Accept
-                  </a>
-                </li>
-                <li>
-                  <a className="dropdown-item" href="#">
-                    Action
-                  </a>
+                  <div className="dropdown-item" onClick={handleClickActive}>
+                    Activate
+                  </div>
                 </li>
               </ul>
             </div>
@@ -562,7 +412,7 @@ function UsersData() {
 
         <DataTable
           columns={columns}
-          data={records}
+          data={records2}
           selectableRows
           fixedHeader
           pagination
@@ -570,6 +420,7 @@ function UsersData() {
           striped
           highlightOnHover
           selectableRowsHighlight
+          onSelectedRowsChange={handleChange}
           customStyles={{
             rows: {
               style: {
@@ -604,7 +455,7 @@ function UsersData() {
               <Col>
                 <Row className="fw-bold mb-4">
                   <div style={{ color: "#003A70" }}>User Name</div>
-                  <div>{selectedUser.name}</div>
+                  <div>{selectedUser.userName}</div>
                 </Row>
                 <Row className="fw-bold">
                   <div style={{ color: "#003A70" }}>Phone Number</div>
