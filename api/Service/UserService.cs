@@ -5,6 +5,7 @@ using api.Events;
 using api.Interfaces;
 using api.Models;
 using api.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +16,19 @@ namespace api.Service
     {
         private readonly ApplicationDBContext _context;
         private readonly EventDispatcher _eventDispatcher;
+        private readonly UserManager<ApplicationUser> _userManeger;
+
 
         // Constructor to inject the ApplicationDBContext into the service
-        public UserService(ApplicationDBContext context, EventDispatcher eventDispatcher)
+        public UserService(ApplicationDBContext context, EventDispatcher eventDispatcher,UserManager<ApplicationUser>userManager)
         {
             _context = context;
             _eventDispatcher = eventDispatcher;
+            _userManeger= userManager;
+
+
         }
-        // Fetch dashboard statistics
+
         public async Task<DashboardStatsDTO> GetDashboardStatsAsync()
         {
             var totalUsers = await _context.Users.CountAsync();
@@ -37,21 +43,46 @@ namespace api.Service
                 BlockedUsers = blockedUsers
             };
         }
-        // Fetch all users as UserDTO
-        public async Task<List<UserDto>> GetAllUsersAsync()
-        {
-            return await _context.Users
-                .Select(user => new UserDto
-                {
-                    UserId = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
 
-                    Status = user.Status.ToString()
-                })
-                .ToListAsync();
-        }
-        // Fetch a user by username or email as UserDTO
+       public async Task<List<UserDto>> GetAllUsersAsync()
+{
+    var users = await _context.Users.ToListAsync();
+    var userDtos = new List<UserDto>();
+
+    foreach (var user in users)
+    {
+        // Fetch associated individual or business data
+        var individual = await _context.Individuals.FirstOrDefaultAsync(i => i.UserId == user.Id);
+        var business = await _context.Businesses.FirstOrDefaultAsync(b => b.UserId == user.Id);
+
+        // Determine the user name based on user type
+        string userName = individual != null
+            ? $"{individual.FirstName} {individual.LastName}"
+            : business != null
+                ? business.BusinessName
+                : user.UserName;
+
+        // Get the user's roles and select the first one
+        var roles = (await _userManeger.GetRolesAsync(user)).ToList();
+        string role = roles.FirstOrDefault() ?? "No Role Assigned"; // Default role if no roles are assigned
+
+        // Add the user data to the list
+        userDtos.Add(new UserDto
+        {
+            UserId = user.Id,
+            UserName = userName,
+            Email = user.Email,
+            Status = user.Status.ToString(),
+            Role = role // Assign the single role
+        });
+    }
+
+    return userDtos;
+}
+
+
+
+   
         public async Task<UserDto> GetUserByUsernameOrEmailAsync(string usernameOrEmail)
         {
             var user = await _context.Users
@@ -63,62 +94,68 @@ namespace api.Service
                 UserId = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
-
-                Status = user.Status.ToString()
+                 Status = user.Status.ToString()
             };
         }
-        // Update all users and handle logic for user type and status update
-        public async Task<bool> UpdateAllUsersAsync(List<UserUpdateDto> userUpdateDtos)
+        
+        public async Task<bool> UpdateUsersStatusAsync(List<UserUpdateDto> userUpdateDtos)
+{
+    if (userUpdateDtos == null || userUpdateDtos.Count == 0)
+        return false;
+
+    // Extract user IDs from DTOs
+    var userIds = userUpdateDtos.Select(dto => dto.UserId).ToList();
+
+    // Fetch users from the database
+    var users = await _context.Users.Where(u => userIds.Contains(u.Id)).ToListAsync();
+
+    if (users == null || users.Count == 0)
+        return false;
+
+    // Create a lookup dictionary for DTOs
+    var userUpdateMap = userUpdateDtos.ToDictionary(dto => dto.UserId);
+
+    var updatedUsers = new List<ApplicationUser>();
+
+    foreach (var user in users)
+    {
+        if (userUpdateMap.TryGetValue(user.Id, out var updateDto))
         {
-            if (userUpdateDtos == null || userUpdateDtos.Count == 0)
-                return false;
-
-            // Fetch users to be updated from the database by matching their IDs
-            var userIds = userUpdateDtos.Select(dto => dto.UserId).ToList();
-            var users = await _context.Users.Where(u => userIds.Contains(u.Id)).ToListAsync();
-
-            if (users == null || users.Count == 0)
-                return false;
-
-            // Create a dictionary for easy lookup
-            var userUpdateMap = userUpdateDtos.ToDictionary(dto => dto.UserId);
-            var updatedUsers = new List<ApplicationUser>();
-            // Loop through each user to update their properties
-            foreach (var user in users)
+            try
             {
-                try
+              
+                if (!string.IsNullOrEmpty(updateDto.Status))
                 {
-                    if (userUpdateMap.TryGetValue(user.Id, out var updateDto))
-                    {
-
-
-
-                        if (!string.IsNullOrEmpty(updateDto.Status))
-                        {
-                            user.Status = Enum.Parse<AccountStatus>(updateDto.Status);
-                            updatedUsers.Add(user);
-                        }
-                        // Add additional updates as needed
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Log the exception and continue with the next user
-                    Console.WriteLine($"Error updating user {user.Id}: {ex.Message}");
-                    throw new Exception("Error updating users");
+                    user.Status = Enum.Parse<AccountStatus>(updateDto.Status);
+                    updatedUsers.Add(user);
                 }
             }
-
-            // Save changes to the database
-            await _context.SaveChangesAsync();
-            foreach (var user in updatedUsers)
+            catch (Exception ex)
             {
-                var userStatus = new UserStatusUpdatedEvent(user.Id, user.Status.ToString());
-
-                await _eventDispatcher.Dispatch(userStatus);
+                Console.WriteLine($"Error updating user {user.Id}: {ex.Message}");
+            
+                throw new Exception("Error updating user statuses");
             }
-            return true;
         }
+    }
+
+ 
+    await _context.SaveChangesAsync();
+
+ 
+    foreach (var user in updatedUsers)
+    {
+        var userStatusEvent = new UserStatusUpdatedEvent(user.Id, user.Status.ToString());
+        await _eventDispatcher.Dispatch(userStatusEvent);
+    }
+
+    return true;
+}
+
+
+
+
+
     }
 }
 
