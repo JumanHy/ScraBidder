@@ -105,7 +105,7 @@ function AuctionCard({ currentAuction }) {
 
         {currentAuction.auctionStatus == "Ended" && (
           <Card.Text className="text-secondary fw-bold text-uppercase">
-            Final Price: ${currentAuction.currentBid}
+            Final Price: {currentAuction.currentBid} JD
           </Card.Text>
         )}
 

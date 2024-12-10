@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Carousel, Button, Modal } from "react-bootstrap";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function CompanyProfile() {
   // State to check if the user has won the auction
+  const { sellerId } = useParams(); // Get auctionId from URL
+
   const [hasWonAuction, setHasWonAuction] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [fetchedImages, setFetchedImages] = useState([]);
@@ -18,49 +21,38 @@ function CompanyProfile() {
   // Fetch images from API
   const fetchUserImages = async () => {
     try {
-      const userId = localStorage.getItem("userId");
-      if (!userId) throw new Error("User ID not found in localStorage.");
-
       const response = await axios.get(
-        `http://localhost:5192/api/UserSetting/get-images/${userId}`
+        `http://localhost:5192/api/UserSetting/get-images/${sellerId}`
       );
       setFetchedImages(response.data.images);
     } catch (error) {
       console.error("Error fetching user images:", error);
-      alert("Failed to fetch images.");
     }
   };
 
   const fetchCompanyInfo = async () => {
     try {
-      const userId = localStorage.getItem("userId");
-      if (!userId) {
-        console.error("User ID not found in localStorage.");
-        return;
-      }
-
       const companyNameResponse = await axios.get(
-        `http://localhost:5192/api/UserSetting/company-name?userId=${userId}`
+        `http://localhost:5192/api/UserSetting/company-name?userId=${sellerId}`
       );
       setBusinessName(
         companyNameResponse.data.businessName || "Company Name Not Found"
       );
 
       const servicesResponse = await axios.get(
-        `http://localhost:5192/api/UserSetting/company-service/${userId}`
+        `http://localhost:5192/api/UserSetting/company-service/${sellerId}`
       );
       setCompanyServiceInfo(
         servicesResponse.data.businessServices || "No services available"
       );
 
       const visionResponse = await axios.get(
-        `http://localhost:5192/api/UserSetting/vision/${userId}`
+        `http://localhost:5192/api/UserSetting/vision/${sellerId}`
       );
 
       setCompanyVision(visionResponse.data || "Vision not available");
     } catch (error) {
       console.error("Error fetching company information:", error);
-      alert("Failed to fetch company info.");
     }
   };
 

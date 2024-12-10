@@ -9,9 +9,10 @@ import {
   Modal,
   Stack,
 } from "react-bootstrap";
-//import { HubConnectionBuilder } from "@microsoft/signalr";
-import { Bell, Dot, Upload } from "react-bootstrap-icons";
 import { LinkContainer } from "react-router-bootstrap";
+
+import { Bell, Dot, Upload } from "react-bootstrap-icons";
+
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import axios from "axios";
@@ -24,7 +25,7 @@ import { HubConnectionBuilder } from "@microsoft/signalr";
 
 function NavBar() {
   const [notifications, setNotifications] = useState([]);
-
+  const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("authToken");
   const roleData = localStorage.getItem("role");
   console.log({ roleData });
@@ -215,7 +216,9 @@ function NavBar() {
                       My Account
                     </Dropdown.Item>
                     {roleData === "Business" && (
-                      <Dropdown.Item href="/cprofile">My Profile</Dropdown.Item>
+                      <LinkContainer to={`/cprofile/${userId}`}>
+                        <Dropdown.Item>My Profile</Dropdown.Item>
+                      </LinkContainer>
                     )}
                     <Dropdown.Divider />
                     <Dropdown.Item onClick={handleLogout}>

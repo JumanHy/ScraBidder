@@ -13,7 +13,7 @@ namespace api.Models
         [Required]
         public AccountStatus Status { get; set; }  // Using the AccountStatus enum instead of string
 
-       public string? ProfileImage { get; set; } = string.Empty;
+        public string? ProfileImage { get; set; } = string.Empty;
 
         [Required]
         public DateTime CreatedAt { get; set; }

@@ -37,16 +37,9 @@ const UserDetails = () => {
           businessServices:
             response.data.businessServices || "No services available",
         });
-      } else {
-        alert(
-          `Failed to fetch company service details. Status: ${response.status}`
-        );
       }
     } catch (error) {
       console.error("Error fetching company service details:", error);
-      alert(
-        `An error occurred while fetching company service details: ${error.message}`
-      );
     } finally {
       setIsLoading(false);
     }
@@ -71,7 +64,7 @@ const UserDetails = () => {
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching user details:", error);
-      alert("Failed to fetch user details.");
+
       setIsLoading(false);
     }
   };
@@ -98,10 +91,6 @@ const UserDetails = () => {
         alert("Company service details updated successfully!");
         toggleEditServiceInfo();
         fetchCompanyServiceInfo();
-      } else {
-        alert(
-          `Failed to update company service details. Status: ${response.status}`
-        );
       }
     } catch (error) {
       console.error("Error updating company service details:", error);
@@ -185,7 +174,6 @@ const UserDetails = () => {
       }
     } catch (error) {
       console.error("Error fetching user images:", error);
-      alert("Failed to fetch images.");
     }
   };
 

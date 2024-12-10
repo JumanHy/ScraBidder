@@ -60,10 +60,7 @@ function AuctionDetailsPage() {
   return (
     <Container>
       <Row>
-        <Title
-          auctionTitle={auctionItem.title}
-          companyName={auctionItem.seller.businessName}
-        />
+        <Title auctionTitle={auctionItem.title} company={auctionItem.seller} />
       </Row>
 
       <Row>

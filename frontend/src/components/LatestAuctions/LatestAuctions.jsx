@@ -54,11 +54,16 @@ function LatestAuctions() {
           <div className="row g-3 justify-content-center">
             {/* Display only the first 3 auctions */}
             {auctions.length > 0 ? (
-              auctions.slice(0, 3).map((auction, index) => (
-                <Col key={index} xs={12} sm={6} lg={4}>
-                  <AuctionCard currentAuction={auction} />
-                </Col>
-              ))
+              auctions.slice(0, 3).map(
+                (auction, index) =>
+                  (auction.auctionStatus == "Started" ||
+                    auction.auctionStatus == "Ended" ||
+                    auction.auctionStatus == "Approved") && (
+                    <Col key={index} xs={12} sm={6} lg={4}>
+                      <AuctionCard currentAuction={auction} />
+                    </Col>
+                  )
+              )
             ) : (
               <Container className="pt-5">
                 <Alert variant="primary">

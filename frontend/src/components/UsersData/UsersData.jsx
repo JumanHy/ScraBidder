@@ -9,10 +9,6 @@ import axios from "axios";
 //import { toast } from "react-toastify";
 
 function UsersData() {
-  const [showModal, setShowModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState({});
-  const [accountStatus, setAccountStatus] = useState("");
-  const [userType, setUserType] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
   const [userStats, setUserStats] = useState({
     totalUsers: 0,
@@ -41,36 +37,27 @@ function UsersData() {
     }
   };
 
-  
   useEffect(() => {
     fetchUserStats();
     fetchUsers();
   }, []);
 
-  const handleModalClose = () => setShowModal(false);
-
-  const handleUserClick = (user) => {
-    setSelectedUser(user);
-    setShowModal(true);
-  };
   const columns = [
-    { name: "ID", selector: (row) => row.userId, sortable: true },
+    { name: "ID", selector: (row) => row.userId, sortable: true, wrap: true },
     {
       name: "UserName",
       selector: (row) => row.userName,
       sortable: true,
-      cell: (row) => (
-        <a
-          href="#"
-          className="user-name-link"
-          onClick={() => handleUserClick(row)}
-        >
-          {row.userName}
-        </a>
-      ),
+      wrap: true,
+      cell: (row) => <div className="text-primary fw-bold">{row.userName}</div>,
     },
-    { name: "Email", selector: (row) => row.email, sortable: true },
-    { name: "User Type", selector: (row) => row.role, sortable: true },
+    { name: "Email", selector: (row) => row.email, sortable: true, wrap: true },
+    {
+      name: "User Type",
+      selector: (row) => row.role,
+      sortable: true,
+      wrap: true,
+    },
     {
       name: "Account Status",
       selector: (row) => row.status,
@@ -127,47 +114,45 @@ function UsersData() {
         const { userName, email, role, ...rest } = user;
         return { ...rest, status: "Blocked" };
       });
-  
+
       // Make the API request
       await axios.patch(
         "http://localhost:5192/api/Dashboard/update-selected-users",
         modifiedUsers
       );
-  
+
       // Fetch updated user data
       fetchUsers();
-  
+
       // Reset selected rows
-      setSelectedRows([]);
     } catch (error) {
       console.error("Failed to update users:", error);
       // Optionally, show an error message to the user
     }
   };
-  
+
   const handleClickActive = async () => {
     try {
       const modifiedUsers = selectedRows.map((user) => {
         const { userName, email, role, ...rest } = user;
         return { ...rest, status: "Active" };
       });
-  
+
       // Make the API request
       await axios.patch(
         "http://localhost:5192/api/Dashboard/update-selected-users",
         modifiedUsers
       );
-  
+
       // Fetch updated user data
       fetchUsers();
-  
+
       // Reset selected rows
-      setSelectedRows([]);
     } catch (error) {
       console.error("Failed to update users:", error);
     }
   };
-  
+
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
@@ -180,8 +165,6 @@ function UsersData() {
       console.error("Error fetching users:", error);
     }
   };
-
-  
 
   return (
     <>
@@ -310,9 +293,9 @@ function UsersData() {
               <a
                 className="dropdown-item"
                 href="#"
-                onClick={() => handleTypeFilter("Indivisual")}
+                onClick={() => handleTypeFilter("Individual")}
               >
-                Indivisual
+                Individual
               </a>
             </li>
             <li>
@@ -440,132 +423,6 @@ function UsersData() {
           }}
         ></DataTable>
       </div>
-
-      <Modal show={showModal} onHide={handleModalClose} size="lg">
-        <Modal.Header
-          closeButton
-          style={{ backgroundColor: "#003A70", color: "white" }}
-          className="flex justify-content-center text-center"
-        >
-          <Modal.Title>Profile Information</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            <Container className="d-flex justify-content-between">
-              <Col>
-                <Row className="fw-bold mb-4">
-                  <div style={{ color: "#003A70" }}>User Name</div>
-                  <div>{selectedUser.userName}</div>
-                </Row>
-                <Row className="fw-bold">
-                  <div style={{ color: "#003A70" }}>Phone Number</div>
-                  <div>077 1234567</div>
-                </Row>
-              </Col>
-              <Col>
-                <Row className="fw-bold mb-4">
-                  <div style={{ color: "#003A70" }}>Email</div>
-                  <div>{selectedUser.email}</div>
-                </Row>
-                <Row className="fw-bold">
-                  <div style={{ color: "#003A70" }}>Registration Date</div>
-                  <div>5\2\2024 22:10:23</div>
-                </Row>
-              </Col>
-            </Container>
-
-            <Container>
-              <div
-                className="text-white p-2 mt-5 w-100 text-center rounded"
-                style={{ backgroundColor: "#003A70" }}
-              >
-                Account Activity
-              </div>
-              <div className="fw-bold mt-4">
-                <div style={{ color: "#003A70" }} className="my-3">
-                  Recent Logins
-                </div>
-                <div className="fs-6 fw-light">
-                  <div>
-                    <Dot size={24} color="black" />
-                    <span>
-                      Oct 24, 2024 | 09:45 AM | 192.168.1.100 | Chrome on
-                      Windows
-                    </span>
-                  </div>
-                  <div>
-                    <Dot size={24} color="black" />
-                    <span>
-                      Oct 24, 2024 | 09:45 AM | 192.168.1.100 | Chrome on
-                      Windows
-                    </span>
-                  </div>
-                  <div>
-                    <Dot size={24} color="black" />
-                    <span>
-                      Oct 24, 2024 | 09:45 AM | 192.168.1.100 | Chrome on
-                      Windows
-                    </span>
-                  </div>
-                  <div>
-                    <Dot size={24} color="black" />
-                    <span>
-                      Oct 24, 2024 | 09:45 AM | 192.168.1.100 | Chrome on
-                      Windows
-                    </span>
-                  </div>
-                  <div>
-                    <Dot size={24} color="black" />
-                    <span>
-                      Oct 24, 2024 | 09:45 AM | 192.168.1.100 | Chrome on
-                      Windows
-                    </span>
-                  </div>
-                </div>
-
-                <div style={{ color: "#003A70" }} className="mt-5 mb-3">
-                  Total Auctions Participated In
-                </div>
-                <div>25 Auctions</div>
-                <div>
-                  ( <span className="text-success">15 winning bids </span> ,{" "}
-                  <span className="text-danger">10 losing bids</span> )
-                </div>
-              </div>
-              <div className="border border-bottom-black my-5"></div>
-
-              <div className="mb-4 d-flex justify-content-between">
-                <div className="fw-bold" style={{ color: "#003A70" }}>
-                  Account Status:{" "}
-                  <span
-                    className={
-                      selectedUser.status === "Active"
-                        ? "text-success"
-                        : "text-danger"
-                    }
-                    style={{ fontWeight: "bold" }}
-                  >
-                    {selectedUser.status}
-                  </span>
-                </div>
-                <Button variant="danger">Block User</Button>
-              </div>
-            </Container>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="text-center w-100 my-3">
-            <Button
-              className="w-25 text-white"
-              variant="secondary"
-              onClick={handleModalClose}
-              style={{ backgroundColor: "#B87333", borderColor: "#B87333" }}
-            >
-              Close
-            </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 }

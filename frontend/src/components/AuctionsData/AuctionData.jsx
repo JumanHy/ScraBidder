@@ -20,15 +20,8 @@ import { Trash3 } from "react-bootstrap-icons";
 function AuctionData({ auctions, BiddingHistory }) {
   const [records, setRecords] = useState([]);
   const [bidRecords, setBidRecords] = useState(auctions.biddings);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedAuction, setSelectedAuction] = useState(null);
-  const [selectedBid, setSelectedBid] = useState(null);
+
   console.log(BiddingHistory);
-  const handleModalClose = () => {
-    setShowModal(false);
-    setSelectedAuction(null);
-    setSelectedBid(null);
-  };
 
   useEffect(() => {
     if (auctions && auctions.length > 0) {
@@ -83,37 +76,6 @@ function AuctionData({ auctions, BiddingHistory }) {
     return () => clearInterval(intervalId);
   }, [auctions]); // Dependency array includes auctions
 
-  const handleAuctionRowClick = async (auction) => {
-    try {
-      const auctionId = auction.auctionId; // Use the correct property for the auction ID
-      const response = await axios.get(
-        `http://localhost:5192/api/auction/${auctionId}`
-      );
-      console.log(response);
-      // Set the selected auction and open the modal
-      setSelectedAuction(response.data);
-      setShowModal(true);
-    } catch (error) {
-      console.error("Error fetching auction details:", error);
-      alert("Could not load auction details.");
-    }
-  };
-  const handleBidRowClick = async (bid) => {
-    try {
-      const bidId = bid.bidId; // Use the correct property for the auction ID
-      const response = await axios.get(
-        `http://localhost:5192/api/biddinghistory/${bidId}`
-      );
-      console.log(response);
-      // Set the selected auction and open the modal
-      setSelectedBid(response.data);
-      setShowModal(true);
-    } catch (error) {
-      console.error("Error fetching auction details:", error);
-      alert("Could not load auction details.");
-    }
-  };
-
   const columns = [
     {
       name: "ID",
@@ -126,23 +88,26 @@ function AuctionData({ auctions, BiddingHistory }) {
       width: "200px",
       selector: (row) => row.title,
       sortable: true,
-      cell: (row) => (
-        <a
-          href="#"
-          className="user-name-link"
-          onClick={() => handleAuctionRowClick(row)}
-        >
-          {row.title}
-        </a>
-      ),
+      cell: (row) => <div className="text-primary fw-bold">{row.title}</div>,
     },
     {
       name: "Seller",
       selector: (row) => row.seller.businessName,
       sortable: true,
+      wrap: true,
     },
-    { name: "Start Date", selector: (row) => row.startingTime, sortable: true },
-    { name: "End Date", selector: (row) => row.endingTime, sortable: true },
+    {
+      name: "Start Date",
+      selector: (row) => new Date(row.startingTime).toLocaleString(),
+      sortable: true,
+      wrap: true,
+    },
+    {
+      name: "End Date",
+      selector: (row) => new Date(row.endingTime).toLocaleString(),
+      sortable: true,
+      wrap: true,
+    },
     {
       name: "Category",
       width: "150px",
@@ -233,13 +198,7 @@ function AuctionData({ auctions, BiddingHistory }) {
       sortable: true,
       wrap: true,
       cell: (row) => (
-        <a
-          href="#"
-          className="user-name-link"
-          onClick={() => handleBidRowClick(row)}
-        >
-          {row.bidder.bidderName}
-        </a>
+        <div className="text-primary fw-bold">{row.bidder.bidderName}</div>
       ),
     },
     {
@@ -259,13 +218,7 @@ function AuctionData({ auctions, BiddingHistory }) {
       sortable: true,
       wrap: true,
       cell: (row) => (
-        <a
-          href="#"
-          className="user-name-link"
-          onClick={() => handleUserClick(row)}
-        >
-          {row.auction.auctionId}
-        </a>
+        <div className="text-primary fw-bold">{row.auction.auctionId}</div>
       ),
     },
   ];
@@ -505,7 +458,6 @@ function AuctionData({ auctions, BiddingHistory }) {
           striped
           highlightOnHover
           selectableRowsHighlight
-          onRowClicked={handleBidRowClick}
           customStyles={{
             rows: {
               style: {
@@ -526,129 +478,6 @@ function AuctionData({ auctions, BiddingHistory }) {
           }}
         />
       </div>
-
-      <Modal show={showModal} onHide={handleModalClose} size="lg">
-        <Modal.Header
-          closeButton
-          style={{ backgroundColor: "#003A70", color: "white" }}
-          className="flex justify-content-center text-center"
-        >
-          <Modal.Title>Auction Information</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div>
-            <Container className="d-flex justify-content-between">
-              <Col className="ms-5">
-                <Image src={scrap} className="rounded w-75"></Image>
-              </Col>
-              <Col className="ms-5">
-                <Row className="fw-bold mb-2">
-                  <div style={{ color: "#003A70" }}>Auction Title</div>
-                  {selectedAuction && <div>{selectedAuction.title}</div>}
-                </Row>
-                <Row className="fw-bold mb-2">
-                  <div style={{ color: "#003A70" }}>Starting Price</div>
-                  {selectedAuction && <div>{selectedAuction.startingBid}</div>}
-                </Row>
-                <Row className="fw-bold mb-2">
-                  <div style={{ color: "#003A70" }}>Reservce Price</div>
-                  {selectedAuction && <div>{selectedAuction.reservePrice}</div>}
-                </Row>
-              </Col>
-            </Container>
-            <div className="mx-5 mt-3 px-2">
-              <div style={{ color: "#003A70" }} className="fw-bold mb-2">
-                Description
-              </div>
-              {selectedAuction && <div>{selectedAuction.description}</div>}{" "}
-            </div>
-            <div
-              className="text-white p-2 mt-5 mb-5 w-100 text-center rounded"
-              style={{ backgroundColor: "#003A70" }}
-            >
-              Seller Information
-            </div>
-
-            <Container className="d-flex justify-content-between mb-5 border-bottom pb-5">
-              <Col>
-                <Row className="fw-bold mb-4">
-                  <div style={{ color: "#003A70" }}>Company Name</div>
-                  {selectedAuction && (
-                    <div>{selectedAuction.seller.businessName}</div>
-                  )}
-                </Row>
-                <Row className="fw-bold">
-                  <div style={{ color: "#003A70" }}>Phone Number</div>
-                  <div>077 1234567</div>
-                </Row>
-              </Col>
-              <Col>
-                <Row className="fw-bold mb-4">
-                  <div style={{ color: "#003A70" }}>Email</div>
-                  {selectedAuction && (
-                    <div>{selectedAuction.seller.businessEmail}</div>
-                  )}
-                </Row>
-                <Row className="fw-bold">
-                  <div style={{ color: "#003A70" }}>Registration Date</div>
-                  {selectedAuction && (
-                    <div>{selectedAuction.seller.createdAt}</div>
-                  )}
-                </Row>
-              </Col>
-            </Container>
-            <div className="mb-4 d-flex justify-content-between">
-              {selectedAuction && (
-                <div className="fw-bold" style={{ color: "#003A70" }}>
-                  Auction Status:{" "}
-                  <span
-                    style={{
-                      fontWeight: "bold",
-                      color:
-                        selectedAuction.auctionStatus === "Started"
-                          ? "green"
-                          : selectedAuction.auctionStatus === "Pending"
-                          ? "orange"
-                          : selectedAuction.auctionStatus === "Ended"
-                          ? "grey"
-                          : selectedAuction.auctionStatus === "Denied"
-                          ? "red"
-                          : selectedAuction.auctionStatus === "Approved"
-                          ? "blue"
-                          : "#000000",
-                    }}
-                  >
-                    {selectedAuction.auctionStatus}
-                  </span>
-                </div>
-              )}
-            </div>
-            {selectedAuction && selectedAuction.currentBid && (
-              <div className="fw-bold" style={{ color: "#003A70" }}>
-                Highest Bid : $ {selectedAuction.currentBid}
-              </div>
-            )}
-
-            {selectedAuction && !selectedAuction.currentBid && (
-              <div className="fw-bold" style={{ color: "#003A70" }}>
-                Highest Bid : $ 0
-              </div>
-            )}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <div className="text-center w-100 my-3">
-            <Button
-              className="w-25 text-white"
-              variant="secondary"
-              onClick={handleModalClose}
-              style={{ backgroundColor: "#B87333", borderColor: "#B87333" }}
-            >
-              Close
-            </Button>
-          </div>
-        </Modal.Footer>
-      </Modal>
 
       <div style={{ height: "100px" }}></div>
 

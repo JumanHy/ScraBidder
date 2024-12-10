@@ -27,7 +27,6 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import Footer from "./components/Footer/Footer";
 
 import "./styles/css/main.min.css";
-import Table from "./Pages/Table";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,7 +65,7 @@ export default function App() {
             />
             <Route path="/reset-Password" element={<ResetPasswordRequest />} />
             <Route path="/resetPassword" element={<ResetPassword />} />
-            <Route path="/cprofile" element={<Companyprofile />} />
+            <Route path="/cprofile/:sellerId" element={<Companyprofile />} />
             <Route path="/user-account" element={<UserAccount />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/business-account" element={<BusinessAccount />} />
