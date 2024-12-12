@@ -43,7 +43,6 @@ function UsersData() {
   }, []);
 
   const columns = [
-    { name: "ID", selector: (row) => row.userId, sortable: true, wrap: true },
     {
       name: "UserName",
       selector: (row) => row.userName,
@@ -238,7 +237,7 @@ function UsersData() {
         >
           <input
             type="text"
-            placeholder="Search by username or email"
+            placeholder="Search by username"
             className="w-100 border-0 "
             style={{
               outline: "none",

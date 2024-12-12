@@ -12,12 +12,12 @@ function SideBar() {
   const [auctions, setAuctions] = useState([]);
   const [biddings, setBiddings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isStarted, setisStarted] = useState(false);
+
   const [error, setError] = useState(false);
 
   useEffect(() => {
     // Define multiple API requests
-    const fetchAuctions = axios.get("http://localhost:5192/api/auction"); // Replace with your endpoint
+    const fetchAuctions = axios.get("http://localhost:5192/api/auction/admin"); // Replace with your endpoint
     const fetchBiddings = axios.get("http://localhost:5192/api/biddinghistory"); // Replace with your endpoint
 
     // Use Promise.all to wait for all requests to complete

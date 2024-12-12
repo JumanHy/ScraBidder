@@ -33,9 +33,9 @@ const BAcountSidebar = ({ setActiveSection }) => {
       {/* Button to toggle the Offcanvas sidebar on mobile */}
       <Button
         variant="primary"
+        style={{ minHeight: "100vh" }}
         className="d-md-none" // Hide on larger screens
         onClick={() => setShowSidebar(true)}
-        style={{ marginLeft: "10px", marginTop: "10px" }}
       >
         Menu
       </Button>
@@ -124,12 +124,13 @@ const BAcountSidebar = ({ setActiveSection }) => {
       {/* Sidebar for Larger Screens */}
       <div
         style={{
-          width: "250px", // Set a smaller width for large screens
+          // Set a smaller width for large screens
           minHeight: "100vh",
+          height: "100%",
         }}
         className="d-none d-md-block  bg-primary p-0 text-white" // Only show on larger screens
       >
-        <Nav className="flex-column sticky-top">
+        <Nav className="flex-column">
           <Nav.Item style={{ marginBottom: "10px" }}>
             <div
               style={linkStyle(hoveredItem === "dashboard")}

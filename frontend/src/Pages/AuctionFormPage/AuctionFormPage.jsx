@@ -8,10 +8,12 @@ import {
   Container,
   Image,
   Spinner,
+  Alert,
 } from "react-bootstrap";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const materialCategories = [
   { id: 1, label: "Iron" },
@@ -32,7 +34,27 @@ function AuctionFormPage() {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyD164boEAkDOWxKojpHFaPRyRyK5sQoPpY", // Replace with your API key
   });
+  const userRole = localStorage.getItem("role");
 
+  const navigate = useNavigate();
+  if (userRole != "Business") {
+    return (
+      <Container
+        className="d-flex justify-content-center align-items-center flex-column"
+        style={{ height: "100vh", textAlign: "center" }}
+      >
+        <Alert variant="danger" className="w-50">
+          <h4 className="mb-3">Access Denied</h4>
+          <p className="mb-3">
+            You do not have the necessary permissions to access this page.
+          </p>
+        </Alert>
+        <Button variant="primary" onClick={() => navigate("/")}>
+          Go Back to Home
+        </Button>
+      </Container>
+    );
+  }
   const handleMapClick = useCallback((event) => {
     setFormData((prev) => ({
       ...prev,
@@ -121,9 +143,7 @@ function AuctionFormPage() {
         data.append(key, value);
       }
     }
-    for (const [key, value] of data.entries()) {
-      console.log(key, value); // This will log each key-value pair in the FormData object
-    }
+
     try {
       const response = await axios.post(
         "http://localhost:5192/api/auction",
@@ -365,30 +385,41 @@ function AuctionFormPage() {
           <Row className="g-3">
             <h4 className="text-decoration-underline">Location</h4>
             <Col>
-              <Button variant="secondary" className="text-white">
-                Current Location
+              <Button
+                variant="secondary"
+                className="text-white"
+                onClick={handleChooseCurrentLocation}
+              >
+                Use Current Location
               </Button>
             </Col>
-            {/*<Col xs={12} className="">
+            <Col xs={12} className="mt-3">
               {isLoaded ? (
                 <GoogleMap
                   center={
-                    formData.location.lat
+                    formData.location && formData.location.lat !== undefined
                       ? formData.location
-                      : "Amman"
+                      : { lat: 31.9515694, lng: 35.9239625 } // Default to Amman
                   }
-                  zoom={18}
+                  zoom={
+                    formData.location && formData.location.lat !== undefined
+                      ? 18
+                      : 12
+                  }
                   mapContainerStyle={{ height: "400px", width: "100%" }}
-                  
+                  onClick={handleMapClick}
                 >
-                  {formData.location.lat && (
+                  {formData.location && formData.location.lat !== undefined && (
                     <Marker position={formData.location} />
                   )}
                 </GoogleMap>
               ) : (
-                <Spinner animation="border"></Spinner>
+                <div className="d-flex justify-content-center align-items-center">
+                  <Spinner animation="border" />
+                  <span className="ms-2">Loading Map...</span>
+                </div>
               )}
-            </Col>*/}
+            </Col>
           </Row>
 
           <Col

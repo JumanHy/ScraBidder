@@ -1,5 +1,5 @@
 import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
-import SearchBar from "@/components/SearchBar/SearchBar";
+import LiveSearchBar from "@/components/LiveSearchBar/LiveSearchBar";
 import Filters from "@/components/resultsComponents/Filters/Filters";
 import { useEffect, useState } from "react";
 import AuctionCardsList from "@/components/AuctionCardsList/AuctionCardsList";
@@ -8,19 +8,28 @@ import axios from "axios";
 
 function ResultsPage() {
   const [auctions, setAuctions] = useState([]);
-  const [filteredAuctions, setFilteredAuctions] = useState([]); // For filtered data
+  const [filteredAuctions, setFilteredAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const itemsPerPage = 24; // Show 24 AuctionCards per page
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilters, setActiveFilters] = useState({
+    materialType: "",
+    condition: "",
+    quantity: "",
+    auctionStatus: "",
+  });
 
-  useEffect(() => {
+  const itemsPerPage = 24;
+
+  const fetchData = () => {
+    setLoading(true);
     axios
       .get("http://localhost:5192/api/auction")
       .then((response) => {
         setAuctions(response.data);
-        setFilteredAuctions(response.data); // Initialize filtered auctions
+        setFilteredAuctions(response.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -28,12 +37,19 @@ function ResultsPage() {
         setError(true);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    const interval = setInterval(fetchData, 300000);
+
+    return () => clearInterval(interval);
   }, []);
 
-  const totalItems = filteredAuctions.length; // Total number of items after filtering
+  const totalItems = filteredAuctions.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  // Calculate the current items based on the current page
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredAuctions.slice(
@@ -41,14 +57,78 @@ function ResultsPage() {
     indexOfLastItem
   );
 
-  // Handle page change
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Handle filtering from Filters component
-  const handleFilterChange = (filteredData) => {
-    setFilteredAuctions(filteredData);
-    setCurrentPage(1); // Reset to first page on new filter
+  // Unified filtering logic
+  const applyFilters = () => {
+    let filtered = [...auctions];
+
+    // Apply active filters
+    if (activeFilters.materialType) {
+      const materialMapping = {
+        Aluminum: 1,
+        Copper: 2,
+        Plastic: 3,
+        Iron: 4,
+        "Stainless Steel": 5,
+        Wood: 6,
+        Glass: 7,
+        Paper: 8,
+        Rubber: 9,
+        Textile: 10,
+        Ceramic: 11,
+      };
+
+      const categoryId = materialMapping[activeFilters.materialType];
+      filtered = filtered.filter(
+        (auction) => auction.category.categoryId === categoryId
+      );
+    }
+
+    if (activeFilters.condition) {
+      filtered = filtered.filter(
+        (auction) => auction.condition === activeFilters.condition
+      );
+    }
+
+    if (activeFilters.quantity) {
+      filtered = filtered.filter(
+        (auction) => auction.quantity >= Number(activeFilters.quantity)
+      );
+    }
+
+    if (activeFilters.auctionStatus && activeFilters.auctionStatus !== "All") {
+      filtered = filtered.filter(
+        (auction) => auction.auctionStatus === activeFilters.auctionStatus
+      );
+    }
+
+    // Apply live search term
+    if (searchTerm) {
+      filtered = filtered.filter((auction) =>
+        auction.title.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    setFilteredAuctions(filtered);
   };
+
+  // Handle filter changes
+  const handleFilterChange = (filters) => {
+    setActiveFilters(filters); // Update active filters
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  // Handle live search changes
+  const handleSearchChange = (term) => {
+    setSearchTerm(term); // Update the search term
+    setCurrentPage(1); // Reset to the first page
+  };
+
+  // Reapply filters whenever `activeFilters` or `searchTerm` changes
+  useEffect(() => {
+    applyFilters();
+  }, [activeFilters, searchTerm]);
 
   if (loading) {
     return (
@@ -75,7 +155,7 @@ function ResultsPage() {
     <Container fluid className="pt-2">
       <Row className="justify-content-center gap-3">
         <Row className="justify-content-center">
-          <SearchBar />
+          <LiveSearchBar onSearchChange={handleSearchChange} />
         </Row>
         <Row className="gap-3 gap-md-0">
           <Col xs={12} md={4} lg={3}>

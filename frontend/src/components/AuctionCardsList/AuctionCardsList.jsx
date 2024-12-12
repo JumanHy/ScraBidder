@@ -2,17 +2,12 @@ import { Col, Row, Alert } from "react-bootstrap";
 import AuctionCard from "@/components/AuctionCard/AuctionCard";
 
 function AuctionCardsList({ currentItems }) {
-  console.log(currentItems);
   return (
     <Row className="g-3">
       {currentItems && currentItems.length > 0 ? (
         currentItems.map((currentAuction, index) => (
           <Col key={currentAuction.auctionId || index} xs={12} sm={6} lg={4}>
-            {currentAuction.auctionStatus != "Denied" &&
-              currentAuction.auctionStatus != "Pending" &&
-              currentAuction.auctionStatus != "Deleted" && (
-                <AuctionCard currentAuction={currentAuction} />
-              )}
+            <AuctionCard currentAuction={currentAuction} />
           </Col>
         ))
       ) : (

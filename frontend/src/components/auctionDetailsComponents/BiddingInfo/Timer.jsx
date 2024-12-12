@@ -4,18 +4,17 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
-function Timer({ auction }) {
-  const [status, setStatus] = useState(auction.auctionStatus);
+function Timer({ auction, status, setStatus }) {
   const [endTime, setEndTime] = useState(
     status == "Approved" ? auction.startingTime : auction.endingTime
   );
-
+  const [counterKey, setCounterKey] = useState(Date.now());
   useEffect(() => {
-    // Dynamically adjust the endTime based on the auction status
     if (status == "Started") {
       setEndTime(auction.endingTime);
+      setCounterKey(Date.now());
     }
-  }, [status, auction.endingTime]);
+  }, [status]);
 
   const handleStatusUpdate = async (newStatus) => {
     const updatedData = {
@@ -76,6 +75,7 @@ function Timer({ auction }) {
     <Container fluid>
       <Row className="justify-content-between p-2 align-items-center bg-secondary bg-opacity-50 text-center text-primary-emphasis rounded-3">
         <FlipCountdown
+          key={counterKey}
           endAt={endTime} // Dynamic end time based on auction status
           size="small"
           titlePosition="top"

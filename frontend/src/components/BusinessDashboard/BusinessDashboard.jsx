@@ -135,7 +135,7 @@ const Dashboard = () => {
           <div style={flexContainerStyle}>
             <div style={dashboardCardStyle}>
               <h4 style={headerStyle}>Total Revenue</h4>
-              <p>${dashboardData.totalRevenue.toFixed(2)}</p>
+              <p>{dashboardData.totalRevenue.toFixed(2)} JD</p>
             </div>
           </div>
 

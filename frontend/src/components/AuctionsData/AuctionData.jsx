@@ -21,8 +21,6 @@ function AuctionData({ auctions, BiddingHistory }) {
   const [records, setRecords] = useState([]);
   const [bidRecords, setBidRecords] = useState(auctions.biddings);
 
-  console.log(BiddingHistory);
-
   useEffect(() => {
     if (auctions && auctions.length > 0) {
       setRecords(auctions);
@@ -77,12 +75,6 @@ function AuctionData({ auctions, BiddingHistory }) {
   }, [auctions]); // Dependency array includes auctions
 
   const columns = [
-    {
-      name: "ID",
-      width: "100px",
-      selector: (row) => row.auctionId,
-      sortable: true,
-    },
     {
       name: "Auction Title",
       width: "200px",
@@ -186,13 +178,6 @@ function AuctionData({ auctions, BiddingHistory }) {
 
   const bidColumns = [
     {
-      name: "ID",
-      width: "100px",
-      selector: (row) => row.bidId,
-      sortable: true,
-      wrap: true,
-    },
-    {
       name: "Bidder Name",
       selector: (row) => row.bidder.bidderName,
       sortable: true,
@@ -213,12 +198,12 @@ function AuctionData({ auctions, BiddingHistory }) {
       wrap: true,
     },
     {
-      name: "Auction ID",
-      selector: (row) => row.auction.auctionId,
+      name: "Auction Title",
+      selector: (row) => row.auction.title,
       sortable: true,
       wrap: true,
       cell: (row) => (
-        <div className="text-primary fw-bold">{row.auction.auctionId}</div>
+        <div className="text-primary fw-bold">{row.auction.title}</div>
       ),
     },
   ];
@@ -264,18 +249,10 @@ function AuctionData({ auctions, BiddingHistory }) {
     }
   };
 
-  function handleBidFilter(event) {
-    const newData = bidData.filter((row) => {
-      return row.name
-        .toLocaleLowerCase()
-        .includes(event.target.value.toLocaleLowerCase());
-    });
-    setBidRecords(newData);
-  }
   function handleAuctionFilter(event) {
     const filterValue = event.target.value.toLowerCase(); // Ensure case-insensitivity if needed
     const newData = auctions.filter((row) => {
-      return String(row.auctionId).toLowerCase().includes(filterValue);
+      return String(row.title).toLowerCase().includes(filterValue);
     });
     setRecords(newData);
   }
@@ -294,15 +271,37 @@ function AuctionData({ auctions, BiddingHistory }) {
   }
   return (
     <>
-      <Row className="justify-content-between px-2 pt-2">
-        <Col xs={12} sm={6} md={3} className="mt-4">
-          <span style={{ color: "#666666" }} className="me-2">
-            start/end date
-          </span>
-          <Form.Control type="date" className="rounded-5" />
+      <Row className="justify-content-center align-items-center  px-2 pt-2">
+        <Col sm={3}>
+          <div
+            className="d-flex align-items-center bg-white rounded-5  px-2"
+            style={{
+              maxWidth: "100%",
+              borderColor: "#003A70",
+              height: "40px",
+            }}
+          >
+            <Form.Control
+              type="text"
+              placeholder="Search by auction title"
+              className="border-0 w-100"
+              style={{ outline: "none" }}
+              onChange={handleAuctionFilter}
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-search"
+              viewBox="0 0 16 16"
+              color="black"
+            >
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>
+          </div>
         </Col>
-
-        <Col xs={12} sm={6} md={3} className="mt-5">
+        <Col xs={12} sm={6} md={3} className="">
           <Dropdown>
             <Dropdown.Toggle
               variant="light"
@@ -349,7 +348,7 @@ function AuctionData({ auctions, BiddingHistory }) {
           </Dropdown>
         </Col>
 
-        <Col xs={12} sm={6} md={3} className="mt-5">
+        <Col xs={12} sm={6} md={3}>
           <Dropdown>
             <Dropdown.Toggle
               variant="light"
@@ -416,38 +415,6 @@ function AuctionData({ auctions, BiddingHistory }) {
       </Row>
 
       <div className="m-5">
-        <Row className="justify-content-between mb-4">
-          <Col xs={12} sm={6} md={4} lg={3} className="mb-3">
-            <div
-              className="d-flex align-items-center bg-white rounded-5 border border-black px-2"
-              style={{
-                maxWidth: "100%",
-                borderColor: "#003A70",
-                height: "40px",
-              }}
-            >
-              <Form.Control
-                type="text"
-                placeholder="Search by auction ID"
-                className="border-0 w-100"
-                style={{ outline: "none" }}
-                onChange={handleAuctionFilter}
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-search"
-                viewBox="0 0 16 16"
-                color="black"
-              >
-                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-              </svg>
-            </div>
-          </Col>
-        </Row>
-
         <DataTable
           columns={columns}
           data={records}
@@ -485,36 +452,6 @@ function AuctionData({ auctions, BiddingHistory }) {
         <h2 className="text-center mb-3" style={{ color: "#003a70" }}>
           Bidding History
         </h2>
-
-        <div
-          className="col-12 d-flex p-2 m-3 bg-white rounded-5 justify-content-between border border-black "
-          style={{
-            maxWidth: "250px",
-            height: "40px",
-            borderColor: "#003A70",
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Search by auction ID"
-            className="w-100 border-0 "
-            style={{
-              outline: "none",
-            }}
-            onChange={handleBidFilter}
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            className="bi bi-search"
-            viewBox="0 0 16 16"
-            color="black"
-          >
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-          </svg>
-        </div>
 
         <DataTable
           columns={bidColumns}

@@ -16,7 +16,7 @@ namespace api.Models
         public string? ProfileImage { get; set; } = string.Empty;
 
         [Required]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Business Business { get; set; }
         public Individual Individual { get; set; }
 

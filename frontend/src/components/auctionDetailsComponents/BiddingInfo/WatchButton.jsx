@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Button, Stack } from "react-bootstrap";
 import { Eye, EyeFill } from "react-bootstrap-icons";
 import axios from "axios";
-
+import Swal from "sweetalert2";
 function WatchButton({ auctionId }) {
   const [isInWatchList, setIsInWatchList] = useState(false);
   const token = localStorage.getItem("authToken");
@@ -11,6 +11,7 @@ function WatchButton({ auctionId }) {
   const checkIfInWatchList = async () => {
     if (!token) {
       console.error("No token found");
+
       return;
     }
 
@@ -39,6 +40,17 @@ function WatchButton({ auctionId }) {
   const addToWatchList = async () => {
     if (!token) {
       console.error("No token found");
+      Swal.fire({
+        title: "Login Required",
+        text: "You need to log in to add items to your watchlist.",
+        icon: "warning", // Use "warning" to indicate it's a reminder or action needed
+        confirmButtonText: "Login",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect the user to the login page
+          navigate("/login");
+        }
+      });
       return;
     }
 

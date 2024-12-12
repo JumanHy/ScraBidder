@@ -138,7 +138,7 @@ namespace api.Controllers
                 UserName = businessRegisterDto.Email,
                 Email = businessRegisterDto.Email,
                 PhoneNumber = businessRegisterDto.PrimaryPhoneNumber,
-                 Status = AccountStatus.Active
+                // Status = AccountStatus.Pending
             };
 
             var createResult = await _userManager.CreateAsync(user, businessRegisterDto.Password);
@@ -241,16 +241,16 @@ namespace api.Controllers
             return Ok(new { message = "Phone number is available." });
         }
 
-        
-
-
-
-       
 
 
 
 
-        
+
+
+
+
+
+
 
     }
 }

@@ -34,12 +34,7 @@ function Overview() {
                 <h2 className="text-center pt-3" style={{ color: "#003a70" }}>
                   Quick Stats
                 </h2>
-                <div className="w-50 w-md-25 mx-auto mb-3">
-                  <span style={{ color: "#666666" }} className="me-2">
-                    Date Range
-                  </span>
-                  <Form.Control type="date" className="rounded-4" />
-                </div>
+
                 <div className="de-flex row justify-content-center">
                   <div className="shadow col-6 col-lg-3 mx-2 mt-5 mb-1 text-center rounded-3  card-animation card-delay-1">
                     <div className="fs-6 py-3">
@@ -55,21 +50,7 @@ function Overview() {
                       450
                     </div>
                   </div>
-                  <div className="shadow col-6 col-lg-3 mx-2 mt-5 mb-1 text-center rounded-3  card-animation card-delay-2">
-                    <div className="fs-6 py-3">
-                      <PersonFill size={20} color="#B87333" />
-                      <QuestionCircle size={10} color="#B87333" />
-                      <span className="ps-3" style={{ color: "#666666" }}>
-                        Site Visits
-                      </span>
-                    </div>
-                    <div
-                      className="fs-5 pb-2 fw-bold"
-                      style={{ color: "#003A70" }}
-                    >
-                      8500
-                    </div>
-                  </div>
+
                   <div className="shadow col-6 col-lg-3 mx-2 mt-5 mb-1 text-center rounded-3 card-animation card-delay-3">
                     <div className="fs-6 py-3">
                       <CurrencyDollar size={20} color="#B87333" />
@@ -100,13 +81,56 @@ function Overview() {
                   </div>
                 </div>
               </div>
-            </Row>
-            <Row>
-              <div className="mt-5">
+
+              <div>
                 <h2 className="text-center py-3" style={{ color: "#003a70" }}>
-                  Recent Activities Feed
+                  Sales & Earning
                 </h2>
-                <Feed />
+                <div className="text-center">
+                  <Container className="d-flex justify-content-evenly py-3">
+                    <Col xs="auto">
+                      <Button
+                        style={{
+                          backgroundColor: "#B87333",
+                          borderColor: "#B87333",
+                        }}
+                        size="md"
+                      >
+                        Weekly
+                      </Button>
+                    </Col>
+                    <Col xs="auto">
+                      <Button
+                        style={{
+                          backgroundColor: "#B87333",
+                          borderColor: "#B87333",
+                        }}
+                        size="md"
+                      >
+                        Monthly
+                      </Button>
+                    </Col>
+                    <Col xs="auto">
+                      <Button
+                        style={{
+                          backgroundColor: "#B87333",
+                          borderColor: "#B87333",
+                        }}
+                        size="md"
+                      >
+                        Yearly
+                      </Button>
+                    </Col>
+                  </Container>
+                </div>
+              </div>
+              <div className="shadow w-100">
+                <Chart
+                  chartType="PieChart"
+                  data={data}
+                  options={options}
+                  width={"100%"}
+                />
               </div>
             </Row>
           </Col>
@@ -153,58 +177,6 @@ function Overview() {
                     </Col>
                   </Row>
                 </div>
-              </div>
-            </Row>
-            <Row>
-              <div>
-                <h2 className="text-center py-3" style={{ color: "#003a70" }}>
-                  Sales & Earning
-                </h2>
-                <div className="text-center">
-                  <Container className="d-flex justify-content-evenly py-3">
-                    <Col xs="auto">
-                      <Button
-                        style={{
-                          backgroundColor: "#B87333",
-                          borderColor: "#B87333",
-                        }}
-                        size="md"
-                      >
-                        Weekly
-                      </Button>
-                    </Col>
-                    <Col xs="auto">
-                      <Button
-                        style={{
-                          backgroundColor: "#B87333",
-                          borderColor: "#B87333",
-                        }}
-                        size="md"
-                      >
-                        Monthly
-                      </Button>
-                    </Col>
-                    <Col xs="auto">
-                      <Button
-                        style={{
-                          backgroundColor: "#B87333",
-                          borderColor: "#B87333",
-                        }}
-                        size="md"
-                      >
-                        Yearly
-                      </Button>
-                    </Col>
-                  </Container>
-                </div>
-              </div>
-              <div className="shadow w-100" style={{ maxWidth: "600px" }}>
-                <Chart
-                  chartType="PieChart"
-                  data={data}
-                  options={options}
-                  width={"100%"}
-                />
               </div>
             </Row>
           </Col>

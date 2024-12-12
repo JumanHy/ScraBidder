@@ -42,7 +42,7 @@ namespace api.Services
         public async Task Handle(TransactionEvent e)
         {
 
-            string message = $"Your {e.Purpose} {e.Type} for Auction ID ({e.AuctionId}) has been created.";
+            string message = $"Your {e.Purpose} {e.Type} for Auction ({e.AuctionTitle}) has been created.";
 
             var notificationItem = new NotificationItem
             {
@@ -60,11 +60,11 @@ namespace api.Services
 
             if (e.DeliveryStatus == DeliveryStatus.Pending)
             {
-                message = $"Your shipment for Auction ID ({e.AuctionId}) is pending, Contact the seller for shipping process";
+                message = $"Your shipment for Auction ({e.AuctionTitle}) is pending, Contact the seller for shipping process";
             }
             else
             {
-                message = $"Your shipment for Auction ID ({e.AuctionId}) is {e.DeliveryStatus}";
+                message = $"Your shipment for Auction ({e.AuctionTitle}) is {e.DeliveryStatus}";
 
             }
             var notificationItem = new NotificationItem

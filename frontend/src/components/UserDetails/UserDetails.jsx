@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { FaEdit, FaPlus, FaTimes } from "react-icons/fa";
 import { Modal, Button, Form, Row, Col, Image, Spinner } from "react-bootstrap";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  Marker,
+  useJsApiLoader,
+  useLoadScript,
+} from "@react-google-maps/api";
 import axios from "axios";
 
 const UserDetails = () => {
@@ -289,8 +294,8 @@ const UserDetails = () => {
     }));
   };
 
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY",
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyD164boEAkDOWxKojpHFaPRyRyK5sQoPpY", // Replace with your API key
   });
 
   return (

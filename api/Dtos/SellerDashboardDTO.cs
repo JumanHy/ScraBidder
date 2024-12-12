@@ -7,12 +7,9 @@ namespace api.Dtos
 {
     public class SellerDashboardDTO
     {
-
         public decimal TotalRevenue { get; set; }
         public List<TimeSeriesData> RevenueOverTime { get; set; } = new List<TimeSeriesData>();
         public List<TimeSeriesData> ItemsSoldOverTime { get; set; } = new List<TimeSeriesData>();
-
-
 
     }
 }

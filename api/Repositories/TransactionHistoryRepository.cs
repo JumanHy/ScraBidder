@@ -68,7 +68,12 @@ namespace api.Repositories
             await _context.SaveChangesAsync();
             if (transaction.TransactionType != TransactionType.Order)
             {
-                var auctionEvent = new TransactionEvent(transaction.AuctionId, transaction.UserId, transaction.TransactionPurpose, transaction.TransactionType);
+                var auction = await _context.Auctions.FindAsync(transaction.AuctionId);
+                if (auction == null)
+                {
+                    throw new InvalidOperationException("Auction not found.");
+                }
+                var auctionEvent = new TransactionEvent(auction.Title, transaction.UserId, transaction.TransactionPurpose, transaction.TransactionType);
 
                 await _eventDispatcher.Dispatch(auctionEvent);
             }

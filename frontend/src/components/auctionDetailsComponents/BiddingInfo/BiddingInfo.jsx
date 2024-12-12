@@ -18,8 +18,17 @@ import WatchButton from "./WatchButton";
 import axios from "axios";
 import { HubConnectionBuilder } from "@microsoft/signalr";
 import { useNavigate } from "react-router-dom";
-
-function BiddingInfo({ currentItem }) {
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+};
+function BiddingInfo({ currentItem, status, setStatus }) {
   const isLoggedIn = localStorage.getItem("authToken");
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [isDepositAuthorized, setIsDepositAuthorized] = useState(
@@ -35,7 +44,7 @@ function BiddingInfo({ currentItem }) {
   const depositAmount = 50; // amount to hold for bidding authorization
   const navigate = useNavigate();
   const winnerId =
-    currentItem.auctionStatus == "Ended" &&
+    status == "Ended" &&
     biddings &&
     biddings.length > 0 &&
     biddings.reduce(
@@ -44,8 +53,6 @@ function BiddingInfo({ currentItem }) {
     ).bidderId;
 
   const isWinner = userId == winnerId && highestBid >= currentItem.reservePrice;
-  console.log(userId);
-  console.log(winnerId);
 
   // Handle Bid Placement
   const handleBidNowClick = async () => {
@@ -69,9 +76,6 @@ function BiddingInfo({ currentItem }) {
       setError(`Bid amount must be at least ${permissableBid + 1} JD.`);
     } else {
       try {
-        console.log("from bidding info");
-        console.log(currentItem.auctionId);
-        console.log(userId);
         const response = await axios.post(
           "http://localhost:5192/api/biddinghistory",
           {
@@ -137,15 +141,10 @@ function BiddingInfo({ currentItem }) {
     newConnection
       .start()
       .then(() => {
-        console.log("Connected to SignalR from bidding");
-
         // Listen for updates from the hub
         newConnection.on(
           "ReceiveBidUpdate",
           (auctionId, currentBid, biddings) => {
-            console.log(currentBid);
-            console.log(biddings);
-            console.log("yes im here");
             if (auctionId == currentItem.auctionId) {
               setHighestBid(currentBid);
               setBiddings(biddings);
@@ -167,10 +166,10 @@ function BiddingInfo({ currentItem }) {
         <Card.Title>
           <Row fluid className="p-0 align-items-center justify-content-between">
             <Col xs="auto" className="text-success">
-              {currentItem.auctionStatus}
+              {status}
             </Col>
             <Col xs="auto">
-              {currentItem.auctionStatus !== "Ended" && (
+              {status !== "Ended" && (
                 <WatchButton auctionId={currentItem.auctionId} />
               )}
             </Col>
@@ -179,11 +178,22 @@ function BiddingInfo({ currentItem }) {
 
         <Card.Text>
           <Card.Subtitle className="mb-2 text-muted">
-            {currentItem.auctionStatus == "Approved" && "Starts After"}
-            {currentItem.auctionStatus == "Started" && "Ends After"}
-            {currentItem.auctionStatus == "Ended" && "Ended At"}
+            {status == "Approved" && "Starts After"}
+            {status == "Started" && "Ends After"}
+            {status == "Ended" && "Ended At"}
           </Card.Subtitle>
-          <Timer auction={currentItem} />
+          {status != "Ended" && (
+            <Timer
+              auction={currentItem}
+              status={status}
+              setStatus={setStatus}
+            />
+          )}
+          {status == "Ended" && (
+            <div className="text-danger text-center">
+              {formatDate(currentItem.endingTime)}
+            </div>
+          )}
         </Card.Text>
 
         <Card.Text>
@@ -200,14 +210,14 @@ function BiddingInfo({ currentItem }) {
                 {highestBid ? (
                   <h4>{highestBid} JD</h4>
                 ) : (
-                  currentItem.startingBid
+                  <h4>{currentItem.startingBid} JD</h4>
                 )}
               </Stack>
             </Row>
           </Container>
         </Card.Text>
 
-        {currentItem.auctionStatus == "Started" &&
+        {status == "Started" &&
           !isWinner &&
           userId != currentItem.seller.sellerId && (
             <Card.Text className="d-flex justify-content-center">
@@ -257,7 +267,7 @@ function BiddingInfo({ currentItem }) {
           )}
 
         {/* If the auction has ended and the user is the winner */}
-        {currentItem.auctionStatus == "Ended" && isWinner && (
+        {status == "Ended" && isWinner && (
           <Card.Text className="d-flex justify-content-center">
             <Col xs={12} md={7}>
               <Button

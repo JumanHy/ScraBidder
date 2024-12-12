@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Form, Container, Row, Col, Button, Stack } from "react-bootstrap";
 
-function Filters({ auctions, onFilterChange }) {
+function Filters({ onFilterChange }) {
   const [filters, setFilters] = useState({
     materialType: "",
     condition: "",
@@ -23,44 +23,11 @@ function Filters({ auctions, onFilterChange }) {
     Ceramic: 11,
   };
 
-  useEffect(() => {
-    let updatedAuctions = auctions;
-
-    // Filter by material type (using categoryId)
-    if (filters.materialType) {
-      const categoryId = materialTypeMapping[filters.materialType];
-      updatedAuctions = updatedAuctions.filter(
-        (auction) => auction.category.categoryId === categoryId
-      );
-    }
-
-    // Filter by condition
-    if (filters.condition) {
-      updatedAuctions = updatedAuctions.filter(
-        (auction) => auction.condition == filters.condition
-      );
-    }
-
-    // Filter by quantity (greater than or equal to the entered value)
-    if (filters.quantity) {
-      updatedAuctions = updatedAuctions.filter(
-        (auction) => auction.quantity >= Number(filters.quantity)
-      );
-    }
-
-    // Filter by auction status
-    if (filters.auctionStatus && filters.auctionStatus !== "All") {
-      updatedAuctions = updatedAuctions.filter(
-        (auction) => auction.auctionStatus === filters.auctionStatus
-      );
-    }
-
-    onFilterChange(updatedAuctions); // Notify parent component of filtered data
-  }, [filters, auctions, onFilterChange]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+    const updatedFilters = { ...filters, [name]: value };
+    setFilters(updatedFilters); // Update local state
+    onFilterChange(updatedFilters); // Send updated filters to parent
   };
 
   return (

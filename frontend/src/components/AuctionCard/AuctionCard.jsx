@@ -1,8 +1,25 @@
 import { Card, Button } from "react-bootstrap";
 import FlipCountdown from "@rumess/react-flip-countdown";
 import { LinkContainer } from "react-router-bootstrap";
+import { useState, useEffect } from "react";
 
 function AuctionCard({ currentAuction }) {
+  const [status, setStatus] = useState(currentAuction.auctionStatus);
+
+  const [countdownKey, setCountdownKey] = useState(Date.now()); // Unique key for FlipCountdown
+
+  useEffect(() => {
+    setCountdownKey(Date.now());
+  }, [status]);
+
+  const handleTimeUp = () => {
+    if (status === "Approved") {
+      setStatus("Started");
+    } else if (status === "Started") {
+      setStatus("Ended");
+    }
+  };
+
   const endTime = new Date(currentAuction.endingTime);
   const formattedDate = new Intl.DateTimeFormat("en-US", {
     year: "numeric",
@@ -11,13 +28,15 @@ function AuctionCard({ currentAuction }) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(endTime);
+
   if (!currentAuction) {
     return null; // Handle case when currentAuction is not passed or is empty
   }
+
   const baseURL = "/src/assets/images/";
   const images = JSON.parse(currentAuction.images || "{}");
   const firstImage = baseURL + images.path1;
-  console.log(firstImage);
+
   return (
     <Card className="shadow border-0 h-100 rounded-4 text-primary">
       {/* Auction Image */}
@@ -36,7 +55,7 @@ function AuctionCard({ currentAuction }) {
         </Card.Title>
 
         {/* Auction Ending Text */}
-        {currentAuction.auctionStatus == "Started" && (
+        {status === "Started" && (
           <div className="text-center">
             <Card.Subtitle className="text-secondary fw-bold text-uppercase">
               Ends After
@@ -45,7 +64,8 @@ function AuctionCard({ currentAuction }) {
             {/* Countdown Timer */}
             <div>
               <FlipCountdown
-                endAt={new Date(currentAuction.endingTime).toLocaleString()}
+                key={countdownKey} // Force re-render on key change
+                endAt={currentAuction.endingTime}
                 size="small"
                 titlePosition="top"
                 hideYear
@@ -54,12 +74,13 @@ function AuctionCard({ currentAuction }) {
                 hourTitle="Hours"
                 minuteTitle="Mins"
                 secondTitle="Secs"
+                onTimeUp={handleTimeUp} // Handle time up
               />
             </div>
           </div>
         )}
 
-        {currentAuction.auctionStatus == "Approved" && (
+        {status === "Approved" && (
           <div className="text-center">
             <Card.Subtitle className="text-secondary fw-bold text-uppercase">
               Starts After
@@ -68,6 +89,7 @@ function AuctionCard({ currentAuction }) {
             {/* Countdown Timer */}
             <div>
               <FlipCountdown
+                key={countdownKey} // Force re-render on key change
                 endAt={currentAuction.startingTime}
                 size="small"
                 titlePosition="top"
@@ -77,12 +99,13 @@ function AuctionCard({ currentAuction }) {
                 hourTitle="Hours"
                 minuteTitle="Mins"
                 secondTitle="Secs"
+                onTimeUp={handleTimeUp} // Handle time up
               />
             </div>
           </div>
         )}
 
-        {currentAuction.auctionStatus == "Ended" && (
+        {status === "Ended" && (
           <div className="text-center">
             <Card.Subtitle className="text-secondary fw-bold text-uppercase">
               Ended At
@@ -93,7 +116,7 @@ function AuctionCard({ currentAuction }) {
         )}
 
         {/* Starting Bid */}
-        {currentAuction.auctionStatus == "Started" && (
+        {status === "Started" && (
           <Card.Text className="text-secondary fw-bold text-uppercase">
             Current Bid:
             {currentAuction.currentBid == null
@@ -103,7 +126,7 @@ function AuctionCard({ currentAuction }) {
           </Card.Text>
         )}
 
-        {currentAuction.auctionStatus == "Ended" && (
+        {status === "Ended" && (
           <Card.Text className="text-secondary fw-bold text-uppercase">
             Final Price: {currentAuction.currentBid} JD
           </Card.Text>

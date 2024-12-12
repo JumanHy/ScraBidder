@@ -9,6 +9,19 @@ import Swal from "sweetalert2";
 
 const Login = () => {
   const navigate = useNavigate();
+  const userRole = localStorage.getItem("role");
+  const token = localStorage.getItem("authToken");
+
+  if (token) {
+    // Redirect based on user role
+    let roleRedirects = {
+      Admin: "/dashboard",
+      Individual: "/user-account",
+      Business: "/business-account",
+    };
+
+    navigate(roleRedirects[userRole] || "/");
+  }
 
   return (
     <Container style={{ height: "100vh" }} className="my-2 shadow rounded-3">
@@ -69,7 +82,7 @@ const Login = () => {
                     Swal.fire({
                       icon: "error",
                       title: "Account Status",
-                      text: "Your account is either pending or inactive. Please contact support for assistance.",
+                      text: "Your account is either pending or inactive. Wait for the Approval.",
                       confirmButtonText: "OK",
                     });
                   } else {
@@ -90,6 +103,12 @@ const Login = () => {
                   setErrors({
                     general: "Invalid credentials. Please try again.",
                   });
+                  Swal.fire({
+                    icon: "error",
+                    title: "Invalid Credentials",
+                    text: "Invalid credentials. Please try again.",
+                    confirmButtonText: "OK",
+                  });
                 }
               } catch (error) {
                 console.error(error);
@@ -97,6 +116,12 @@ const Login = () => {
                 if (error.response && error.response.status === 401) {
                   setErrors({
                     general: "Invalid email or password. Please try again.",
+                  });
+                  Swal.fire({
+                    icon: "error",
+                    title: "Invalid Credentials",
+                    text: "Invalid email or password. Please try again.",
+                    confirmButtonText: "OK",
                   });
                 } else {
                   setErrors({

@@ -12,13 +12,11 @@ function ImagesSlider({ auction }) {
     try {
       const imageObject = JSON.parse(auction.images); // Parse the string into an object
       images = Object.values(imageObject).map((path) => `${baseURL}${path}`);
-      console.log("Parsed image paths:", images);
     } catch (error) {
       console.error("Failed to parse auction images:", error);
     }
   }
 
-  console.log("Image URLs:", images);
   const [mainSlider, setMainSlider] = useState(null);
   const [thumbnailSlider, setThumbnailSlider] = useState(null);
 

@@ -64,7 +64,7 @@ function NavBar() {
               className="dashnav-link d-flex align-items-center"
               href="#profile"
             >
-              <h5 className="mb-0 me-2">Admin Name</h5>
+              <h5 className="mb-0 me-2">Admin</h5>
               <Person size={24} color="black" />
             </Nav>
           </Nav>

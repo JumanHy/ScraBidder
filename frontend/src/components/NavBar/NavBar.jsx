@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
-import { Bell, Dot, Upload } from "react-bootstrap-icons";
+import { Bell, Dot } from "react-bootstrap-icons";
 
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -28,14 +28,10 @@ function NavBar() {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("authToken");
   const roleData = localStorage.getItem("role");
-  console.log({ roleData });
 
   const val = !!token;
   const [isLoggedIn, setIsLoggedIn] = useState(val);
-  // const [role, setRole] = useState(roleData);
-
   const [showModal, setShowModal] = useState(false);
-  const [uploadedImage, setUploadedImage] = useState(null);
 
   useEffect(() => {
     setIsLoggedIn(val);
@@ -74,7 +70,7 @@ function NavBar() {
     newConnection
       .start()
       .then(() => {
-        console.log("SignalR connected fron notification");
+        console.log("SignalR connected from notification");
         newConnection.on("ReceiveNotification", (message) => {
           setNotifications((prev) => [message, ...prev]);
         });
@@ -114,15 +110,6 @@ function NavBar() {
     window.location.href = "/login";
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setUploadedImage(reader.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <>
       <Navbar expand="md" className="bg-light shadow-lg fixed-top">
@@ -135,98 +122,104 @@ function NavBar() {
               </Navbar.Brand>
             </LinkContainer>
           </Col>
+          <Navbar.Toggle className="ms-auto" aria-controls="basic-navbar-nav" />
           {isLoggedIn ? (
             <Col xs={{ span: "auto" }} md={{ order: "last" }}>
-              <Stack direction="horizontal" className="gap-2">
-                <Dropdown>
-                  <Dropdown.Toggle variant="link" id="notifications-dropdown">
-                    <Bell size={24} color="black" />
-                    {notifications &&
-                      notifications?.filter((n) => !n.isRead).length > 0 && (
-                        <Badge
-                          pill
-                          bg="danger"
-                          className="position-absolute top-0 translate-middle"
-                        >
-                          {notifications.filter((n) => !n.isRead).length}
-                        </Badge>
-                      )}
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu
-                    align={"end"}
-                    style={{
-                      maxHeight: "400px",
-                      overflowY: "auto",
-                      width: "50px",
-                    }}
-                  >
-                    <Dropdown.Header>Notifications</Dropdown.Header>
-                    {notifications && notifications?.length > 0 ? (
-                      notifications.map((notification, index) => (
-                        <Dropdown.Item
-                          key={index}
-                          className={`d-flex justify-content-between text-wrap py-3 px-3 ${
-                            !notification.isRead ? "bg-primary-subtle" : ""
-                          }`}
-                          onClick={() => handleNotificationClick(index)}
-                        >
-                          <span>
-                            {notification.message}
-                            <span
-                              className="fw-lighter fst-italic fs-6"
-                              style={{ color: "#005092" }}
-                            >
-                              <Dot />
-                              {formatTimeAgo(notification.createdAt)}
-                            </span>
-                          </span>
-                        </Dropdown.Item>
-                      ))
-                    ) : (
-                      <Dropdown.Item disabled>
-                        No new notifications
-                      </Dropdown.Item>
-                    )}
-                  </Dropdown.Menu>
-                </Dropdown>
-                <span
-                  onClick={() => setShowModal(true)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <Image
-                    src={uploadedImage || userImage}
-                    roundedCircle
-                    width={30}
-                    height={30}
-                  />
-                </span>
-                <Dropdown align="end">
-                  <Dropdown.Toggle
-                    variant="secondary"
-                    className="border-0 bg-transparent p-0"
-                  />
-                  <Dropdown.Menu>
-                    <Dropdown.Item
-                      href={
-                        roleData === "Business"
-                          ? "/business-account"
-                          : "/user-account"
-                      }
+              {roleData !== "Admin" ? ( // Check for "Admin" role
+                <Stack direction="horizontal" className="gap-2">
+                  <Dropdown>
+                    <Dropdown.Toggle variant="link" id="notifications-dropdown">
+                      <Bell size={24} color="black" />
+                      {notifications &&
+                        notifications?.filter((n) => !n.isRead).length > 0 && (
+                          <Badge
+                            pill
+                            bg="danger"
+                            className="position-absolute top-0 translate-middle"
+                          >
+                            {notifications.filter((n) => !n.isRead).length}
+                          </Badge>
+                        )}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu
+                      align={"end"}
+                      style={{
+                        maxHeight: "400px",
+                        overflowY: "auto",
+                        width: "50px",
+                      }}
                     >
-                      My Account
-                    </Dropdown.Item>
-                    {roleData === "Business" && (
-                      <LinkContainer to={`/cprofile/${userId}`}>
-                        <Dropdown.Item>My Profile</Dropdown.Item>
-                      </LinkContainer>
-                    )}
-                    <Dropdown.Divider />
-                    <Dropdown.Item onClick={handleLogout}>
-                      Log Out
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Stack>
+                      <Dropdown.Header>Notifications</Dropdown.Header>
+                      {notifications && notifications?.length > 0 ? (
+                        notifications.map((notification, index) => (
+                          <Dropdown.Item
+                            key={index}
+                            className={`d-flex justify-content-between text-wrap py-3 px-3 ${
+                              !notification.isRead ? "bg-primary-subtle" : ""
+                            }`}
+                            onClick={() => handleNotificationClick(index)}
+                          >
+                            <span>
+                              {notification.message}
+                              <span
+                                className="fw-lighter fst-italic fs-6"
+                                style={{ color: "#005092" }}
+                              >
+                                <Dot />
+                                {formatTimeAgo(notification.createdAt)}
+                              </span>
+                            </span>
+                          </Dropdown.Item>
+                        ))
+                      ) : (
+                        <Dropdown.Item disabled>
+                          No new notifications
+                        </Dropdown.Item>
+                      )}
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <span>
+                    <Image
+                      src={userImage}
+                      roundedCircle
+                      width={30}
+                      height={30}
+                    />
+                  </span>
+                  <Dropdown align="end">
+                    <Dropdown.Toggle
+                      variant="secondary"
+                      className="border-0 bg-transparent p-0"
+                    />
+                    <Dropdown.Menu>
+                      <Dropdown.Item
+                        href={
+                          roleData === "Business"
+                            ? "/business-account"
+                            : "/user-account"
+                        }
+                      >
+                        My Account
+                      </Dropdown.Item>
+                      {roleData === "Business" && (
+                        <LinkContainer to={`/cprofile/${userId}`}>
+                          <Dropdown.Item>My Profile</Dropdown.Item>
+                        </LinkContainer>
+                      )}
+                      <Dropdown.Divider />
+                      <Dropdown.Item onClick={handleLogout}>
+                        Log Out
+                      </Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Stack>
+              ) : (
+                <LinkContainer to="/Dashboard">
+                  <Button variant="primary" className="w-100 text-white">
+                    Dashboard
+                  </Button>
+                </LinkContainer>
+              )}
             </Col>
           ) : (
             <Col xs="auto" md={{ order: "last" }}>
@@ -238,8 +231,11 @@ function NavBar() {
             </Col>
           )}
           <Col xs={12} md={5}>
-            <Navbar.Collapse>
-              <Nav className="gap-md-3">
+            <Navbar.Collapse
+              className="justify-content-between"
+              id="basic-navbar-nav"
+            >
+              <Nav className="m-start gap-md-3 text-center">
                 <LinkContainer to="/">
                   <Nav.Link className="text-primary">Home</Nav.Link>
                 </LinkContainer>
@@ -253,29 +249,6 @@ function NavBar() {
           </Col>
         </Container>
       </Navbar>
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-        <Modal.Body className="text-center">
-          <Image
-            src={uploadedImage || userImage}
-            roundedCircle
-            style={{
-              maxWidth: "150px",
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.15)",
-            }}
-          />
-          <br />
-          <label htmlFor="image-upload" className="btn btn-primary">
-            <Upload className="me-2" /> Change Picture
-          </label>
-          <input
-            id="image-upload"
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            style={{ display: "none" }}
-          />
-        </Modal.Body>
-      </Modal>
     </>
   );
 }

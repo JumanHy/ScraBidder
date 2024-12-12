@@ -9,49 +9,73 @@ import Orders from "../../components/Orders/Orders"; // Import Orders component
 import "../../styles/BusinessAccount.css";
 import BusinessDashboard from "../../components/BusinessDashboard/BusinessDashboard";
 import "../../styles/animations.css";
+import { useNavigate } from "react-router-dom";
+import { Alert, Button, Col, Container, Row } from "react-bootstrap";
 
 function BusinessProfile() {
   const [activeSection, setActiveSection] = useState("dashboard");
+  const userRole = localStorage.getItem("role");
 
+  const navigate = useNavigate();
+  if (userRole != "Business") {
+    return (
+      <Container
+        className="d-flex justify-content-center align-items-center flex-column"
+        style={{ height: "100vh", textAlign: "center" }}
+      >
+        <Alert variant="danger" className="w-50">
+          <h4 className="mb-3">Access Denied</h4>
+          <p className="mb-3">
+            You do not have the necessary permissions to access this page.
+          </p>
+        </Alert>
+        <Button variant="primary" onClick={() => navigate("/")}>
+          Go Back to Home
+        </Button>
+      </Container>
+    );
+  }
   // Function to render content based on active section
   const renderContent = () => {
     switch (activeSection) {
       case "dashboard":
         return (
-          <div key="dashboard">
+          <div key="dashboard" className="m-4">
             <h2 style={{ color: "#003A70" }}>Dashboard</h2>
             <BusinessDashboard />
           </div>
         );
       case "watchlist":
-        return <WatchList key="watchlist" />;
+        return (
+          <div key="watchlist" className="m-4">
+            <h2 style={{ color: "#003A70" }}>Watch List</h2>
+            <WatchList />
+          </div>
+        );
+
       case "MyAuctions":
         return (
-          <div
-            className="justify-content-center align-items-center flex-column"
-            style={{ marginTop: "-15px", padding: "0px" }}
-            key="MyAuctions"
-          >
+          <div key="MyAuctions" className="m-4">
             <MyAuctions />
           </div>
         );
       case "transactions":
         return (
-          <div key="transactions">
+          <div key="transactions" className="m-4">
             <h2 style={{ color: "#003A70" }}>Transaction History</h2>
             <TransactionHistory />
           </div>
         );
       case "orders": // New case for Orders
         return (
-          <div key="orders">
+          <div key="orders" className="m-4">
             <h2 style={{ color: "#003A70" }}>Orders</h2>
             <Orders />
           </div>
         );
       case "settings":
         return (
-          <div key="settings">
+          <div key="settings" className="m-4">
             <h2 style={{ color: "#003A70" }}>Settings</h2>
             <UserDetails />
           </div>
@@ -62,16 +86,18 @@ function BusinessProfile() {
   };
 
   return (
-    <div>
-      <div style={{ display: "flex", minHeight: "100vh" }}>
+    <Container fluid>
+      <Row className="">
         {/* Sidebar */}
-        <BAcountSidebar
-          setActiveSection={setActiveSection}
-          activeSection={activeSection}
-        />
+        <Col xs={2} sm={3} className="p-0">
+          <BAcountSidebar
+            setActiveSection={setActiveSection}
+            activeSection={activeSection}
+          />
+        </Col>
 
         {/* Main Content Area with Transition */}
-        <div style={{ flex: 1, padding: "20px", color: "#003A70" }}>
+        <Col xs={10} sm={9} style={{ color: "#003A70" }}>
           <TransitionGroup>
             <CSSTransition
               key={activeSection}
@@ -81,9 +107,9 @@ function BusinessProfile() {
               {renderContent()}
             </CSSTransition>
           </TransitionGroup>
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

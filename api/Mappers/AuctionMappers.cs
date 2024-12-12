@@ -61,6 +61,28 @@ namespace api.Mappers
                     : [],
             };
         }
+
+        public static AuctionsResponseForSeller ToAuctionsResponseForSellerDto(this Auction auctionModel)
+        {
+            return new AuctionsResponseForSeller
+            {
+                AuctionId = auctionModel.AuctionId,
+                SellerId = auctionModel.SellerId,
+                Title = auctionModel.Title,
+                AuctionStatus = auctionModel.AuctionStatus,
+                CurrentBid = auctionModel.CurrentBid,
+                CreatedAt = auctionModel.CreatedAt,
+                StartingTime = auctionModel.StartingTime,
+                EndingTime = auctionModel.EndingTime,
+                Watchers = auctionModel.watches.Count,
+                Category = new CategoryDto
+                {
+                    CategoryId = auctionModel.CategoryId,
+                    CategoryName = auctionModel.Category.CategoryName,
+                }
+            };
+
+        }
         public static Auction? ToAuctionFromCreateDto(this CreateAuctionRequestDto auctionDto)
         {
             if (auctionDto.StartingTime >= auctionDto.EndingTime || auctionDto.StartingTime < DateTime.UtcNow)

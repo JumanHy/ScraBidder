@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using api.Data;
 using api.Dtos.Shipment;
 using api.Enums;
 using api.Events;
@@ -14,12 +15,14 @@ namespace api.Services
     public class ShipmentService : IShipmentService
     {
         private readonly IShipmentRepository _repository;
+        private readonly ApplicationDBContext _dbContext;
         private readonly EventDispatcher _eventDispatcher;
 
-        public ShipmentService(IShipmentRepository repository, EventDispatcher eventDispatcher)
+        public ShipmentService(IShipmentRepository repository, EventDispatcher eventDispatcher, ApplicationDBContext dbContext)
         {
             _repository = repository;
             _eventDispatcher = eventDispatcher;
+            _dbContext = dbContext;
         }
 
         public async Task<IEnumerable<ShipmentResponseForSellerDto>> GetShipmentsForSellerAsync(string sellerId)
@@ -73,8 +76,12 @@ namespace api.Services
             shipment.CreatedAt = DateTime.UtcNow;
             shipment.DeliveryStatus = DeliveryStatus.Pending;
             await _repository.AddShipmentAsync(shipment);
-
-            var shipmentEvent = new ShipmentEvent(shipment.BuyerId, shipment.AuctionId, shipment.DeliveryStatus);
+            var auction = await _dbContext.Auctions.FindAsync(shipment.AuctionId);
+            if (auction == null)
+            {
+                throw new InvalidOperationException("Auction not found.");
+            }
+            var shipmentEvent = new ShipmentEvent(shipment.BuyerId, auction.Title, shipment.DeliveryStatus);
 
             // Dispatch the event to handlers
             await _eventDispatcher.Dispatch(shipmentEvent);
@@ -98,7 +105,12 @@ namespace api.Services
             };
 
             await _repository.AddShipmentAsync(newShipmentRecord);
-            var shipmentEvent = new ShipmentEvent(shipment.BuyerId, shipment.AuctionId, newShipmentRecord.DeliveryStatus);
+            var auction = await _dbContext.Auctions.FindAsync(shipment.AuctionId);
+            if (auction == null)
+            {
+                throw new InvalidOperationException("Auction not found.");
+            }
+            var shipmentEvent = new ShipmentEvent(shipment.BuyerId, auction.Title, newShipmentRecord.DeliveryStatus);
 
             // Dispatch the event to handlers
             await _eventDispatcher.Dispatch(shipmentEvent);
