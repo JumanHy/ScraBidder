@@ -1,24 +1,63 @@
 import React, { useState, useEffect } from "react";
-import { Carousel, Button, Modal } from "react-bootstrap";
+import { Carousel, Button, Modal, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
 function CompanyProfile() {
-  // State to check if the user has won the auction
   const { sellerId } = useParams(); // Get auctionId from URL
-
-  const [hasWonAuction, setHasWonAuction] = useState(true);
+  const [loading, setLoading] = useState(true); // Loading state
   const [showModal, setShowModal] = useState(false);
   const [fetchedImages, setFetchedImages] = useState([]);
   const [businessName, setBusinessName] = useState("");
   const [companyServiceInfo, setCompanyServiceInfo] = useState("");
-  const [CompanyVision, setCompanyVision] = useState("");
+  const [companyVision, setCompanyVision] = useState("");
+  const [contactInfo, setContactInfo] = useState({
+    primaryContactFirstName: "",
+    primaryContactLastName: "",
+    primaryContactEmail: "",
+    primaryPhoneNumber: " ",
+  });
+  const [businessContactInfo, setBusinessContactInfo] = useState({});
 
-  // Toggle the modal
-  const handleShowModal = () => setShowModal(true);
+  const handleShowModal = () => {
+    fetchContactInfo();
+    setShowModal(true);
+  };
   const handleCloseModal = () => setShowModal(false);
 
-  // Fetch images from API
+  const fetchContactInfo = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5192/api/UserSetting/business-primary-info?userId=${sellerId}`
+      );
+
+      setContactInfo({
+        primaryContactFirstName:
+          response.data.primaryContactFirstName || "First Name",
+        primaryContactLastName:
+          response.data.primaryContactLastName || "Last Name",
+        primaryContactEmail:
+          response.data.primaryContactEmail || "Email Not Available",
+        primaryPhoneNumber:
+          response.data.primaryPhoneNumber || "Phone Number Not Available",
+      });
+    } catch (error) {
+      console.error("Error fetching contact information:", error);
+    }
+  };
+
+  const fetchBusinessContactInfo = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5192/api/UserSetting/contacts/${sellerId}`
+      );
+      setBusinessContactInfo(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching business contact information:", error);
+    }
+  };
+
   const fetchUserImages = async () => {
     try {
       const response = await axios.get(
@@ -49,7 +88,6 @@ function CompanyProfile() {
       const visionResponse = await axios.get(
         `http://localhost:5192/api/UserSetting/vision/${sellerId}`
       );
-
       setCompanyVision(visionResponse.data || "Vision not available");
     } catch (error) {
       console.error("Error fetching company information:", error);
@@ -57,10 +95,40 @@ function CompanyProfile() {
   };
 
   useEffect(() => {
-    fetchUserImages();
-    fetchCompanyInfo();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        await Promise.all([
+          fetchUserImages(),
+          fetchCompanyInfo(),
+          fetchBusinessContactInfo(),
+        ]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading...</span>
+        </Spinner>
+      </div>
+    );
+  }
   return (
     <div
       style={{
@@ -178,7 +246,7 @@ function CompanyProfile() {
           >
             Company Overview
           </h3>
-          <p>{CompanyVision}</p>
+          <p>{companyVision}</p>
         </div>
 
         {/* Services Section */}
@@ -239,19 +307,21 @@ function CompanyProfile() {
         >
           <div style={{ flex: 1 }}>
             <p>
-              <strong>Phone:</strong> +123 456 7890
+              <strong>Phone:</strong> {businessContactInfo.businessPhoneNumber}
             </p>
             <p>
-              <strong>Email:</strong> info@company.com
+              <strong>Email:</strong> {businessContactInfo.businessEmail}
             </p>
             <p>
               <strong>LinkedIn:</strong>{" "}
               <a
-                href="https://linkedin.com"
+                href={businessContactInfo.linkedIn || "https://linkedin.com"}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Company LinkedIn
+                {businessContactInfo.linkedIn
+                  ? "Company LinkedIn"
+                  : "Company LinkedIn"}
               </a>
             </p>
           </div>
@@ -273,37 +343,26 @@ function CompanyProfile() {
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Contact Information</Modal.Title>
+          <Modal.Title>Business Contact Information</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {hasWonAuction ? (
-            <div>
-              <p
-                style={{
-                  color: "green",
-                  fontSize: "2em",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                Congratulations!
-              </p>
-              <p>
-                You have won the auction. You can contact us using the following
-                details:
-              </p>
-              <p>
-                <strong>Eng. Zaina Alrajabi:</strong> +123 456 7890
-              </p>
-              <p>
-                <strong>Email:</strong> info@company.com
-              </p>
-            </div>
-          ) : (
-            <div>
-              <p>Can Wait to be with you , keep biding</p>
-            </div>
-          )}
+          <div>
+            <p>
+              <strong>Contact Name: </strong>
+              <strong>
+                {contactInfo.primaryContactFirstName}{" "}
+                {contactInfo.primaryContactLastName}
+              </strong>
+            </p>
+            <p>
+              <strong>Email: </strong>
+              {contactInfo.primaryContactEmail}
+            </p>
+            <p>
+              <strong>Phone: </strong>
+              {contactInfo.primaryPhoneNumber}
+            </p>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>

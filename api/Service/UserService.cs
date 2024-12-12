@@ -73,7 +73,7 @@ namespace api.Service
                     UserName = userName,
                     Email = user.Email,
                     Status = user.Status.ToString(),
-                    Role = role // Assign the single role
+                    Role = role 
                 });
             }
 
@@ -134,7 +134,7 @@ namespace api.Service
     .Select(g => new TimeSeriesData
     {
         Period = g.Key,
-        TotalCount = g.Count() // Count the filtered transactions
+        TotalCount = g.Count() 
     })
     .ToList();
 

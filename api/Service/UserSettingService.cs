@@ -17,7 +17,7 @@ namespace api.Service
         {
             _context = context;
         }
-     private readonly string _imagePath;
+        private readonly string _imagePath;
 
         public UserSettingService(ApplicationDBContext context, IConfiguration configuration)
         {
@@ -48,7 +48,7 @@ namespace api.Service
                 PrimaryContactFirstName = business.PrimaryContactFirstName,
                 PrimaryContactLastName = business.PrimaryContactLastName,
                 PrimaryContactEmail = business.PrimaryContactEmail,
-               
+
             };
         }
 
@@ -67,7 +67,7 @@ namespace api.Service
             business.PrimaryContactFirstName = businessDto.PrimaryContactFirstName;
             business.PrimaryContactLastName = businessDto.PrimaryContactLastName;
             business.PrimaryContactEmail = businessDto.PrimaryContactEmail;
-           
+
 
             // Mark the entity as modified and save changes
             _context.Businesses.Update(business);
@@ -95,7 +95,7 @@ namespace api.Service
         }
 
         // Update the company service info
-        public async Task<CompanyServiceDto> UpdateCompanyServiceAsync( CompanyServiceDto companyServiceDto)
+        public async Task<CompanyServiceDto> UpdateCompanyServiceAsync(CompanyServiceDto companyServiceDto)
         {
             var companyService = await _context.Businesses
                 .FirstOrDefaultAsync(B => B.UserId == companyServiceDto.UserId);
@@ -105,7 +105,7 @@ namespace api.Service
                 return null;
 
             // Update the company's details with the new values from the DTO
-              companyService.UserId= companyServiceDto.UserId;
+            companyService.UserId = companyServiceDto.UserId;
             companyService.BusinessName = companyServiceDto.BusinessName;
             companyService.BusinessServices = companyServiceDto.BusinessServices;
 
@@ -128,7 +128,7 @@ namespace api.Service
                     LastName = i.LastName,
                     Email = i.User.Email,
                     PhoneNumber = i.PhoneNumber,
-                   
+
                 })
                 .FirstOrDefaultAsync();
 
@@ -148,7 +148,7 @@ namespace api.Service
             // Update Individual properties
             individual.FirstName = userUpdateDto.FirstName;
             individual.LastName = userUpdateDto.LastName;
-           
+
 
             // Update ApplicationUser properties
             individual.User.Email = userUpdateDto.Email;
@@ -161,24 +161,34 @@ namespace api.Service
 
 
 
-            
+
         }
 
-        
-        
-        
 
 
-       
+        public async Task<BusinessContactDto> GetBusinessContactsAsync(string userId)
+        {
+            // Fetch businesses associated with the given userId
+            var businessContacts = await _context.Businesses
+                .Where(b => b.UserId == userId) // Filter by UserId
+                .Select(b => new BusinessContactDto
+                {
+                    BusinessPhoneNumber = b.BusinessPhoneNumber,
+                    BusinessEmail = b.BusinessEmail,
+                    LinkedIn = b.LinkedIn
+                })
+                .FirstOrDefaultAsync();
 
-
-        
+            return businessContacts;
+        }
     }
+
 }
 
 
 
 
-       
-    
+
+
+
 

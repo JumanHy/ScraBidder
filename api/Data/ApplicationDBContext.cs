@@ -174,8 +174,10 @@ namespace api.Data
 
         }
 
-
-
+        internal async Task GetBusinessContactsAsync(string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

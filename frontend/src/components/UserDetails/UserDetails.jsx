@@ -8,6 +8,7 @@ import {
   useLoadScript,
 } from "@react-google-maps/api";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const UserDetails = () => {
   const [isEditingUserInfo, setIsEditingUserInfo] = useState(false);
@@ -93,7 +94,20 @@ const UserDetails = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        alert("Company service details updated successfully!");
+
+
+        Swal.fire({
+          title: 'Success!',
+          text: 'Company service details updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+
+
+
+
+
+
         toggleEditServiceInfo();
         fetchCompanyServiceInfo();
       }
@@ -138,7 +152,15 @@ const UserDetails = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        alert("User details updated successfully!");
+
+        Swal.fire({
+          title: 'Success!',
+          text: 'User details updated successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+       
+
         toggleEditUserInfo();
         fetchUserDetails();
       } else {
@@ -191,7 +213,12 @@ const UserDetails = () => {
 
     // Limit the number of images
     if (formData.images.length + files.length > 3) {
-      alert("You can only upload up to three images.");
+      Swal.fire({
+        title: 'Error!',
+        text: 'You can only upload up to three images.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
       return;
     }
 
@@ -227,7 +254,12 @@ const UserDetails = () => {
           ...prevData,
           images: [...prevData.images, ...files], // Add new images to state
         }));
-        alert("Images uploaded successfully!");
+        Swal.fire({
+          title: 'Success!',
+          text: 'Images uploaded successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
       } else {
         alert("Failed to upload images.");
       }
@@ -250,7 +282,7 @@ const UserDetails = () => {
         setFetchedImages((prevImages) =>
           prevImages.filter((image) => image !== imageId)
         );
-        alert("Image deleted successfully!");
+       
       } else {
         alert("Failed to delete the image.");
       }
@@ -630,20 +662,7 @@ const UserDetails = () => {
           </Col>
         </Row>
 
-        <Col
-          xs={12}
-          sm={6}
-          md={4}
-          className="d-flex mt-3 justify-content-center"
-        >
-          <Button
-            variant="primary"
-            type="submit"
-            className="w-75 rounded text-white"
-          >
-            Submit
-          </Button>
-        </Col>
+       
       </div>
     </div>
   );

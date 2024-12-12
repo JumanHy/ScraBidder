@@ -16,12 +16,14 @@ namespace api.Interfaces
 
         Task<UserSettingUpdateDto> GetUserInfoAsync(string userId);
         Task<bool> UpdateUserInfoAsync(UserSettingUpdateDto userUpdateDto);
+        Task<BusinessContactDto> GetBusinessContactsAsync(string userId);
 
 
-       
 
-   
-       
-        
+
+
+
+
+
     }
 }

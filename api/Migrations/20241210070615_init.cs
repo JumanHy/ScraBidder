@@ -46,6 +46,7 @@ namespace api.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ProfileImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -367,6 +368,7 @@ namespace api.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AuctionId = table.Column<int>(type: "int", nullable: false),
                     SellerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BuyerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DeliveryStatus = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -374,17 +376,23 @@ namespace api.Migrations
                 {
                     table.PrimaryKey("PK_Shipments", x => x.ShipmentId);
                     table.ForeignKey(
+                        name: "FK_Shipments_AspNetUsers_BuyerId",
+                        column: x => x.BuyerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Shipments_AspNetUsers_SellerId",
                         column: x => x.SellerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Shipments_Auctions_AuctionId",
                         column: x => x.AuctionId,
                         principalTable: "Auctions",
                         principalColumn: "AuctionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -452,31 +460,9 @@ namespace api.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "41655db1-579f-457d-a298-b0383f4d4b59", null, "Individual", "INDIVIDUAL" },
-                    { "a1e98f4b-5232-4897-8f66-02574fc41d85", null, "Business", "BUSINESS" },
-                    { "a985bf9a-81eb-411a-86b4-c3039a517c5f", null, "Admin", "ADMIN" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedAt", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Status", "TwoFactorEnabled", "UserName" },
-                values: new object[,]
-                {
-                    { "1", 0, "acfae306-7164-4149-b31e-d5bfc65432d4", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "admin1@example.com", false, false, null, null, null, null, null, false, "1d17fc68-ae0f-4f29-9c78-c06c263c09cd", "Active", false, "admin1" },
-                    { "10", 0, "07147d18-4ed2-4e67-b1bc-8e6aff2dacad", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "business5@example.com", false, false, null, null, null, null, null, false, "3e83c243-0306-450f-9df5-ff8491bdd49f", "Pending", false, "business5" },
-                    { "11", 0, "88454579-7eb5-499f-87fb-164be66cc318", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "individual1@example.com", false, false, null, null, null, null, null, false, "19c36a91-8666-43b6-98aa-2f21cb198649", "Active", false, "individual1" },
-                    { "12", 0, "2d9a4863-c38b-492b-a3fc-710957290e5b", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "individual2@example.com", false, false, null, null, null, null, null, false, "25aee866-15a3-44af-911e-723cded7f73d", "Blocked", false, "individual2" },
-                    { "13", 0, "13a82b8b-48b9-491d-9434-62c65603cec0", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "individual3@example.com", false, false, null, null, null, null, null, false, "7f680be6-8bef-4b1d-a5bd-e6e55c469da1", "Active", false, "individual3" },
-                    { "14", 0, "97ef3855-1f08-4499-8f41-8bd5a8a20513", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "individual4@example.com", false, false, null, null, null, null, null, false, "83299943-a931-41c8-bf76-d3911e9da8c1", "Pending", false, "individual4" },
-                    { "15", 0, "3a606425-6486-4b82-9ae8-df1be4ee14b0", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "individual5@example.com", false, false, null, null, null, null, null, false, "b198f64f-2564-4b88-a59e-88c889bb2060", "Active", false, "individual5" },
-                    { "2", 0, "a9b6e8cb-e773-4133-81f1-54553b781d3e", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "admin2@example.com", false, false, null, null, null, null, null, false, "f7e7200b-35c8-4e49-a903-c18631162000", "Active", false, "admin2" },
-                    { "3", 0, "e850788c-962d-4427-8585-9cd443a93cf3", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "admin3@example.com", false, false, null, null, null, null, null, false, "b9c093e1-61c8-4e23-8a5f-00da9d353163", "Blocked", false, "admin3" },
-                    { "4", 0, "c9700bf1-d6be-4f4e-8e94-6d413ec4e4ce", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "admin4@example.com", false, false, null, null, null, null, null, false, "84396d06-7236-423c-bbcb-f8d863e27083", "Active", false, "admin4" },
-                    { "5", 0, "5b695fe7-333d-46d2-b86e-7115c304423b", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "admin5@example.com", false, false, null, null, null, null, null, false, "682b1154-0ad7-4ca5-8ef6-33e65019dcad", "Pending", false, "admin5" },
-                    { "6", 0, "cdeefe9b-6abb-4f57-b6c9-1925ba23740b", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "business1@example.com", false, false, null, null, null, null, null, false, "ebe6c5f7-393d-4715-8319-8fab05455426", "Active", false, "business1" },
-                    { "7", 0, "c38474f2-8138-43c3-ba09-9da63d525668", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "business2@example.com", false, false, null, null, null, null, null, false, "ecca230d-abba-493f-bd05-0f40cab755c7", "Pending", false, "business2" },
-                    { "8", 0, "a48707cd-e7a0-43dc-80ca-782c9e48dbf5", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "business3@example.com", false, false, null, null, null, null, null, false, "f6e172ea-0971-4951-b8cd-64cc53df6e97", "Active", false, "business3" },
-                    { "9", 0, "30949a02-7ba8-4b25-9ef3-c37f76455753", new DateTime(2024, 12, 7, 15, 56, 8, 493, DateTimeKind.Utc).AddTicks(9689), "business4@example.com", false, false, null, null, null, null, null, false, "477fdd74-728d-450a-9cc0-ade46f7e6fab", "Active", false, "business4" }
+                    { "0f250d46-e1c3-4bf4-aae2-a81a83e0c761", null, "Individual", "INDIVIDUAL" },
+                    { "175ac949-ade2-4c49-bfb5-4758675210fd", null, "Admin", "ADMIN" },
+                    { "c0b3274f-7d25-41fd-ae34-d170ddabdd8d", null, "Business", "BUSINESS" }
                 });
 
             migrationBuilder.InsertData(
@@ -495,47 +481,6 @@ namespace api.Migrations
                     { 9, "Rubber" },
                     { 10, "Textile" },
                     { 11, "Ceramic" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Auctions",
-                columns: new[] { "AuctionId", "Address", "AuctionStatus", "CategoryId", "Condition", "CreatedAt", "CurrentBid", "Description", "EndingTime", "Images", "Quantity", "ReservePrice", "SellerId", "StartingBid", "StartingTime", "Title" },
-                values: new object[,]
-                {
-                    { 1, "{\"city\": \"New York\", \"state\": \"NY\"}", "Started", 1, "Mixed", new DateTime(2024, 11, 27, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(212), 650.00m, "A collection of high-grade aluminum scraps.", new DateTime(2024, 12, 12, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(221), "[\"aluminum1.jpg\", \"aluminum2.jpg\"]", 100m, 800.00m, "4", 500.00m, new DateTime(2024, 12, 2, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(220), "Aluminum Scrap Bundle" },
-                    { 2, "{\"city\": \"Los Angeles\", \"state\": \"CA\"}", "Ended", 2, "Used", new DateTime(2024, 11, 7, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(229), 1200.00m, "Various grades of copper wiring ready for recycling.", new DateTime(2024, 11, 22, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(230), "[\"copper1.jpg\", \"copper2.jpg\"]", 200m, 1500.00m, "4", 1000.00m, new DateTime(2024, 11, 12, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(230), "Copper Wiring Scrap" },
-                    { 3, "{\"city\": \"Houston\", \"state\": \"TX\"}", "Started", 3, "New", new DateTime(2024, 12, 2, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(236), 450.00m, "Recyclable plastic waste from industrial sources.", new DateTime(2024, 12, 14, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(237), "[\"plastic1.jpg\"]", 50m, 600.00m, "4", 300.00m, new DateTime(2024, 12, 4, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(236), "Plastic Waste" },
-                    { 4, "{\"city\": \"Chicago\", \"state\": \"IL\"}", "Ended", 4, "Used", new DateTime(2024, 11, 17, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(242), 800.00m, "Scrap iron sheets from old construction projects.", new DateTime(2024, 11, 27, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(243), "[\"iron1.jpg\", \"iron2.jpg\"]", 300m, 1000.00m, "4", 700.00m, new DateTime(2024, 11, 19, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(242), "Iron Sheets" },
-                    { 5, "{\"city\": \"Dallas\", \"state\": \"TX\"}", "Started", 5, "New", new DateTime(2024, 11, 29, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(248), 1600.00m, "Premium-grade stainless steel scrap materials.", new DateTime(2024, 12, 10, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(250), "[\"steel1.jpg\", \"steel2.jpg\"]", 150m, 2000.00m, "4", 1500.00m, new DateTime(2024, 11, 30, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(249), "Stainless Steel Scraps" },
-                    { 6, "{\"city\": \"Atlanta\", \"state\": \"GA\"}", "Ended", 6, "Mixed", new DateTime(2024, 10, 18, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(254), 250.00m, "Recyclable wooden pallets from warehouses.", new DateTime(2024, 10, 28, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(256), "[\"wood1.jpg\", \"wood2.jpg\"]", 500m, 300.00m, "4", 200.00m, new DateTime(2024, 10, 20, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(255), "Wooden Pallets" },
-                    { 7, "{\"city\": \"Phoenix\", \"state\": \"AZ\"}", "Started", 7, "Used", new DateTime(2024, 11, 27, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(262), 550.00m, "Glass shards from old construction materials.", new DateTime(2024, 12, 9, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(263), "[\"glass1.jpg\"]", 250m, 700.00m, "4", 400.00m, new DateTime(2024, 11, 30, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(263), "Glass Shards" },
-                    { 8, "{\"city\": \"Seattle\", \"state\": \"WA\"}", "Ended", 8, "Mixed", new DateTime(2024, 11, 12, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(269), 150.00m, "Paper waste from old documents and magazines.", new DateTime(2024, 11, 22, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(270), "[\"paper1.jpg\"]", 1000m, 200.00m, "4", 100.00m, new DateTime(2024, 11, 17, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(269), "Paper Waste" },
-                    { 9, "{\"city\": \"San Francisco\", \"state\": \"CA\"}", "Started", 9, "Used", new DateTime(2024, 12, 2, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(274), 350.00m, "Used rubber tires ready for recycling.", new DateTime(2024, 12, 13, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(276), "[\"rubber1.jpg\"]", 400m, 500.00m, "4", 300.00m, new DateTime(2024, 12, 3, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(275), "Rubber Tires" },
-                    { 10, "{\"city\": \"Denver\", \"state\": \"CO\"}", "Ended", 11, "Used", new DateTime(2024, 11, 7, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(281), 600.00m, "Scrap ceramic tiles from construction sites.", new DateTime(2024, 11, 19, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(282), "[\"ceramic1.jpg\"]", 50m, 700.00m, "4", 500.00m, new DateTime(2024, 11, 9, 15, 56, 8, 494, DateTimeKind.Utc).AddTicks(281), "Ceramic Tiles" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Businesses",
-                columns: new[] { "BusinessId", "Address", "BusinessEmail", "BusinessName", "BusinessPhoneNumber", "BusinessServices", "BusinessType", "CompanyVision", "Images", "LinkedIn", "PrimaryContactEmail", "PrimaryContactFirstName", "PrimaryContactLastName", "PrimaryJobTitle", "PrimaryPhoneNumber", "RegistrationNumber", "UserId" },
-                values: new object[,]
-                {
-                    { 1, "123 Main St, Amman, Jordan", "business1@example.com", "Business 1", "123-456-7890", "", 1, "", "", "", "contact@business1.com", "John", "Doe", "CEO", "123-456-7890", "REG12345", "6" },
-                    { 2, "123 Main St, Amman, Jordan", "business2@example.com", "Business 2", "223-456-7890", "", 1, "", "", "", "contact@business2.com", "Alice", "Smith", "Manager", "223-456-7890", "REG22345", "7" },
-                    { 3, "123 Main St, Amman, Jordan", "business3@example.com", "Business 3", "323-456-7890", "", 2, "", "", "", "contact@business3.com", "Mark", "Brown", "Owner", "323-456-7890", "REG32345", "8" },
-                    { 4, "123 Main St, Amman, Jordan", "business4@example.com", "Business 4", "423-456-7890", "", 1, "", "", "", "contact@business4.com", "Linda", "Johnson", "CEO", "423-456-7890", "REG42345", "9" },
-                    { 5, "123 Main St, Amman, Jordan", "business5@example.com", "Business 5", "523-456-7890", "", 1, "", "", "", "contact@business5.com", "Sarah", "Williams", "Manager", "523-456-7890", "REG52345", "10" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Individuals",
-                columns: new[] { "IndividualId", "Address", "FirstName", "Image", "LastName", "PhoneNumber", "UserId" },
-                values: new object[,]
-                {
-                    { 1, "{\"street\":\"123 Main St\",\"city\":\"Amman\",\"country\":\"Jordan\"}", "Alice", null, "Williams", "987-654-3210", "11" },
-                    { 2, "{\"street\":\"456 Oak St\",\"city\":\"Amman\",\"country\":\"Jordan\"}", "Bob", "profilepic2.jpg", "Johnson", "987-654-3220", "12" },
-                    { 3, "{\"street\":\"789 Pine St\",\"city\":\"Amman\",\"country\":\"Jordan\"}", "Charlie", "profilepic3.jpg", "Smith", "987-654-3230", "13" },
-                    { 4, "{\"street\":\"123 Birch St\",\"city\":\"Amman\",\"country\":\"Jordan\"}", "David", "profilepic4.jpg", "Davis", "987-654-3240", "14" },
-                    { 5, "{\"street\":\"456 Maple St\",\"city\":\"Amman\",\"country\":\"Jordan\"}", "Eva", "profilepic5.jpg", "Martin", "987-654-3250", "15" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -628,6 +573,11 @@ namespace api.Migrations
                 name: "IX_Shipments_AuctionId",
                 table: "Shipments",
                 column: "AuctionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Shipments_BuyerId",
+                table: "Shipments",
+                column: "BuyerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Shipments_SellerId",

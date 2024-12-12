@@ -10,6 +10,7 @@ using System;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using api.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.Controllers
 {
@@ -19,13 +20,16 @@ namespace api.Controllers
     {
         private readonly IUserSettingService _userSettingService;
         private readonly ApplicationDBContext _context; // Replace with your actual DbContext class name
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        // Constructor to inject the IUserSettingService and DbContext
-        public UserSettingController(IUserSettingService userSettingService, ApplicationDBContext context)
+        public UserSettingController(IUserSettingService userSettingService, ApplicationDBContext context, UserManager<ApplicationUser> userManager)
         {
             _userSettingService = userSettingService;
             _context = context;
+            _userManager = userManager;
         }
+
+
 
         // Endpoint to get business primary info
         [HttpGet("business-primary-info")]
@@ -261,6 +265,23 @@ namespace api.Controllers
             return Ok(business.CompanyVision);
         }
 
+        [HttpGet("contacts/{userId}")]
+        public async Task<ActionResult<BusinessContactDto>> GetBusinessContacts([FromRoute] string userId)
+        {
+            // Fetch business contacts for the given userId
+            var businessContacts = await _userSettingService.GetBusinessContactsAsync(userId);
+
+            // If no business contacts are found, return NotFound
+            if (businessContacts == null)
+            {
+                return NotFound("No business contacts found for this user.");
+            }
+
+            // Return the fetched business contacts
+            return Ok(businessContacts);
+        }
+
+
 
 
 
@@ -268,7 +289,19 @@ namespace api.Controllers
 
 
     }
+
+
+
+
+
+
+
+
+
 }
+
+
+
 
 
 
