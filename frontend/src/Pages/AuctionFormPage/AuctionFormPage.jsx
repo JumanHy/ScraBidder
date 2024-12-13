@@ -58,26 +58,26 @@ function AuctionFormPage() {
   const handleMapClick = useCallback((event) => {
     setFormData((prev) => ({
       ...prev,
-      location: { lat: event.latLng.lat(), lng: event.latLng.lng() },
+      location: {
+        latitude: event.latLng.lat(),
+        longitude: event.latLng.lng(),
+        // Optional field for additional details
+      },
     }));
   }, []);
 
   const handleChooseCurrentLocation = () => {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setFormData((prev) => ({
-            ...prev,
-            location: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            },
-          }));
-        },
-        () => alert("Could not retrieve your location.")
-      );
-    } else {
-      alert("Geolocation is not supported by this browser.");
+      navigator.geolocation.getCurrentPosition((position) => {
+        setFormData((prev) => ({
+          ...prev,
+          location: {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            // Optional field for additional details
+          },
+        }));
+      });
     }
   };
   const [formData, setFormData] = useState({
@@ -120,21 +120,15 @@ function AuctionFormPage() {
       images: prev.images.filter((_, i) => i !== index),
     }));
   };
-  const convertToUTC = (localDateTime) => {
-    const date = new Date(localDateTime); // Local time
-    return date.toISOString(); // Convert to ISO string in UTC
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = new FormData();
-    // Convert StartingTime and EndingTime to UTC
-    const formDataWithUTC = {
-      ...formData,
-      StartingTime: convertToUTC(formData.StartingTime),
-      EndingTime: convertToUTC(formData.EndingTime),
-    };
+    var data = new FormData();
+
     for (const [key, value] of Object.entries(formData)) {
+      if (key == "location") {
+        continue;
+      }
       if (key === "images") {
         value.forEach((file) => data.append("images", file));
       } else if (typeof value === "object" && value !== null) {
@@ -154,10 +148,10 @@ function AuctionFormPage() {
           },
         }
       );
+
       setSubmitted(true);
     } catch (error) {
       console.error("Error submitting auction:", error);
-      alert(error);
     }
   };
 
@@ -397,21 +391,35 @@ function AuctionFormPage() {
               {isLoaded ? (
                 <GoogleMap
                   center={
-                    formData.location && formData.location.lat !== undefined
-                      ? formData.location
+                    formData.location &&
+                    formData.location.latitude &&
+                    formData.location.longitude
+                      ? {
+                          lat: formData.location.latitude,
+                          lng: formData.location.longitude,
+                        }
                       : { lat: 31.9515694, lng: 35.9239625 } // Default to Amman
                   }
                   zoom={
-                    formData.location && formData.location.lat !== undefined
+                    formData.location &&
+                    formData.location.latitude &&
+                    formData.location.longitude
                       ? 18
                       : 12
                   }
                   mapContainerStyle={{ height: "400px", width: "100%" }}
                   onClick={handleMapClick}
                 >
-                  {formData.location && formData.location.lat !== undefined && (
-                    <Marker position={formData.location} />
-                  )}
+                  {formData.location &&
+                    formData.location.latitude &&
+                    formData.location.longitude && (
+                      <Marker
+                        position={{
+                          lat: formData.location.latitude,
+                          lng: formData.location.longitude,
+                        }}
+                      />
+                    )}
                 </GoogleMap>
               ) : (
                 <div className="d-flex justify-content-center align-items-center">

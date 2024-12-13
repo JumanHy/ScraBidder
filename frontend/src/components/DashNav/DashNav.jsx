@@ -15,7 +15,7 @@ function NavBar() {
 
     navigate("/login");
   };
-  console.log(localStorage.getItem("role"));
+
   if (
     localStorage.getItem("role") == null ||
     localStorage.getItem("role") != "Admin"

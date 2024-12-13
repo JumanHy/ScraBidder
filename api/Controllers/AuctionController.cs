@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace api.Controllers
 {
@@ -79,10 +80,12 @@ namespace api.Controllers
             return Ok(auctionsDto);
         }
         [HttpPost]
-        public async Task<IActionResult>
-        Auction([FromForm] CreateAuctionRequestDto createDto)
+        public async Task<IActionResult> Auction([FromForm] CreateAuctionRequestDto createDto)
         {
+            Console.WriteLine("JsonConvert.SerializeObject(createDto.Address)");
+
             var auction = createDto.ToAuctionFromCreateDto();
+
             if (auction == null) return BadRequest();
             await _auctionRepo.CreateAuctionAsync(auction);
             return Ok();

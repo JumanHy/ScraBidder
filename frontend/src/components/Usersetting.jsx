@@ -2,8 +2,8 @@ import { FaEdit } from "react-icons/fa";
 import { Modal, Button, Form, Row, Col, Spinner } from "react-bootstrap";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 import Swal from "sweetalert2";
-
 const UserDetails = () => {
   const [isEditingUserInfo, setIsEditingUserInfo] = useState(false);
   const [userInfo, setUserInfo] = useState({
@@ -14,7 +14,6 @@ const UserDetails = () => {
   });
 
   const [formData, setFormData] = useState({
-    images: [],
     location: null,
   });
 
@@ -25,6 +24,7 @@ const UserDetails = () => {
   const fetchUserDetails = async () => {
     try {
       const userId = localStorage.getItem("userId");
+      if (!userId) throw new Error("User ID not found in localStorage.");
 
       if (!userId) {
         throw new Error("User ID not found in localStorage.");
@@ -38,11 +38,7 @@ const UserDetails = () => {
       );
 
       setUserInfo(response.data);
-      Swal.fire({
-        icon: "success",
-        title: "User Details Fetched",
-        text: "User details have been successfully retrieved!",
-      });
+
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching user details:", error);
@@ -78,17 +74,92 @@ const UserDetails = () => {
         toggleEditUserInfo();
         fetchUserDetails();
       } else {
-        Swal.fire("Error", "Failed to update user details. Please try again.", "error");
+        Swal.fire(
+          "Error",
+          "Failed to update user details. Please try again.",
+          "error"
+        );
       }
     } catch (error) {
       console.error("Error updating user details:", error);
-      Swal.fire("Error", "An error occurred while updating user details.", "error");
+      Swal.fire(
+        "Error",
+        "An error occurred while updating user details.",
+        "error"
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Handle User Input Change
+  // Submit updated location to the backend
+  const handleSubmitLocation = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      if (!userId) throw new Error("User ID not found in localStorage.");
+      const locationDto = {
+        longitude: formData.location.lng,
+        latitude: formData.location.lat,
+        address: "",
+      };
+      if (!locationDto)
+        return Swal.fire({
+          title: "Location is not selected",
+          text: "Please select or choose a location before submitting.",
+          icon: "warning",
+        });
+
+      const response = await axios.patch(
+        `http://localhost:5192/api/IndividualAccount/upload-location/${userId}`,
+        locationDto
+      );
+
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Sucessful",
+          text: "Location updated successfully!",
+          icon: "success",
+        });
+
+        fetchUserDetails(); // Refresh user details
+      } else {
+      }
+    } catch (error) {
+      console.error("Error updating location:", error);
+    }
+  };
+
+  const handleChooseCurrentLocation = () => {
+    if (navigator.geolocation) {
+      setIsLocationLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFormData((prevData) => ({
+            ...prevData,
+            location: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+          }));
+          setIsLocationLoading(false);
+        },
+        () => {
+          setIsLocationLoading(false);
+        }
+      );
+    }
+  };
+
+  const handleMapClick = (event) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      location: {
+        lat: event.latLng.lat(),
+        lng: event.latLng.lng(),
+      },
+    }));
+  };
+
   const handleUserInputChange = (event) => {
     const { name, value } = event.target;
     setUserInfo((prevInfo) => ({ ...prevInfo, [name]: value }));
@@ -97,40 +168,6 @@ const UserDetails = () => {
   // Toggle Edit Mode
   const toggleEditUserInfo = () => {
     setIsEditingUserInfo(!isEditingUserInfo);
-  };
-
-  // Get Location from IP API
-  const getLocationFromIP = async () => {
-    try {
-      setIsLocationLoading(true);
-      const response = await axios.get("http://ip-api.com/json");
-      const { lat, lon } = response.data;
-
-      setFormData((prevData) => ({
-        ...prevData,
-        location: {
-          lat,
-          lng: lon,
-        },
-      }));
-
-      Swal.fire({
-        icon: "success",
-        title: "Location Fetched",
-        text: `Your location is Latitude: ${lat}, Longitude: ${lon}`,
-      });
-
-      setIsLocationLoading(false);
-    } catch (error) {
-      console.error("Error fetching IP location:", error);
-      Swal.fire("Error", "Failed to fetch location from IP.", "error");
-      setIsLocationLoading(false);
-    }
-  };
-
-  // Handle location selection (if using IP API)
-  const handleChooseCurrentLocation = () => {
-    getLocationFromIP();
   };
 
   // Handle Image Upload
@@ -160,13 +197,20 @@ const UserDetails = () => {
           text: "Your image(s) have been uploaded successfully!",
         });
       } else {
-        Swal.fire("Error", "Failed to upload images. Please try again.", "error");
+        Swal.fire(
+          "Error",
+          "Failed to upload images. Please try again.",
+          "error"
+        );
       }
     } catch (error) {
       console.error("Error uploading images:", error);
       Swal.fire("Error", "An error occurred while uploading images.", "error");
     }
   };
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: "AIzaSyD164boEAkDOWxKojpHFaPRyRyK5sQoPpY",
+  });
 
   return (
     <div
@@ -266,22 +310,44 @@ const UserDetails = () => {
           </Button>
         </Col>
         <Col xs={12}>
-          {formData.location && (
-            <p>
-              <strong>Latitude:</strong> {formData.location.lat} <br />
-              <strong>Longitude:</strong> {formData.location.lng}
-            </p>
+          {isLoaded ? (
+            <GoogleMap
+              center={
+                formData.location
+                  ? {
+                      lat: formData.location.lat,
+                      lng: formData.location.lng,
+                    }
+                  : { lat: 31.963158, lng: 35.930359 }
+              }
+              zoom={18}
+              mapContainerStyle={{ height: "400px", width: "100%" }}
+              onClick={handleMapClick}
+            >
+              {formData.location && (
+                <Marker
+                  position={{
+                    lat: formData.location.lat,
+                    lng: formData.location.lng,
+                  }}
+                />
+              )}
+            </GoogleMap>
+          ) : (
+            <Spinner animation="border" />
           )}
         </Col>
       </Row>
 
-      {/* Image Upload Section */}
-      <Row className="g-3">
-        <h4 className="text-decoration-underline">Upload Images</h4>
-        <Col xs={12}>
-          <input type="file" multiple onChange={handleImageUpload} />
-        </Col>
-      </Row>
+      <Col xs={12} sm={6} md={4} className="d-flex mt-3 justify-content-center">
+        <Button
+          variant="primary"
+          className="w-75 rounded text-white"
+          onClick={handleSubmitLocation}
+        >
+          Submit Location
+        </Button>
+      </Col>
     </div>
   );
 };

@@ -15,9 +15,8 @@ namespace api.Dtos
         [EnumDataType(typeof(BusinessType), ErrorMessage = "Business Type must be either Buyer, Seller, or Both.")]
         public BusinessType BusinessType { get; set; }
 
-        [Required]
-        [MaxLength(200, ErrorMessage = "Address must not exceed 200 characters.")]
-        public string? Address { get; set; }
+
+        public LocationDto? Address { get; set; }
 
         [Required]
         [Phone(ErrorMessage = "Invalid phone number format.")]

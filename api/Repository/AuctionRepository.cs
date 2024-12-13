@@ -13,6 +13,7 @@ using api.Mappers;
 using api.Models;
 using api.Services;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace api.Repository
 {
@@ -123,7 +124,7 @@ namespace api.Repository
             auctionModel.ReservePrice = updatedto.ReservePrice;
             auctionModel.StartingTime = updatedto.StartingTime;
             auctionModel.EndingTime = updatedto.EndingTime;
-            auctionModel.Address = updatedto.Address;
+            auctionModel.Address = JsonConvert.SerializeObject(updatedto.Address);
             auctionModel.Condition = updatedto.Condition;
             auctionModel.Quantity = updatedto.Quantity;
             await _context.SaveChangesAsync();

@@ -47,7 +47,6 @@ function Timer({ auction, status, setStatus }) {
           },
         }
       );
-      console.log(`Auction status updated to ${newStatus}:`, response.data);
     } catch (error) {
       console.error("Error updating auction status:", error);
     }

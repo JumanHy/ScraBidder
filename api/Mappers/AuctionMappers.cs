@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 using api.Enums;
+using Newtonsoft.Json;
+using api.Dtos;
 
 namespace api.Mappers
 {
@@ -120,7 +122,7 @@ namespace api.Mappers
                 pathDictionary.Add($"path{cnt + 1}", uniqueFileName);
                 cnt++;
             }
-            string json = JsonSerializer.Serialize(pathDictionary);
+            string json = System.Text.Json.JsonSerializer.Serialize(pathDictionary);
 
 
             return new Auction

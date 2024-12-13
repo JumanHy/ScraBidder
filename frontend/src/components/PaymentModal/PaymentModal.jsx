@@ -18,7 +18,6 @@ function PaymentModal({
   const apiUrl = "http://localhost:5192/api/payments"; // Replace with your API endpoint
 
   const handleApprove = async (data) => {
-    console.log(data.orderID);
     try {
       // Call backend API to authorize payment
       const response = await axios.post(`${apiUrl}/authorize`, {
@@ -28,7 +27,6 @@ function PaymentModal({
         purpose,
       });
 
-      console.log(response);
       onPaymentSuccess(); // Notify parent of success
       handleClose(); // Close modal
     } catch (error) {
@@ -51,7 +49,6 @@ function PaymentModal({
       });
 
       if (response.data && response.data.orderId) {
-        console.log(response.data.orderId);
         return response.data.orderId; // Return orderId to PayPal
       } else {
         throw new Error("Failed to create deposit.");

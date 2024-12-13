@@ -5,15 +5,19 @@ import { useEffect, useState } from "react";
 import AuctionCardsList from "@/components/AuctionCardsList/AuctionCardsList";
 import Pager from "@/components/resultsComponents/Pager/Pager";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 
 function ResultsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(
+    searchParams.get("search") || ""
+  );
+
   const [auctions, setAuctions] = useState([]);
   const [filteredAuctions, setFilteredAuctions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
-  const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState({
     materialType: "",
     condition: "",
@@ -29,8 +33,9 @@ function ResultsPage() {
       .get("http://localhost:5192/api/auction")
       .then((response) => {
         setAuctions(response.data);
-        setFilteredAuctions(response.data);
+        setFilteredAuctions(response.data); // Initialize with unfiltered data
         setLoading(false);
+        applyFilters(response.data); // Apply initial filters
       })
       .catch((err) => {
         console.error("Error fetching auctions:", err);
@@ -39,31 +44,9 @@ function ResultsPage() {
       });
   };
 
-  useEffect(() => {
-    fetchData();
+  const applyFilters = (data = auctions) => {
+    let filtered = [...data];
 
-    const interval = setInterval(fetchData, 300000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const totalItems = filteredAuctions.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredAuctions.slice(
-    indexOfFirstItem,
-    indexOfLastItem
-  );
-
-  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
-
-  // Unified filtering logic
-  const applyFilters = () => {
-    let filtered = [...auctions];
-
-    // Apply active filters
     if (activeFilters.materialType) {
       const materialMapping = {
         Aluminum: 1,
@@ -103,7 +86,6 @@ function ResultsPage() {
       );
     }
 
-    // Apply live search term
     if (searchTerm) {
       filtered = filtered.filter((auction) =>
         auction.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -113,22 +95,43 @@ function ResultsPage() {
     setFilteredAuctions(filtered);
   };
 
-  // Handle filter changes
-  const handleFilterChange = (filters) => {
-    setActiveFilters(filters); // Update active filters
-    setCurrentPage(1); // Reset to the first page
-  };
-
-  // Handle live search changes
-  const handleSearchChange = (term) => {
-    setSearchTerm(term); // Update the search term
-    setCurrentPage(1); // Reset to the first page
-  };
-
-  // Reapply filters whenever `activeFilters` or `searchTerm` changes
   useEffect(() => {
-    applyFilters();
-  }, [activeFilters, searchTerm]);
+    fetchData();
+
+    const interval = setInterval(fetchData, 300000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (auctions.length > 0) {
+      applyFilters();
+    }
+  }, [searchTerm, filteredAuctions]);
+
+  const totalItems = filteredAuctions.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredAuctions.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleFilterChange = (filters) => {
+    setActiveFilters(filters);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (term) => {
+    setSearchTerm(term);
+    searchParams.set("search", term);
+    setSearchParams(searchParams);
+    setCurrentPage(1);
+  };
 
   if (loading) {
     return (

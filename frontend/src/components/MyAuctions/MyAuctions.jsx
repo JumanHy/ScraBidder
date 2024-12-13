@@ -56,7 +56,7 @@ function AuctionList() {
     },
     {
       name: "Latest Bid",
-      selector: (row) => `$${row.currentBid}`,
+      selector: (row) => `${row.currentBid == null ? "-" : row.currentBid} JD`,
       sortable: true,
       center: true,
     },

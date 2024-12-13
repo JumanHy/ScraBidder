@@ -25,22 +25,22 @@ namespace api.Controllers
 
         // Get Individual User Info by User ID
         [HttpGet("userdetails")]
-public async Task<IActionResult> GetUserInfo([FromQuery] string userId)
-{
-    if (string.IsNullOrEmpty(userId))
-    {
-        return BadRequest("User ID is required.");
-    }
+        public async Task<IActionResult> GetUserInfo([FromQuery] string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("User ID is required.");
+            }
 
-    var userInfo = await _userSettingService.GetUserInfoAsync(userId);
+            var userInfo = await _userSettingService.GetUserInfoAsync(userId);
 
-    if (userInfo == null)
-    {
-        return NotFound("User not found.");
-    }
+            if (userInfo == null)
+            {
+                return NotFound("User not found.");
+            }
 
-    return Ok(userInfo);
-}
+            return Ok(userInfo);
+        }
 
 
         // Update Individual User Info
@@ -60,17 +60,17 @@ public async Task<IActionResult> GetUserInfo([FromQuery] string userId)
         }
 
         // Upload Location for Individual User
-        [HttpPost("upload-location/{userId}")]
+        [HttpPatch("upload-location/{userId}")]
         public async Task<IActionResult> UploadLocationForIndividual(string userId, [FromBody] LocationDto locationDto)
         {
             // Validate the input data
-            if (locationDto == null || string.IsNullOrEmpty(locationDto.Latitude) || string.IsNullOrEmpty(locationDto.Longitude))
+            if (locationDto == null)
             {
                 return BadRequest("Invalid location data.");
             }
 
             // Find the individual user using the UserId
-            var individualUser = await _context.Individuals.FirstOrDefaultAsync(u => u.UserId == userId); 
+            var individualUser = await _context.Individuals.FirstOrDefaultAsync(u => u.UserId == userId);
             if (individualUser == null)
             {
                 return NotFound("Individual user not found for the given user ID.");

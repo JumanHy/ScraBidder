@@ -181,10 +181,10 @@ namespace api.Controllers
 
 
 
-        [HttpPost("upload-location/{userId}")]
+        [HttpPatch("upload-location/{userId}")]
         public async Task<IActionResult> UploadLocation(string userId, [FromBody] LocationDto locationDto)
         {
-            if (locationDto == null || string.IsNullOrEmpty(locationDto.Latitude) || string.IsNullOrEmpty(locationDto.Longitude))
+            if (locationDto == null)
             {
                 return BadRequest("Invalid location data.");
             }
@@ -196,35 +196,34 @@ namespace api.Controllers
                 return NotFound("Business not found for the given user ID.");
             }
 
+            var newAddress = JsonConvert.DeserializeObject<LocationDto>(business.Address);
+            newAddress.Address = business.Address;
+            newAddress.Latitude = locationDto.Latitude;
+            newAddress.Longitude = locationDto.Longitude;
+
             // Serialize the location into a JSON string
-            var locationJson = JsonConvert.SerializeObject(new
-            {
-                latitude = locationDto.Latitude,
-                longitude = locationDto.Longitude,
-                address = locationDto.Address
-            });
+            var locationData = JsonConvert.SerializeObject(newAddress);
+
 
             // Update the Address property
-            business.Address = locationJson;
+            business.Address = locationData;
             await _context.SaveChangesAsync();
 
-            // Deserialize and return the updated location
-            var updatedLocation = JsonConvert.DeserializeObject<object>(locationJson);
 
-            return Ok(new { Message = "Location uploaded successfully.", Location = updatedLocation });
+            return Ok(new { Message = "Location uploaded successfully.", Location = locationData });
         }
         [HttpGet("get-location/{userId}")]
         public async Task<IActionResult> GetLocation(string userId)
         {
             var business = await _context.Businesses.FirstOrDefaultAsync(b => b.UserId == userId);
 
-            if (business == null || string.IsNullOrEmpty(business.Address))
+            if (business == null)
             {
                 return NotFound("Location not found for this business.");
             }
 
             // Deserialize the Address JSON
-            var locationData = JsonConvert.DeserializeObject<object>(business.Address);
+            var locationData = JsonConvert.DeserializeObject<LocationDto>(business.Address);
             return Ok(new { Location = locationData });
         }
 

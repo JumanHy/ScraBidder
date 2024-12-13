@@ -16,7 +16,7 @@ import DataTable from "react-data-table-component";
 import scrap from "../../assets/images/scrap.png";
 import axios from "axios";
 import { Trash3 } from "react-bootstrap-icons";
-
+import Swal from "sweetalert2";
 function AuctionData({ auctions, BiddingHistory }) {
   const [records, setRecords] = useState([]);
   const [bidRecords, setBidRecords] = useState(auctions.biddings);
@@ -50,7 +50,6 @@ function AuctionData({ auctions, BiddingHistory }) {
               auctionStatus: "Started",
             })
             .then((response) => {
-              console.log(`Auction ${auction.id} started successfully`);
               // Update the local state
               setAuctions((prevAuctions) =>
                 prevAuctions.map((a) =>
@@ -243,9 +242,13 @@ function AuctionData({ auctions, BiddingHistory }) {
           },
         }
       );
+      Swal.fire({
+        title: "Sucess",
+        text: "The auction is updated sucessfully!",
+        icon: "success",
+      });
     } catch (error) {
       console.error("Error accepting the auction:", error);
-      alert("Failed to accept the auction.");
     }
   };
 

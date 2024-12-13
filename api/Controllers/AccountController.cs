@@ -8,6 +8,7 @@ using api.Repositories.Implementations;
 using api.Repositories.Interfaces;
 using api.Data;
 using api.Enums;
+using System.Text.Json;
 
 namespace api.Controllers
 {
@@ -145,6 +146,7 @@ namespace api.Controllers
             if (!createResult.Succeeded)
                 return BadRequest(createResult.Errors);
 
+
             var roleResult = await _userManager.AddToRoleAsync(user, "Business");
             if (!roleResult.Succeeded)
             {
@@ -155,7 +157,6 @@ namespace api.Controllers
             var businessModel = new Business
             {
                 UserId = user.Id,
-
                 BusinessName = businessRegisterDto.BusinessName,
                 BusinessType = businessRegisterDto.BusinessType,
                 BusinessEmail = businessRegisterDto.BusinessEmail,
@@ -163,7 +164,7 @@ namespace api.Controllers
                 CompanyVision = businessRegisterDto.CompanyVision,
                 LinkedIn = businessRegisterDto.LinkedIn,
                 RegistrationNumber = businessRegisterDto.RegistrationNumber,
-                Address = businessRegisterDto.Address,
+                Address = JsonSerializer.Serialize(businessRegisterDto.Address),
                 PrimaryPhoneNumber = businessRegisterDto.PrimaryPhoneNumber,
                 PrimaryContactFirstName = businessRegisterDto.PrimaryContactFirstName,
                 PrimaryContactLastName = businessRegisterDto.PrimaryContactLastName,

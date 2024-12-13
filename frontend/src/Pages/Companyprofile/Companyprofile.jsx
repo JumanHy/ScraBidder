@@ -18,6 +18,7 @@ function CompanyProfile() {
     primaryPhoneNumber: " ",
   });
   const [businessContactInfo, setBusinessContactInfo] = useState({});
+  const [businessLocation, setBusinessLocation] = useState({});
 
   const handleShowModal = () => {
     fetchContactInfo();
@@ -52,12 +53,20 @@ function CompanyProfile() {
         `http://localhost:5192/api/UserSetting/contacts/${sellerId}`
       );
       setBusinessContactInfo(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error("Error fetching business contact information:", error);
     }
   };
-
+  const fetchBusinessLocation = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5192/api/UserSetting/get-location/${sellerId}`
+      );
+      setBusinessLocation(response.data);
+    } catch (error) {
+      console.error("Error fetching business location:", error);
+    }
+  };
   const fetchUserImages = async () => {
     try {
       const response = await axios.get(
@@ -102,6 +111,7 @@ function CompanyProfile() {
           fetchUserImages(),
           fetchCompanyInfo(),
           fetchBusinessContactInfo(),
+          fetchBusinessLocation(),
         ]);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -330,7 +340,7 @@ function CompanyProfile() {
           <div style={{ flex: 1 }}>
             <h4>Our Location</h4>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2689.7946885046367!2d-122.08503648436325!3d37.42199997982573!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fb508fd23b7eb%3A0x290c23fc1b05a2ff!2sGoogleplex!5e0!3m2!1sen!2sus!4v1618903508658!5m2!1sen!2sus"
+              src={`https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d6769.290532337154!2d${businessLocation.location.longitude}!3d${businessLocation.location.latitude}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sar!2sjo!4v1730373072971!5m2!1sar!2sjo`}
               width="100%"
               height="300"
               style={{ border: "0", borderRadius: "8px" }}

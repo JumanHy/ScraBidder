@@ -74,7 +74,7 @@ const Login = () => {
                 if (response.status === 200) {
                   const { accountStatus, userId, token, role, email } =
                     response.data;
-                  console.log({ accountStatus });
+
                   if (
                     accountStatus === "Pending" ||
                     accountStatus === "inActive"

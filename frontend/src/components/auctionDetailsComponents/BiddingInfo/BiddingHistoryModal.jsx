@@ -6,8 +6,7 @@ function BidHistoryModal({ biddingsList, startingPrice }) {
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
-  console.log("from history modal");
-  console.log(biddingsList);
+
   return (
     <>
       {/* Trigger Button */}

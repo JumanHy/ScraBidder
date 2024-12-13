@@ -9,7 +9,6 @@ import {
 } from "@react-google-maps/api";
 import axios from "axios";
 import Swal from "sweetalert2";
-
 const UserDetails = () => {
   const [isEditingUserInfo, setIsEditingUserInfo] = useState(false);
 
@@ -94,28 +93,18 @@ const UserDetails = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-
-
         Swal.fire({
-          title: 'Success!',
-          text: 'Company service details updated successfully.',
-          icon: 'success',
-          confirmButtonText: 'OK'
+          title: "Success!",
+          text: "Company service details updated successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
         });
-
-
-
-
-
 
         toggleEditServiceInfo();
         fetchCompanyServiceInfo();
       }
     } catch (error) {
       console.error("Error updating company service details:", error);
-      alert(
-        `An error occurred while updating company service details: ${error.message}`
-      );
     } finally {
       setIsLoading(false);
     }
@@ -152,23 +141,18 @@ const UserDetails = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-
         Swal.fire({
-          title: 'Success!',
-          text: 'User details updated successfully.',
-          icon: 'success',
-          confirmButtonText: 'OK'
+          title: "Success!",
+          text: "User details updated successfully.",
+          icon: "success",
+          confirmButtonText: "OK",
         });
-       
 
         toggleEditUserInfo();
         fetchUserDetails();
-      } else {
-        alert(`Failed to update user details. Status: ${response.status}`);
       }
     } catch (error) {
       console.error("Error updating user details:", error);
-      alert(`An error occurred while updating user details: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -214,10 +198,10 @@ const UserDetails = () => {
     // Limit the number of images
     if (formData.images.length + files.length > 3) {
       Swal.fire({
-        title: 'Error!',
-        text: 'You can only upload up to three images.',
-        icon: 'error',
-        confirmButtonText: 'OK'
+        title: "Error!",
+        text: "You can only upload up to three images.",
+        icon: "error",
+        confirmButtonText: "OK",
       });
       return;
     }
@@ -255,24 +239,21 @@ const UserDetails = () => {
           images: [...prevData.images, ...files], // Add new images to state
         }));
         Swal.fire({
-          title: 'Success!',
-          text: 'Images uploaded successfully!',
-          icon: 'success',
-          confirmButtonText: 'OK'
+          title: "Success!",
+          text: "Images uploaded successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
         });
-      } else {
-        alert("Failed to upload images.");
       }
     } catch (error) {
       console.error("Error uploading images:", error);
-      alert(`An error occurred while uploading images: ${error.message}`);
     }
   };
   const handleImageDelete = async (imageId) => {
     try {
       const userId = localStorage.getItem("userId");
       if (!userId) throw new Error("User ID not found in localStorage.");
-      console.log({ userId }, { imageId });
+
       const response = await axios.delete(
         `http://localhost:5192/api/UserSetting/delete-image/${userId}/${imageId}`
       );
@@ -282,13 +263,9 @@ const UserDetails = () => {
         setFetchedImages((prevImages) =>
           prevImages.filter((image) => image !== imageId)
         );
-       
-      } else {
-        alert("Failed to delete the image.");
       }
     } catch (error) {
       console.error("Error deleting image:", error);
-      alert(`An error occurred while deleting the image: ${error.message}`);
     }
   };
 
@@ -307,15 +284,47 @@ const UserDetails = () => {
           setIsLocationLoading(false);
         },
         () => {
-          alert("Failed to retrieve location");
           setIsLocationLoading(false);
         }
       );
-    } else {
-      alert("Geolocation is not supported by this browser.");
     }
   };
+  const handleSubmitLocation = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      if (!userId) throw new Error("User ID not found in localStorage.");
 
+      const locationDto = {
+        longitude: formData.location.lng,
+        latitude: formData.location.lat,
+        address: "",
+      };
+
+      if (!locationDto)
+        return Swal.fire({
+          title: "Location is not selected",
+          text: "Please select or choose a location before submitting.",
+          icon: "warning",
+        });
+
+      const response = await axios.patch(
+        `http://localhost:5192/api/UserSetting/upload-location/${userId}`,
+        locationDto
+      );
+
+      if (response.status === 200) {
+        Swal.fire({
+          title: "Sucessful",
+          text: "Location updated successfully!",
+          icon: "success",
+        });
+
+        fetchUserDetails(); // Refresh user details
+      }
+    } catch (error) {
+      console.error("Error updating location:", error);
+    }
+  };
   const handleMapClick = (event) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -465,7 +474,6 @@ const UserDetails = () => {
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
-                  {console.log(companyServiceInfo)}
                   <Form.Label>Service Details</Form.Label>
                   <Form.Control
                     as="textarea"
@@ -662,7 +670,20 @@ const UserDetails = () => {
           </Col>
         </Row>
 
-       
+        <Col
+          xs={12}
+          sm={6}
+          md={4}
+          className="d-flex mt-3 justify-content-center"
+        >
+          <Button
+            variant="primary"
+            className="w-75 rounded text-white"
+            onClick={handleSubmitLocation}
+          >
+            Submit Location
+          </Button>
+        </Col>
       </div>
     </div>
   );

@@ -44,14 +44,8 @@ function WatchButton({ auctionId }) {
         title: "Login Required",
         text: "You need to log in to add items to your watchlist.",
         icon: "warning", // Use "warning" to indicate it's a reminder or action needed
-        confirmButtonText: "Login",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // Redirect the user to the login page
-          navigate("/login");
-        }
+        confirmButtonText: "Ok",
       });
-      return;
     }
 
     try {
@@ -64,7 +58,7 @@ function WatchButton({ auctionId }) {
           },
         }
       );
-      console.log("Auction added to watchlist:", response.data);
+
       setIsInWatchList(true);
     } catch (error) {
       console.error("Error adding to watchlist:", error);
@@ -87,7 +81,7 @@ function WatchButton({ auctionId }) {
           },
         }
       );
-      console.log("Auction removed from watchlist:", response.data);
+
       setIsInWatchList(false);
     } catch (error) {
       console.error("Error removing from watchlist:", error);

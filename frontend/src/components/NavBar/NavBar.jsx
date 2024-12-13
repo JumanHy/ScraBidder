@@ -12,7 +12,7 @@ import {
 import { LinkContainer } from "react-router-bootstrap";
 
 import { Bell, Dot } from "react-bootstrap-icons";
-
+import { useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import axios from "axios";
@@ -28,7 +28,7 @@ function NavBar() {
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("authToken");
   const roleData = localStorage.getItem("role");
-
+  const navigate = useNavigate();
   const val = !!token;
   const [isLoggedIn, setIsLoggedIn] = useState(val);
   const [showModal, setShowModal] = useState(false);
@@ -70,7 +70,6 @@ function NavBar() {
     newConnection
       .start()
       .then(() => {
-        console.log("SignalR connected from notification");
         newConnection.on("ReceiveNotification", (message) => {
           setNotifications((prev) => [message, ...prev]);
         });
@@ -107,7 +106,7 @@ function NavBar() {
     localStorage.removeItem("role");
 
     setIsLoggedIn(false);
-    window.location.href = "/login";
+    navigate("/login");
   };
 
   return (
@@ -192,15 +191,16 @@ function NavBar() {
                       className="border-0 bg-transparent p-0"
                     />
                     <Dropdown.Menu>
-                      <Dropdown.Item
-                        href={
+                      <LinkContainer
+                        to={
                           roleData === "Business"
                             ? "/business-account"
                             : "/user-account"
                         }
                       >
-                        My Account
-                      </Dropdown.Item>
+                        <Dropdown.Item>My Account</Dropdown.Item>
+                      </LinkContainer>
+
                       {roleData === "Business" && (
                         <LinkContainer to={`/cprofile/${userId}`}>
                           <Dropdown.Item>My Profile</Dropdown.Item>

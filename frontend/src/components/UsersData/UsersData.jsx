@@ -95,8 +95,6 @@ function UsersData() {
     setRecords2(newData);
   }
   function handleTypeFilter(event) {
-    console.log({ event });
-
     const newData = records?.filter((row) => {
       return row.role === event;
     });

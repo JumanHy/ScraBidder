@@ -40,7 +40,7 @@ const Dashboard = () => {
             "userId"
           )}`
         );
-        console.log(response.data);
+
         setDashboardData(response.data);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);

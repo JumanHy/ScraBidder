@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using api.Dtos;
 
 namespace api.Models
 {
@@ -11,7 +12,7 @@ namespace api.Models
         public string PhoneNumber { get; set; }
 
         public string? Image { get; set; }
- 
+
         [Required]
         public string UserId { get; set; }
 
@@ -23,6 +24,6 @@ namespace api.Models
         [Required]
         public string LastName { get; internal set; }
 
-        
+
     }
 }
